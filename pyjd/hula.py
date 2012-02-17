@@ -130,7 +130,6 @@ class Browser(WebView):
         
         listener = xpcom.server.WrapObject(ContentInvoker(node, event_fn),
                                             interfaces.nsIDOMEventListener)
-        print event_name, listener
         node.addEventListener(event_name, listener, False)
         return listener
 

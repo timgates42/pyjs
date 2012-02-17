@@ -15,6 +15,7 @@ class XULrunnerHackCallback(object):
         pass
 
     def callback(self):
+        print "callback"
         return self.htr.asyncImpl(self.mode, self.user, self.pwd, self.url,
                                   self.postData, self.handler, self.return_xml, 
                                   self.content_type, self.headers)
@@ -145,6 +146,8 @@ class HTTPRequest(object):
         xmlHttp = self.doCreateXmlHTTPRequest()
         url = self._convertUrlToAbsolute(url)
 
+        print "xmlHttp", method, user, pwd, url, postData, handler, dir(xmlHttp)
+
         if mf.platform == 'webkit':
             mf._addXMLHttpRequestEventListener(
                 xmlHttp, "readystatechange", self.onReadyStateChange,
@@ -158,15 +161,13 @@ class HTTPRequest(object):
                 xmlHttp, "load", self.onLoad,
             )
 
-        #print "xmlHttp", method, user, pwd, url, postData, handler, dir(xmlHttp)
         #try :
         if mf.platform == 'webkit' or mf.platform == 'mshtml':
             xmlHttp.open(method, url, True, '', '')
         else:
             # EEK!  xmlhttprequest.open in xpcom is a miserable bastard.
-            #xmlHttp.open("POST", url, True, '', '')
-            res = xmlHttp.open(method, url)
-            #print url, res
+            res = xmlHttp.open(method, url, True, '', '')
+            print url, res
         for h in headers:
             if isinstance(headers[h], basestring):
                 xmlHttp.setRequestHeader(h, headers[h])
