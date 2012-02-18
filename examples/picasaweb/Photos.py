@@ -19,7 +19,7 @@ from pyjamas.ui.Composite import Composite
 from pyjamas.Timer import Timer
 from pyjamas import DOM
 import json
-from __pyjamas__ import JS
+from __pyjamas__ import doc, wnd
 
 class Photos(Composite):
     def __init__(self):
@@ -73,11 +73,10 @@ class Photos(Composite):
            Once we've done that have to wait for the response.
            Which means we need to provide a listener for the timer"""
 
-        JS("$wnd.receiver = 'wait'")
         new_script = DOM.createElement("script")
         DOM.setElemAttribute(new_script, "src", url)
         DOM.setElemAttribute(new_script, "type","text/javascript")
-        JS("$wnd.document.body.appendChild(@{{new_script}})")
+        doc().body.appendChild(new_script)
         self.timer.schedule(100)
 
     def onCellClicked(self, sender, row, col):
@@ -143,13 +142,14 @@ class Photos(Composite):
                 self.fillGrid(self.albums, "albums")
             
     def onTimer(self, timer):
-        receiver = JS("$wnd.receiver")
+        fd = doc().getElementById("__pygwt_hiddenData")
+        receiver = fd.innerHTML
 
         if receiver == 'wait':
-           self.timer.schedule(1000)
-           return
+            self.timer.schedule(1000)
+            return
 
-        JS("$wnd.receiver = 'wait'")
+        fd.innerHTML = 'wait'
 
         if self.drill == 0:
             self.parseAlbums(receiver)
@@ -175,23 +175,21 @@ class Photos(Composite):
     def parsePhotos(self, items):
         photo_list = json.loads(items)
         self.photos = []
-        for i in range(len(photo_list)):
-            index = "%s" % i
+        for ph in photo_list:
             aphoto = {}
-            aphoto['thumb'] = HTML('<img src="' + photo_list[index]["media$group"]["media$thumbnail"]["1"]["url"] + '"/>')
-            aphoto['full'] = photo_list[index]["media$group"]["media$content"]["0"]["url"] 
+            aphoto['thumb'] = HTML('<img src="' + ph[u"media$group"][u"media$thumbnail"][1][u"url"] + '"/>')
+            aphoto['full'] = ph[u"media$group"][u"media$content"][0][u"url"] 
             self.photos.append(aphoto)
 
     def parseAlbums(self, items):
         album_list = json.loads(items)
         self.albums = []
-        for i in range(len(album_list)):
-            index = "%s" % i
+        for al in album_list:
             analbum = {}
-            analbum['title'] = HTML(album_list[index]["title"]["$t"])
-            analbum['thumb'] = HTML('<img src="' + album_list[index]["media$group"]["media$thumbnail"]["0"]["url"] + '"/>')
-            url = album_list[index]["id"]["$t"]
-            analbum['id'] = url.split('albumid/')[1].split('?alt')[0]
+            analbum['title'] = HTML(al[u"title"][u"$t"])
+            analbum['thumb'] = HTML('<img src="' + al[u"media$group"][u"media$thumbnail"][0][u"url"] + '"/>')
+            url = al[u"id"][u"$t"]
+            analbum['id'] = url.split(u'albumid/')[1].split(u'?alt')[0]
             self.albums.append(analbum)
 
 
