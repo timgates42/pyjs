@@ -166,7 +166,10 @@ class HTTPRequest(object):
             xmlHttp.open(method, url, True, '', '')
         else:
             # EEK!  xmlhttprequest.open in xpcom is a miserable bastard.
-            res = xmlHttp.open(method, url, True, '', '')
+            try:
+                res = xmlHttp.open(method, url, True, '', '')
+            except:
+                res = xmlHttp.open(method, url)
             print url, res
         for h in headers:
             if isinstance(headers[h], basestring):
