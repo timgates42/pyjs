@@ -1,6 +1,8 @@
                     Changes made to Pyjamas since 0.8pre1
                     ---------------------------------
-
+ * updated Focus.py and its browser overrides to bring it in 
+   conformance with GWT - solves Issue #537. Phil Charlesworth
+                    
  * added server-side jsonrpc cherrypy helper, thanks to Rene Maurer
 
  * use new platform override scheme {module}.{platformname}.py so that

@@ -12,9 +12,24 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import pyjd
 from pyjamas import DOM
 from __pyjamas__ import JS
 
+if not pyjd.is_desktop:
+    JS("""
+    var focusHandler = null;
+    """)
+
+def ensureFocusHandler():
+    pass
+
+def createFocusHandler():
+    pass    
+
+def createFocusable0():
+    pass
+    
 def blur(elem):
     elem.blur()
 
