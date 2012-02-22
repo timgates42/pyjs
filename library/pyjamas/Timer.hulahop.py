@@ -15,7 +15,7 @@
 # Implementation of Timer for hulahop using xpcom's nsITimer interface
 # see pyjd/hula.py for details.
 
-class Timer:
+class Timer(object):
 
     def __setTimeout(self, delayMillis):
 

@@ -1,56 +1,47 @@
-# FocusImplOld
 
-def blur(elem):
+def ensureFocusHandler():
     JS("""
-    @{{elem}}.blur();
+    return (focusHandler !== null) ? focusHandler : (focusHandler =
+            @{{createFocusHandler}}());
     """)
 
-def createFocusable():
+def createFocusHandler():
+    JS("""
+    return function(evt) {
+      // This function is called directly as an event handler, so 'this' is
+      // set up by the browser to be the input on which the event is fired. We
+      // call focus() in a timeout or the element may be blurred when this event
+      // ends.
+      var div = this.parentNode;
+      if (div.onfocus) {
+        $wnd.setTimeout(function() {
+          div.focus();
+        }, 0);
+      } 
+    };
+    """)
+
+def createFocusable0():
     JS("""
     var div = $doc.createElement('div');
+    div.tabIndex = 0;
+
     var input = $doc.createElement('input');
     input.type = 'text';
-    input.style.width = input.style.height = 0;
+    input.style.opacity = 0;
+    input.tabIndex = -1;
     input.style.zIndex = -1;
+    input.style.width = '1px';
+    input.style.height = '1px';
+    input.style.overflow = 'hidden';
     input.style.position = 'absolute';
 
-    input.addEventListener(
-        'blur',
-        function(evt) { if (this.parentNode.onblur) this.parentNode.onblur(evt); },
-        false);
+    input.addEventListener( 'focus', focusHandler, false);
 
-    input.addEventListener(
-        'focus',
-        function(evt) { if (this.parentNode.onfocus) this.parentNode.onfocus(evt); },
-        false);
-
-    div.addEventListener(
-        'mousedown',
-        function(evt) { this.firstChild.focus(); },
-        false);
-    
     div.appendChild(input);
     return div;
     """)
 
-def focus(elem):
-    JS("""
-    @{{elem}}.focus();
-    """)
-
-def getTabIndex(elem):
-    JS("""
-    return @{{elem}}.firstChild.tabIndex;
-    """)
-
-def setAccessKey(elem, key):
-    JS("""
-    if (@{{elem}}.firstChild != null) @{{elem}}.firstChild.accessKey = @{{key}};
-    """)
-
-def setTabIndex(elem, index):
-    JS("""
-    if (@{{elem}}.firstChild != null) @{{elem}}.firstChild.tabIndex = @{{index}};
-    """)
-
+def createFocusable():
+    return createFocusable0(ensureFocusHandler());
 
