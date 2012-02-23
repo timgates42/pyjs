@@ -22,7 +22,7 @@ def createFocusHandler():
     };
     """)
 
-def createFocusable0():
+def createFocusable0(focusHandler):
     JS("""
     var div = $doc.createElement('div');
     div.tabIndex = 0;
