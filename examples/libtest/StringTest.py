@@ -315,6 +315,14 @@ class StringTest(UnitTest):
         self.assertTrue("A C".isupper(), "A C")
         self.assertFalse("A c".isupper(), "A c")
 
+    def testIsLower(self):
+        self.assertTrue("abc".islower(), "abc")
+        self.assertFalse("AbC".islower(), "AbC")
+        self.assertTrue("a0c".islower(), "a0c")
+        self.assertFalse("A0c".islower(), "A0c")
+        self.assertTrue("a c".islower(), "a c")
+        self.assertFalse("A c".islower(), "A c")
+
 
 class ClassWithOwnToString(object):
 
