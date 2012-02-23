@@ -44,8 +44,7 @@ def createFocusable0(focusHandler):
     """)
 
 def createFocusable():
-    ensureFocusHandler()
-    return createFocusable0()
+    return createFocusable0(ensureFocusHandler())
 
 def blur(elem):
     JS("""
