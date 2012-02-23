@@ -52,7 +52,7 @@ APP_HTML_TEMPLATE = """\
 </head>
 <body style="background-color:white">
 <script type="text/javascript" src="%(bootstrap_file)s"></script>
-<iframe id="__pygwt_historyFrame" style="width:0;height:0;border:0"></iframe>
+<iframe id="__pygwt_historyFrame" style="display:none;"></iframe>
 </body>
 </html>
 """
