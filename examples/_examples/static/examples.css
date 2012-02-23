@@ -2,6 +2,12 @@ body {
     font-family: "Trebuchet MS", Arial;
     font-size: 11pt;
 }
+#logo {
+    float: left;
+}
+h1 {
+    padding-top: 20px;
+}
 h2 {
     margin: 20px 0px 0px 0px;
     padding: 0px;
