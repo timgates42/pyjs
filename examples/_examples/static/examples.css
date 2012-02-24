@@ -4,6 +4,7 @@ body {
 }
 #logo {
     float: left;
+    border: 0;
 }
 h1 {
     padding-top: 20px;
