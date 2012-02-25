@@ -1,10 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 
-TARGETS = [
-    'JSONRPCExample.py',
-]
+head = os.path.dirname(__file__)
+
+TARGETS = {
+    'JSONRPCExample.py': dict(
+        downloads=[
+            dict(
+                url= "http://downloads.sourceforge.net/project/phpolait/"+\
+                     "phpolait/phpolait-0.5.1/phpolait-0.5.1.zip",
+
+                dst=os.path.join(head, 'phpolait-0.5.1.zip'),
+                unzip=True,
+            )
+                 ],
+        )
+
+}
 
 
 PACKAGE = {
