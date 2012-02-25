@@ -4,10 +4,10 @@ from pyjamas.DOM import getFirstChild
 from pyjamas import Window
 from pyjamas.ui.HTML import HTML
 import math
-from __pyjamas__ import jsinclude
+from __pyjamas__ import jsimport
 
 # Include the processing.js in the module scope
-jsinclude("processing.js")
+jsimport("processing.js")
 from __javascript__ import Processing # defined by processing.js
 
 
@@ -43,7 +43,7 @@ def mouseMoved():
 class ProcessingCanvas(GWTCanvas):
     def __init__(self):
         GWTCanvas.__init__(self, 150, 150, 150, 150)
-        self.c = getFirstChild(self.getElement())
+        self.c = self.getCanvasElement()
         self.p = Processing (self.c)
         global p
         p = self.p
