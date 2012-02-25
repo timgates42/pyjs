@@ -56,6 +56,9 @@ def getToken():
 
 
 def newItem(ht):
+    global historyToken
+    if historyToken == ht:
+        return
     print "History - new item", ht
     onHistoryChanged(ht)
     return
