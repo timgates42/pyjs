@@ -1,4 +1,4 @@
-﻿# Date Time Example
+# Date Time Example
 # Copyright (C) 2009 Yit Choong (http://code.google.com/u/yitchoong/)
 
 import pyjd # dummy in pyjs
