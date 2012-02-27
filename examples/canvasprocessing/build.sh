@@ -18,6 +18,6 @@ if [ -z "$DOWNLOADS" ] ; then
 fi
 
 if ./download.sh ; then
-    ../../bin/pyjsbuild --print-statements $options CanvasProcessing
+    ../../bin/pyjsbuild $@ CanvasProcessing
 fi
 
