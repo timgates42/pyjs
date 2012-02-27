@@ -333,7 +333,7 @@ class BrowserLinker(linker.BaseLinker):
             fh = open(file_name, 'r')
             txt = fh.read()
             fh.close()
-            script_tag = '<script language="javascript" src="%s"></script>\n' %
+            script_tag = '<script language="javascript" src="%s"></script>\n' %\
                     self.bootstrap_file
             txt = txt.replace("<!--bootstrap-->", script_tag)
             fh = open(file_name, 'w')
