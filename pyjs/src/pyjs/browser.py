@@ -115,9 +115,7 @@ class BrowserLinker(linker.BaseLinker):
 
     def visit_end(self):
         html_output_filename = os.path.join(self.output, self.top_module + '.html')
-        if not os.path.exists(html_output_filename):
-            # autogenerate
-            self._create_app_html(html_output_filename)
+        self._create_app_html(html_output_filename)
         self._create_nocache_html()
         if not self.keep_lib_files:
             for fname in self.remove_files:
@@ -333,8 +331,8 @@ class BrowserLinker(linker.BaseLinker):
             fh = open(file_name, 'r')
             txt = fh.read()
             fh.close()
-            script_tag = '<script language="javascript" src="%s"></script>\n' %\
-                    self.bootstrap_file
+            script_tag = '<script language="javascript" src="%s"></script>' %\
+                         self.bootstrap_file
             txt = txt.replace("<!--bootstrap-->", script_tag)
             fh = open(file_name, 'w')
             fh.write(txt)
