@@ -327,8 +327,18 @@ class BrowserLinker(linker.BaseLinker):
         in the generated HTML-file.
         """
 
-        # if html file in output directory exists, leave it alone.
+        # if html file in output directory exists, parse it and
+        # sort out the script tag
         if os.path.exists(file_name):
+            fh = open(file_name, 'r')
+            txt = fh.read()
+            fh.close()
+            script_tag = '<script language="javascript" src="%s"></script>\n' %
+                    self.bootstrap_file
+            txt = txt.replace("<!--bootstrap-->", script_tag)
+            fh = open(file_name, 'w')
+            fh.write(txt)
+            fh.close()
             return 0
         if os.path.exists(
             os.path.join(self.output, self.top_module + '.css' )):
