@@ -59,7 +59,6 @@ def newItem(ht):
     global historyToken
     if historyToken == ht:
         return
-    print "History - new item", ht
     onHistoryChanged(ht)
     return
 
@@ -82,6 +81,10 @@ def fireHistoryChangedAndCatch():
 
 
 def fireHistoryChangedImpl(ht):
+    global historyToken
+    if historyToken == ht:
+        return
+    historyToken = ht
     for listener in historyListeners:
         listener.onHistoryChanged(ht)
 
