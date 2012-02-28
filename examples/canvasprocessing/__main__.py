@@ -1,10 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 
-TARGETS = [
-    'CanvasProcessing.py',
-]
+head = os.path.dirname(__file__)
+
+TARGETS = {
+    'CanvasProcessing.py': dict(
+        downloads=[
+            dict(
+                url=
+                "http://cloud.github.com/downloads/processing-js/"+\
+                        "processing-js/processing-1.3.6.js",
+                dst=os.path.join(head, 'processing.js'),
+                unzip=False,
+            )
+                 ],
+        )
+}
 
 
 PACKAGE = {

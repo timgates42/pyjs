@@ -209,6 +209,11 @@ a:visited {
   font-size: 30px;
 }
 
+.ks-Authors {
+    padding: 1em 4px 1em 4px;
+    font-size: smaller;
+}
+
 .ks-List {
   margin-top: 8px;
   margin-bottom: 8px;
