@@ -4,6 +4,7 @@
 
 TARGETS = [
     'GWTCanvasDemo.py',
+    'SVGCanvasDemo.py',
 ]
 
 

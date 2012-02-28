@@ -112,6 +112,14 @@ class GWTCanvasImplIE6:
         self.currentY = y
 
 
+    def setFont(self, font):
+        pass
+        # NOT IMPLEMENTED
+    
+    def fillText(self, text, sourceX, sourceY, maxWidth=None):
+        pass
+        # NOT IMPLEMENTED
+
     def drawImage(self, img, *args):
 
         if isinstance(img, Widget):

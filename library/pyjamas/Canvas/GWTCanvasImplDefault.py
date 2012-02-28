@@ -59,7 +59,9 @@ class GWTCanvasImplDefault:
     def cubicCurveTo(self, cp1x, cp1y, cp2x, cp2y, x, y):
         self.canvasContext.bezierCurveTo(cp1x,cp1y,cp2x,cp2y,x,y)
 
-
+    def setFont(self, font):
+        self.canvasContext.font = font
+    
     def fillText(self, text, sourceX, sourceY, maxWidth=None):
         # TODO: split this dog's dinner into browser-specific
         # and pyjd-specific overrides...

@@ -517,7 +517,15 @@ class GWTCanvas(FocusWidget):
     def setGlobalAlpha(self, alpha):
         self.impl.setGlobalAlpha(alpha)
     
-    
+    """*
+    * Set the canvas font attribute.
+    *
+    * @param font CSS font
+    """
+    def setFont(self, font):
+        self.impl.setFont(font)
+
+
     """*
     * Determines how the canvas is displayed relative to any background content.
     * The string identifies the desired compositing mode. If you do not self.set this
