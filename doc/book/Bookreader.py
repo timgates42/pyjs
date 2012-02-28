@@ -56,12 +56,10 @@ class Bookreader:
         #self.nf.setWidth("100%")
         #self.nf.setHeight("10000")
 
-        height = Window.getClientHeight()
-
         self.sp = ScrollPanel(self.sinkContainer)
         #self.sp = VerticalSplitPanel()
         self.sp.setWidth("100%")
-        self.sp.setHeight("%dpx" % (height-130))
+        self.sp.setHeight("100%")
 
         #self.sp.setTopWidget(self.sinkContainer)
         #self.sp.setBottomWidget(self.nf)
@@ -73,9 +71,24 @@ class Bookreader:
         vp.add(self.description)
         vp.add(self.sp)
 
+        authors = [
+            ("2008, 2009", "Kenneth Casson Leighton", "lkcl@lkcl.net")
+        ]
+        for years, name, email in authors:
+            authors_html = \
+            '&copy; %s <a href="mailto:%s">%s</a><br />' %\
+            (years, email, name)
+        authors_panel = HTML()
+        authors_panel.setStyleName("ks-Authors")
+        authors_panel.setHTML(authors_html[:-6])
+
+        left_panel = DockPanel(Height="100%")
+        left_panel.add(self.sink_list, DockPanel.NORTH)
+        left_panel.add(authors_panel, DockPanel.SOUTH)
+
         self.description.setStyleName("ks-Intro")
 
-        self.panel.add(self.sink_list, DockPanel.WEST)
+        self.panel.add(left_panel, DockPanel.WEST)
         self.panel.add(vp, DockPanel.CENTER)
 
         self.panel.setCellVerticalAlignment(self.sink_list,
