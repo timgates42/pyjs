@@ -604,7 +604,7 @@ class GWTCanvas(FocusWidget):
     * @param height the height of the canvas in pixels
     """
     def setPixelHeight(self, height):
-        FocusWidget.setHeight(self, height)
+        FocusWidget.setHeight(self, str(height) + "px")
         self.impl.setPixelHeight(self.getCanvasElement(), height)
     
     
@@ -614,7 +614,7 @@ class GWTCanvas(FocusWidget):
     * @param width width of the canvas in pixels
     """
     def setPixelWidth(self, width):
-        FocusWidget.setWidth(self, width)
+        FocusWidget.setWidth(self, str(width) + "px")
         self.impl.setPixelWidth(self.getCanvasElement(), width)
     
     
