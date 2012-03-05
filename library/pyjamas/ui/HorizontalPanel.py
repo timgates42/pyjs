@@ -39,7 +39,7 @@ class HorizontalPanel(CellPanel):
 
         if beforeIndex is None:
             beforeIndex = container
-            container = self.getElement()
+            container = self.tableRow
 
         if widget.getParent() == self:
             return
@@ -47,7 +47,7 @@ class HorizontalPanel(CellPanel):
         widget.removeFromParent()
 
         td = DOM.createTD()
-        DOM.insertChild(self.tableRow, td, beforeIndex)
+        DOM.insertChild(container, td, beforeIndex)
 
         CellPanel.insert(self, widget, td, beforeIndex)
 

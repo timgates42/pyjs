@@ -33,17 +33,14 @@ class VerticalPanel(CellPanel):
 
         if beforeIndex is None:
             beforeIndex = container
-            container = self.getElement()
-
-        if widget.getParent() == self:
-            return
+            container = self.getBody()
 
         widget.removeFromParent()
 
         tr = DOM.createTR()
         td = DOM.createTD()
 
-        DOM.insertChild(self.getBody(), tr, beforeIndex)
+        DOM.insertChild(container, tr, beforeIndex)
         DOM.appendChild(tr, td)
 
         CellPanel.insert(self, widget, td, beforeIndex)
