@@ -6050,8 +6050,7 @@ def delattr(obj, name):
                         '$$'+@{{name}};
     if (   @{{obj}}!== null
         && (typeof @{{obj}}== 'object' || typeof @{{obj}}== 'function')
-        && (typeof(@{{obj}}[mapped_name]) != "undefined")
-        &&(typeof(@{{obj}}[mapped_name]) != "function") ){
+        && (typeof(@{{obj}}[mapped_name]) != "undefined") ){
         if (@{{obj}}.__is_instance__
             && typeof @{{obj}}[mapped_name].__delete__ == 'function') {
             @{{obj}}[mapped_name].__delete__(@{{obj}});

@@ -28,6 +28,9 @@ class Foo:
     def do(self):
         return 'do'
 
+    def delete_me(self):
+        pass
+
 
 class AttributeTest(UnitTest):
 
@@ -96,9 +99,33 @@ class AttributeTest(UnitTest):
         self.assertEqual(hasattr(foo, "getV"), True)
         try:
             delattr(foo, "getV")
-            self.fail("No AttributeError raised")
         except AttributeError, e:
             self.assertEqual(str(e), "Foo instance has no attribute 'getV'")
+
+
+        class Foo1(Foo):
+            pass
+
+        foo1 = Foo1(1)
+
+        try:
+            delattr(foo, "delete_me")
+            self.fail("Bug #697: No AttributeError raised")
+        except AttributeError:
+            self.assertTrue(True)
+        self.assertEqual(hasattr(foo, "delete_me"), True)
+
+        try:
+            delattr(Foo1, "delete_me")
+            self.fail("Bug #697: No AttributeError raised")
+        except AttributeError:
+            self.assertTrue(True)
+        self.assertEqual(hasattr(Foo1, "delete_me"), True, "Bug #697: Foo1 should still have method 'delete_me'")
+
+        delattr(Foo, "delete_me")
+        self.assertEqual(hasattr(Foo, "delete_me"), False, "Foo shouldn't have method 'delete_me'")
+        self.assertEqual(hasattr(Foo1, "delete_me"), False, "Foo1 shouldn't have method 'delete_me'")
+        self.assertEqual(hasattr(foo, "delete_me"), False, "foo shouldn't have method 'delete_me'")
 
     def testAttrErr(self):
         foo = Foo(1)
