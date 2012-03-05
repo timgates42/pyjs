@@ -27,9 +27,19 @@ class ComplexPanel(Panel):
         else:
             self.insert(widget, self.getWidgetCount())
 
-    def insert(self, widget, container, beforeIndex):
+    def insert(self, widget, container, beforeIndex=None):
+        """ has two modes of operation:
+            widget, beforeIndex
+            widget, container, beforeIndex.
+            if beforeIndex argument is not given, the 1st mode is assumed.
+            this technique is less costly than using *args.
+        """
         if widget.getParent() == self:
             return
+
+        if beforeIndex is None:
+            beforeIndex = container
+            container = self.getElement()
 
         self.adopt(widget, container)
         self.children.insert(beforeIndex, widget)
