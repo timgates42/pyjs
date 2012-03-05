@@ -21,7 +21,23 @@ from pyjamas.ui import HasVerticalAlignment
 
 class VerticalPanel(CellPanel):
 
-    def insert(self, widget, beforeIndex):
+    def insert(self, widget, container, beforeIndex=None):
+        """ has two modes of operation:
+            widget, beforeIndex
+            widget, container, beforeIndex.
+            if beforeIndex argument is not given, the 1st mode is assumed.
+            this technique is less costly than using *args.
+        """
+        if widget.getParent() == self:
+            return
+
+        if beforeIndex is None:
+            beforeIndex = container
+            container = self.getElement()
+
+        if widget.getParent() == self:
+            return
+
         widget.removeFromParent()
 
         tr = DOM.createTR()
