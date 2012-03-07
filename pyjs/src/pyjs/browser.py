@@ -46,7 +46,6 @@ APP_HTML_TEMPLATE = """\
  wiki for details: http://pyjs.org/wiki/csshellandhowtodealwithit/
 -->
 <head>
-<meta name="pygwt:module" content="%(modulename)s">
 %(css)s
 <title>%(title)s</title>
 </head>
@@ -341,13 +340,31 @@ class BrowserLinker(linker.BaseLinker):
             else:
                 css = ''
 
-            base_html = APP_HTML_TEMPLATE % {
-                            'modulename': self.top_module,
-                            'title': title,
-                            'css': css,
-                        }
+            base_html = APP_HTML_TEMPLATE % { 'title': title, 'css': css }
             created = 1
 
+        # replace (or add) meta tag pygwt:module
+        meta_tag_head = '<meta name="pygwt:module"'
+        meta_tag_tail = ' content="%s">' % self.top_module
+
+        meta_found = base_html.find(meta_tag_head)
+        if meta_found > -1:
+            meta_stop = base_html.find('>', meta_found + len(meta_tag_head))
+        else:
+            head_end = '</head>'
+            meta_found = base_html.find(head_end)
+            meta_stop = meta_found - 1
+            meta_tag_tail += '\n'
+            if meta_found == -1:
+                raise RuntimeError("Can't inject module meta tag. " +\
+                                   "No tag %(tag)s found in %(file)s" %\
+                                   { 'tag': head_end, 'file': file_name })
+
+        base_html = base_html[:meta_found] \
+                  + meta_tag_head + meta_tag_tail \
+                  + base_html[meta_stop + 1:]
+
+        # inject bootstrap script tag and history iframe
         script_tag = '<script type="text/javascript" src="%s"></script>' % self.bootstrap_file
         iframe_tag = '<iframe id="__pygwt_historyFrame" style="display:none;"></iframe>'
         body_end = '</body>'
@@ -355,7 +372,7 @@ class BrowserLinker(linker.BaseLinker):
         if base_html.find(body_end) == -1:
             raise RuntimeError("Can't inject bootstrap loader. " + \
                                "No tag %(tag)s found in %(file)s" % \
-                               { 'tag': body_end, 'file': file_name } )
+                               { 'tag': body_end, 'file': file_name })
         base_html = base_html.replace(body_end,
                                       script_tag +'\n'+ iframe_tag +'\n'+ body_end)
 
