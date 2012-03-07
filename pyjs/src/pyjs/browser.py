@@ -51,8 +51,6 @@ APP_HTML_TEMPLATE = """\
 <title>%(title)s</title>
 </head>
 <body style="background-color:white">
-<script type="text/javascript" src="%(bootstrap_file)s"></script>
-<iframe id="__pygwt_historyFrame" style="display:none;"></iframe>
 </body>
 </html>
 """
@@ -203,7 +201,7 @@ class BrowserLinker(linker.BaseLinker):
                     name = fname[len_ouput_dir:]
                 else:
                     name = os.path.basename(lib)
-                code.append("""<script type="text/javascript"><!--""")
+                code.append('<script type="text/javascript"><!--')
                 if not msg is None:
                     code.append("/* start %s: %s */" % (msg, name))
                 f = file(fname)
@@ -311,8 +309,8 @@ class BrowserLinker(linker.BaseLinker):
         out_file.close()
 
     def _create_app_html(self, file_name):
-        """ Checks if a base HTML-file is available in the PyJamas
-        output directory.
+        """ Checks if a base HTML-file is available in the Pyjamas
+        output directory, and injects the bootstrap loader script tag.
         If the HTML-file isn't available, it will be created.
 
         If a CSS-file with the same name is available
@@ -325,39 +323,46 @@ class BrowserLinker(linker.BaseLinker):
         in the generated HTML-file.
         """
 
-        # if html file in output directory exists, parse it and
-        # sort out the script tag
         if os.path.exists(file_name):
             fh = open(file_name, 'r')
-            txt = fh.read()
+            base_html = fh.read()
             fh.close()
-            script_tag = '<script language="javascript" src="%s"></script>' %\
-                         self.bootstrap_file
-            txt = txt.replace("<!--bootstrap-->", script_tag)
-            fh = open(file_name, 'w')
-            fh.write(txt)
-            fh.close()
-            return 0
-        if os.path.exists(
-            os.path.join(self.output, self.top_module + '.css' )):
-            css = "<link rel='stylesheet' href='" + self.top_module + ".css'>"
-        elif os.path.exists(
-            os.path.join(self.output, 'pyjamas_default.css' )):
-            css = "<link rel='stylesheet' href='pyjamas_default.css'>"
+            created = 0
         else:
-            css = ''
+            title = self.top_module + ' (Pyjamas Auto-Generated HTML file)'
+            link_tag = '<link rel="stylesheet" href="%s">'
+            module_css = self.top_module + '.css'
+            default_css = 'pyjamas_default.css'
 
-        title = 'PyJamas Auto-Generated HTML file ' + self.top_module
+            if os.path.exists(os.path.join(self.output, module_css)):
+                css = link_tag % module_css
+            elif os.path.exists(os.path.join(self.output, default_css)):
+                css = link_tag % default_css
+            else:
+                css = ''
 
-        base_html = APP_HTML_TEMPLATE % {'modulename': self.top_module,
-                                         'title': title, 'css': css,
-                                         'bootstrap_file': self.bootstrap_file,
-                                        }
+            base_html = APP_HTML_TEMPLATE % {
+                            'modulename': self.top_module,
+                            'title': title,
+                            'css': css,
+                        }
+            created = 1
 
-        fh = open (file_name, 'w')
-        fh.write  (base_html)
-        fh.close  ()
-        return 1
+        script_tag = '<script type="text/javascript" src="%s"></script>' % self.bootstrap_file
+        iframe_tag = '<iframe id="__pygwt_historyFrame" style="display:none;"></iframe>'
+        body_end = '</body>'
+
+        if base_html.find(body_end) == -1:
+            raise RuntimeError("Can't inject bootstrap loader. " + \
+                               "No tag %(tag)s found in %(file)s" % \
+                               { 'tag': body_end, 'file': file_name } )
+        base_html = base_html.replace(body_end,
+                                      script_tag +'\n'+ iframe_tag +'\n'+ body_end)
+
+        fh = open(file_name, 'w')
+        fh.write(base_html)
+        fh.close()
+        return created
 
 MODIFIED_TIME = {}
 
