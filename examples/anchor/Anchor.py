@@ -7,10 +7,8 @@ if __name__ == '__main__':
     pyjd.setup("Anchor.html")
 
     root = RootPanel()
-    image_url = "http://www.dcuktec.com/static/images/logo.png"
-    image = Image(image_url)
-    anchor = Anchor(Widget=image)
-    anchor.href.set('http://www.dcuktec.com')
+    image = Image('http://pyjs.org/img/pyjamas.128x128.png')
+    anchor = Anchor(Widget=image, Href='http://pyjs.org')
     root.add(anchor)
 
     pyjd.run()
