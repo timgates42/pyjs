@@ -8,7 +8,7 @@ if __name__ == '__main__':
 
     root = RootPanel()
     image = Image('http://pyjs.org/img/pyjamas.128x128.png')
-    anchor = Anchor(Widget=image, Href='http://pyjs.org')
+    anchor = Anchor(Widget=image, Href='http://pyjs.org', Title='Pyjs website')
     root.add(anchor)
 
     pyjd.run()
