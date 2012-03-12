@@ -1,8 +1,6 @@
 __author__ = 'Peter Bittner <peter.bittner@gmx.net>'
 
-class Handler:
-    def __init__(self):
-        pass
+from logging import Handler
 
 class AppendHandler(Handler):
     def __init__(self):

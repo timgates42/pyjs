@@ -8,7 +8,7 @@ from __pyjamas__ import doc
 
 __data = ""
 __element = None
-#__logger = logging.getLogger('pyjs')
+#__logger = logging.getAppendLogger()
 
 def __getBodyElement():
     return doc().body
@@ -27,6 +27,8 @@ def write(text):
     text = text.replace("\n", "<br />\n")
     __data += text
     DOM.setInnerHTML(__element, __data)
+    #global __logger
+    #__logger.debug(text)
 
 def writebr(text):
     """@deprecated(since='0.8', replacement=logging.debug)"""
