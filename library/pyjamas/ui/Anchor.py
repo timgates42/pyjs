@@ -11,11 +11,8 @@ if __name__ == '__main__':
     from pyjamas.ui.RootPanel import RootPanel
     from pyjamas.ui.Image import Image
     root = RootPanel()
-    image_url = "http://www.dcuktec.com/static/images/logo.png"
-    image = Image(image_url)
-    anchor = Anchor()
-    anchor.add(image)
-    anchor.href.set('http://www.dcuktec.com')
+    image = Image('http://pyjs.org/img/pyjamas.128x128.png')
+    anchor = Anchor(Widget=image, Href='http://pyjs.org')
     root.add(anchor)
 ---------------------------------------------------------
 """
@@ -82,11 +79,14 @@ class Anchor(Widget, ClickHandler, _Attributes):
         widget.setParent(self)
         self.widget = widget
         DOM.appendChild(self.getElement(), widget.getElement())
-        
+
     def removeWidget(self):
         """ remove child widget
         """
         self.widget.removeFromParent()
         DOM.removeChild(self.getElement(), self.widget.getElement())
         self.widget = None
+
+    def setHref(self, url):
+        self.href.set(url)
 
