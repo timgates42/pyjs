@@ -2,33 +2,14 @@
 NOTE: This module is considered deprecated. It's the original implementation
 for backward compatibility. Please use pyjamas.logging.debug() from now on."""
 
-from pyjamas import DOM
-#from pyjamas import logging
-from __pyjamas__ import doc
+from pyjamas import logging
 
-__data = ""
-__element = None
-#__logger = logging.getAppendLogger()
-
-def __getBodyElement():
-    return doc().body
-
-def __add_elem():
-    global __element
-    if __element is not None:
-        return
-    __element = DOM.createDiv()
-    DOM.appendChild(__getBodyElement(), __element)
+__logger = logging.getAppendLogger('log', logging.DEBUG, '%(message)s')
 
 def write(text):
     """@deprecated(since='0.8', replacement=logging.debug)"""
-    global __data
-    __add_elem()
-    text = text.replace("\n", "<br />\n")
-    __data += text
-    DOM.setInnerHTML(__element, __data)
-    #global __logger
-    #__logger.debug(text)
+    global __logger
+    __logger.debug(text)
 
 def writebr(text):
     """@deprecated(since='0.8', replacement=logging.debug)"""
