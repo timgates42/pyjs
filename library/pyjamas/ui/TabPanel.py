@@ -27,6 +27,7 @@ class TabPanel(PanelBase, Composite):
         self.children = [] # TODO: can self.children be used instead?
         self.tab_names = {} 
         self.deck = kwargs.pop('Deck', None)
+        floatingtab = kwargs.pop('FloatingTab', False)
         if self.deck is None:
             self.deck = DeckPanel(StyleName="gwt-TabPanelBottom")
         if tabBar is None:
@@ -40,7 +41,8 @@ class TabPanel(PanelBase, Composite):
         element = kwargs.pop('Element', None)
 
         panel = VerticalPanel(Element=element)
-        panel.add(self.tabBar)
+        if not floatingtab:
+            panel.add(self.tabBar)
         if self.deck.getParent() is None:
             panel.add(self.deck)
             panel.setCellHeight(self.deck, "100%")
