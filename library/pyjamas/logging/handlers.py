@@ -46,5 +46,5 @@ class ConsoleHandler(Handler):
     def emit(self, record):
         msg = self.format(record)
         msg = msg.replace("'", "\\'")
-        JS(""" console.log('%s') """ % msg)
+        JS(" console.log(@{{msg}}); ")
 
