@@ -8,7 +8,7 @@ from __pyjamas__ import doc, JS
 class AlertHandler(Handler):
     """A log output handler displaying any log message using an alert popup."""
     def __init__(self):
-        super(AlertHandler, self).__init__()
+        Handler.__init__(self)
 
     def emit(self, record):
         msg = self.format(record)
@@ -23,7 +23,6 @@ class AppendHandler(Handler):
     output = ''
 
     def __init__(self, logger_name):
-        #super(AppendHandler, self).__init__()
         Handler.__init__(self)
         self.div_id = "logging_" + logger_name
         self.div_id = self.div_id.replace(' ', '_').replace('.', '')
@@ -47,7 +46,7 @@ class AppendHandler(Handler):
 class ConsoleHandler(Handler):
     """A log output handler making use of Firebug's console.log() function."""
     def __init__(self):
-        super(ConsoleHandler, self).__init__()
+        Handler.__init__(self)
 
     def emit(self, record):
         msg = self.format(record)
