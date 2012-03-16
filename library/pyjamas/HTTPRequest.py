@@ -15,7 +15,6 @@ class XULrunnerHackCallback(object):
         pass
 
     def callback(self):
-        print "callback"
         return self.htr.asyncImpl(self.mode, self.user, self.pwd, self.url,
                                   self.postData, self.handler, self.return_xml, 
                                   self.content_type, self.headers)
@@ -93,8 +92,8 @@ class HTTPRequest(object):
         #print "status", status
         #print "local handler", localHandler
         # XXX HACK! webkit wrapper returns 0 not 200!
-        if status == 0:
-            print "HACK ALERT! webkit wrapper returns 0 not 200!"
+        #if status == 0:
+        #    print "HACK ALERT! webkit wrapper returns 0 not 200!"
         if status == 200 or status == 0:
             localHandler.onCompletion(responseText)
         else :
@@ -146,7 +145,7 @@ class HTTPRequest(object):
         xmlHttp = self.doCreateXmlHTTPRequest()
         url = self._convertUrlToAbsolute(url)
 
-        print "xmlHttp", method, user, pwd, url, postData, handler, dir(xmlHttp)
+        #print "xmlHttp", method, user, pwd, url, postData, handler, dir(xmlHttp)
 
         if mf.platform == 'webkit':
             mf._addXMLHttpRequestEventListener(
@@ -170,7 +169,7 @@ class HTTPRequest(object):
                 res = xmlHttp.open(method, url, True, '', '')
             except:
                 res = xmlHttp.open(method, url)
-            print url, res
+            #print url, res
         for h in headers:
             if isinstance(headers[h], basestring):
                 xmlHttp.setRequestHeader(h, headers[h])
