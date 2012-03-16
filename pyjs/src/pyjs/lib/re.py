@@ -343,8 +343,12 @@ class SRE_Pattern:
             m = self.search(string, pos)
             if m is None:
                 break
-            all.append(m.groups())
-            pos = m.end()
+            span = m.span()
+            if not m.groups():
+                all.append(string[span[0]:span[1]])
+            else:
+                all.append(tuple([group or '' for group in m.groups()]))
+            pos = span[1]
         return all
         # Next line bugs in FF2
         return list(string[pos:].match(self.findall_code))
