@@ -23,7 +23,8 @@ class AppendHandler(Handler):
     output = ''
 
     def __init__(self, logger_name):
-        super(AppendHandler, self).__init__()
+        #super(AppendHandler, self).__init__()
+        Handler.__init__(self)
         self.div_id = "logging_" + logger_name
         self.div_id = self.div_id.replace(' ', '_').replace('.', '')
 
