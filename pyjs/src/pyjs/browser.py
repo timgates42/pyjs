@@ -69,6 +69,7 @@ class BrowserLinker(linker.BaseLinker):
         self.multi_file = kwargs.pop('multi_file', False)
         self.cache_buster = kwargs.pop('cache_buster', False)
         self.bootstrap_file = kwargs.pop('bootstrap_file', 'bootstrap.js')
+        self.apploader_file = kwargs.pop('apploader_file', None)
         self.public_folder = kwargs.pop('public_folder', 'public')
         self.runtime_options = kwargs.pop('runtime_options', [])
         super(BrowserLinker, self).__init__(*args, **kwargs)
@@ -111,8 +112,7 @@ class BrowserLinker(linker.BaseLinker):
         self.app_files[platform] = self._generate_app_file(platform)
 
     def visit_end(self):
-        html_output_filename = os.path.join(self.output, self.top_module + '.html')
-        self._create_app_html(html_output_filename)
+        self._create_app_html()
         self._create_nocache_html()
         if not self.keep_lib_files:
             for fname in self.remove_files:
@@ -307,7 +307,7 @@ class BrowserLinker(linker.BaseLinker):
             ))
         out_file.close()
 
-    def _create_app_html(self, file_name):
+    def _create_app_html(self):
         """ Checks if a base HTML-file is available in the Pyjamas
         output directory, and injects the bootstrap loader script tag.
         If the HTML-file isn't available, it will be created.
@@ -321,6 +321,13 @@ class BrowserLinker(linker.BaseLinker):
         "pyjamas_default.css", and if found it will be referenced
         in the generated HTML-file.
         """
+
+        html_output_filename = os.path.join(self.output,
+                                            self.top_module + '.html')
+        if self.apploader_file is None:
+            file_name = html_output_filename 
+        else:
+            file_name = self.apploader_file
 
         if os.path.exists(file_name):
             fh = open(file_name, 'r')
@@ -376,7 +383,7 @@ class BrowserLinker(linker.BaseLinker):
         base_html = base_html.replace(body_end,
                                       script_tag +'\n'+ iframe_tag +'\n'+ body_end)
 
-        fh = open(file_name, 'w')
+        fh = open(html_output_filename, 'w')
         fh.write(base_html)
         fh.close()
         return created
@@ -415,6 +422,7 @@ def build(top_module, pyjs, options, app_platforms,
                       multi_file=options.multi_file,
                       cache_buster=options.cache_buster,
                       bootstrap_file=options.bootstrap_file,
+                      apploader_file=options.apploader_file,
                       public_folder=options.public_folder,
                       runtime_options=runtime_options,
                       list_imports=options.list_imports,
@@ -478,6 +486,12 @@ def build_script():
         )
 
     parser.add_option(
+        "--apploader-file",
+        dest="apploader_file",
+        help="Specify the application html loader file."
+        )
+
+    parser.add_option(
         "--bootstrap-file",
         dest="bootstrap_file",
         help="Specify the bootstrap code. (Used when application html file is generated)."
@@ -528,6 +542,7 @@ def build_script():
                         library_dirs=[],
                         platforms=(','.join(AVAILABLE_PLATFORMS)),
                         bootstrap_file="bootstrap.js",
+                        apploader_file=None,
                         public_folder="public",
                         unlinked_modules=[],
                         )
