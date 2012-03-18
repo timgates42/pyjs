@@ -187,11 +187,11 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
 
 
     def setJustification(self, justification):
-        if justification == Justification.CENTER:
+        if justification == RichTextArea.CENTER:
             self.execCommand("JustifyCenter", '')
-        elif justification == Justification.LEFT:
+        elif justification == RichTextArea.LEFT:
             self.execCommand("JustifyLeft", '')
-        elif justification == Justification.RIGHT:
+        elif justification == RichTextArea.RIGHT:
             self.execCommand("JustifyRight", '')
 
 
@@ -256,10 +256,6 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
         return self.elem.contentWindow.document.body.textContent
 
     def __gwt_handler(self, view, evt, from_window):
-        try:
-            evt = get_main_frame().gobject_wrap(evt) # webkit HACK!
-        except:
-            pass
 
         listener = DOM.get_listener(self.elem)
         if listener is not None:
