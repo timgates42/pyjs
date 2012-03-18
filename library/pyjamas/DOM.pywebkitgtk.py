@@ -54,3 +54,13 @@ def getAbsoluteTop(elem):
     
     return top
 
+def buttonClick(element):
+    evt = doc().createEvent('MouseEvents')
+    mf = get_main_frame()
+    target = mf.EventTarget(element)
+    target.setptr(element.getptr()) # dreadful hack that actually works. wow.
+    evt.initMouseEvent("click", True, True, wnd(), 1, 0, 0, 0, 0, False,
+                        False, False, False, 0, target)
+    element.dispatchEvent(evt)
+
+

@@ -181,6 +181,7 @@ class Browser:
         #main_frame.gobject_wrap = pywebkit.gobject_wrap
         main_frame.platform = 'webkit'
         main_frame.getUri = self.getUri
+        main_frame.EventTarget = pywebkit.EventTarget
 
         set_main_frame(main_frame)
 

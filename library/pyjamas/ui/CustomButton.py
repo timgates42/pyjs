@@ -319,6 +319,7 @@ class CustomButton (ButtonBase):
                 return
 
         elif event_type == "mousedown":
+            print "down", DOM.eventGetButton(event) 
             if DOM.eventGetButton(event) == Event.BUTTON_LEFT:
                 self.setFocus(True)
                 self.onClickStart()
