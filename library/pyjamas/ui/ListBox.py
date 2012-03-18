@@ -96,13 +96,6 @@ class ListBox(FocusWidget, ChangeHandler):
         option = DOM.getChild(self.getElement(), index)
         return DOM.getBooleanAttribute(option, "selected")
 
-    def onBrowserEvent(self, event):
-        etype = DOM.eventGetType(event)
-        if etype == "change":
-            ChangeHandler.onBrowserEvent(self, event)
-        else:
-            FocusWidget.onBrowserEvent(self, event)
-
     def removeItem(self, idx):
         child = DOM.getChild(self.getElement(), idx)
         DOM.removeChild(self.getElement(), child)

@@ -22,6 +22,8 @@ from pyjamas.ui.ClickListener import ClickHandler
 from pyjamas.ui.FocusListener import FocusHandler
 from pyjamas.ui.KeyboardListener import KeyboardHandler
 from pyjamas.ui.MouseListener import MouseHandler, MouseWheelHandler
+from pyjamas.ui.InputListener import InputHandler
+from pyjamas.ui.ChangeListener import ChangeHandler
 from pyjamas.ui.DragHandler import DragHandler
 from pyjamas.ui.DropHandler import DropHandler
 
@@ -76,6 +78,10 @@ class Widget(UIObject):
             FocusHandler.onBrowserEvent(self, event)
         if hasattr(self, "_dragListeners"):
             DragHandler.onBrowserEvent(self, event)
+        if hasattr(self, "_changeListeners"):
+            ChangeHandler.onBrowserEvent(self, event)
+        if hasattr(self, "_inputListeners"):
+            InputHandler.onBrowserEvent(self, event)
         if hasattr(self, "_dropListeners"):
             DropHandler.onBrowserEvent(self, event)
 

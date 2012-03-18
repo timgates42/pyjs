@@ -82,15 +82,6 @@ class TextBoxBase(FocusWidget, ChangeHandler, InputHandler):
     def getText(self):
         return DOM.getAttribute(self.getElement(), "value")
 
-    def onBrowserEvent(self, event):
-        etype = DOM.eventGetType(event)
-        if etype == "change":
-            ChangeHandler.onBrowserEvent(self, event)
-        elif etype == "input":
-            InputHandler.onBrowserEvent(self, event)
-        else:
-            FocusWidget.onBrowserEvent(self, event)
-
     def selectAll(self):
         length = len(self.getText())
         if length > 0:
