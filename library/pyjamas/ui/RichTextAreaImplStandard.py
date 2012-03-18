@@ -88,7 +88,7 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
         Timer(50, self)
 
     def insertHorizontalRule(self):
-        self.execCommand("InsertHorizontalRule", None)
+        self.execCommand("InsertHorizontalRule", '')
 
 
     def insertImage(self, url):
@@ -96,11 +96,11 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
 
 
     def insertOrderedList(self):
-        self.execCommand("InsertOrderedList", None)
+        self.execCommand("InsertOrderedList", '')
 
 
     def insertUnorderedList(self):
-        self.execCommand("InsertUnorderedList", None)
+        self.execCommand("InsertUnorderedList", '')
 
 
     def isBasicEditingSupported(self):
@@ -136,11 +136,11 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
 
 
     def leftIndent(self):
-        self.execCommand("Outdent", None)
+        self.execCommand("Outdent", '')
 
 
     def removeFormat(self):
-        self.execCommand("RemoveFormat", None)
+        self.execCommand("RemoveFormat", '')
 
 
     def removeLink(self):
@@ -148,11 +148,11 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
 
 
     def rightIndent(self):
-        self.execCommand("Indent", None)
+        self.execCommand("Indent", '')
 
 
     def selectAll(self):
-        self.execCommand("SelectAll", None)
+        self.execCommand("SelectAll", '')
 
 
     def setBackColor(self, color):
@@ -188,11 +188,11 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
 
     def setJustification(self, justification):
         if justification == Justification.CENTER:
-            self.execCommand("JustifyCenter", None)
+            self.execCommand("JustifyCenter", '')
         elif justification == Justification.LEFT:
-            self.execCommand("JustifyLeft", None)
+            self.execCommand("JustifyLeft", '')
         elif justification == Justification.RIGHT:
-            self.execCommand("JustifyRight", None)
+            self.execCommand("JustifyRight", '')
 
 
 
