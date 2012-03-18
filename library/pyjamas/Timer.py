@@ -15,6 +15,7 @@
 from pyjamas import Window
 from __pyjamas__ import JS, get_main_frame
 import pyjd
+from traceback import print_exc # used in Timer.pywebkitgtknew.py for debugging
 
 class Timer(object):
 
