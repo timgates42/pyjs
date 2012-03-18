@@ -4,3 +4,7 @@ def enableScrolling(enable):
 def setMargin(size):
     doc().body.style.setProperty("margin", size, '')
 
+def prompt(msg, defaultReply=""):
+    return wnd().prompt(msg, defaultReply)
+
+
