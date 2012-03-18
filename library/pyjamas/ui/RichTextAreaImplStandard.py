@@ -286,18 +286,18 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
         win = elem.contentWindow;
 
         mf = get_main_frame()
-        mf._addWindowEventListener('keydown', self.__gwt_handler, win)
-        mf._addWindowEventListener('keyup', self.__gwt_handler, win)
-        mf._addWindowEventListener('keypress', self.__gwt_handler, win)
-        mf._addWindowEventListener('mousedown', self.__gwt_handler, win)
-        mf._addWindowEventListener('mouseup', self.__gwt_handler, win)
-        mf._addWindowEventListener('mousemove', self.__gwt_handler, win)
-        mf._addWindowEventListener('mouseover', self.__gwt_handler, win)
-        mf._addWindowEventListener('mouseout', self.__gwt_handler, win)
-        mf._addWindowEventListener('click', self.__gwt_handler, win)
+        mf._addWindowEventListener('keydown', self.__gwt_handler)#, win)
+        mf._addWindowEventListener('keyup', self.__gwt_handler)#, win)
+        mf._addWindowEventListener('keypress', self.__gwt_handler)#, win)
+        mf._addWindowEventListener('mousedown', self.__gwt_handler)#, win)
+        mf._addWindowEventListener('mouseup', self.__gwt_handler)#, win)
+        mf._addWindowEventListener('mousemove', self.__gwt_handler)#, win)
+        mf._addWindowEventListener('mouseover', self.__gwt_handler)#, win)
+        mf._addWindowEventListener('mouseout', self.__gwt_handler)#, win)
+        mf._addWindowEventListener('click', self.__gwt_handler)#, win)
 
-        mf._addWindowEventListener('focus', self.__gwt_focus_handler, win)
-        mf._addWindowEventListener('blur', self.__gwt_blur_handler, win)
+        mf._addWindowEventListener('focus', self.__gwt_focus_handler)#, win)
+        mf._addWindowEventListener('blur', self.__gwt_blur_handler)#, win)
 
 
     def onElementInitialized(self):
