@@ -16,9 +16,11 @@ from pyjamas import DOM
 from pyjamas import Factory
 from __pyjamas__ import console, JS
 from pyjamas.ui.FocusWidget import FocusWidget
+from pyjamas.ui.ChangeListener import ChangeHandler
+from pyjamas.ui.InputListener import InputHandler
 from pyjamas.ui import Event
 
-class TextBoxBase(FocusWidget):
+class TextBoxBase(FocusWidget, ChangeHandler, InputHandler):
     ALIGN_CENTER = "center"
     ALIGN_JUSTIFY = "justify"
     ALIGN_LEFT = "left"
@@ -29,19 +31,15 @@ class TextBoxBase(FocusWidget):
             ]
 
     def __init__(self, element, **kwargs):
-        self.changeListeners = []
-        self.inputListeners = []
         self.currentEvent = None
 
         FocusWidget.__init__(self, element, **kwargs)
-        self.sinkEvents(Event.ONCHANGE | Event.ONINPUT)
+        ChangeHandler.__init__(self)
+        InputHandler.__init__(self)
 
     @classmethod
     def _getProps(self):
         return FocusWidget._getProps() + self._props
-
-    def addChangeListener(self, listener):
-        self.changeListeners.append(listener)
 
     def cancelKey(self):
         if self.currentEvent is not None:
@@ -85,26 +83,13 @@ class TextBoxBase(FocusWidget):
         return DOM.getAttribute(self.getElement(), "value")
 
     def onBrowserEvent(self, event):
-        FocusWidget.onBrowserEvent(self, event)
-
-        type = DOM.eventGetType(event)
-        if type == "change":
-            for listener in self.changeListeners:
-                if hasattr(listener, 'onChange'): listener.onChange(self)
-                else: listener(self)
-        if type == "input":
-            for listener in self.inputListeners:
-                if hasattr(listener, 'onInput'): listener.onInput(self)
-                else: listener(self)
-                
-    def addInputListener(self, listener):
-        self.inputListeners.append(listener)
-        
-    def removeInputListener(self, listener):
-        self.inputListeners.remove(listener)
-
-    def removeChangeListener(self, listener):
-        self.changeListeners.remove(listener)
+        etype = DOM.eventGetType(event)
+        if etype == "change":
+            ChangeHandler.onBrowserEvent(self, event)
+        elif etype == "input":
+            InputHandler.onBrowserEvent(self, event)
+        else:
+            FocusWidget.onBrowserEvent(self, event)
 
     def selectAll(self):
         length = len(self.getText())
