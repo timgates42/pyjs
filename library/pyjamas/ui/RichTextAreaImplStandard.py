@@ -246,6 +246,7 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
         html = self.getHTML()
         self.beforeInitPlaceholder = DOM.createDiv()
         DOM.setInnerHTML(self.beforeInitPlaceholder, html)
+        self.elem.contentWindow.document.designMode = 'Off'
 
 
     def getHTMLImpl(self):
