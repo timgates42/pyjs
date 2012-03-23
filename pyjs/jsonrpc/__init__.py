@@ -1,4 +1,5 @@
 import sys
+import traceback
 
 # some dog's dinner random ways to get a json library from somewhere... 
 try:
@@ -39,10 +40,14 @@ class JSONRPCServiceBase:
                 return self.response(msgid, result)
             except BaseException:
                 etype, eval, etb = sys.exc_info()
-                return self.error(msgid, 100, '%s: %s' %(etype.__name__, eval))
+                tb = traceback.format_tb(etb)
+                return self.error(msgid, 100, '%s: %s\n%s' % \
+                        (etype.__name__, eval, '\n'.join(tb)))
             except:
                 etype, eval, etb = sys.exc_info()
-                return self.error(msgid, 100, 'Exception %s: %s' %(etype, eval))
+                tb = traceback.format_tb(etb)
+                return self.error(msgid, 100, '%s: %s\n%s' % \
+                        (etype.__name__, eval, '\n'.join(tb)))
         else:
             return self.error(msgid, 100, 'method "%s" does not exist' % method)
 

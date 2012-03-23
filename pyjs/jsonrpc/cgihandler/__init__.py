@@ -29,11 +29,13 @@ def read_data():
         data = ""
     return data
 
-def write_data(data):
+def write_data(data, cookies):
     if not isinstance(data, list):
         data = [data]
     data = "\n".join(data)
     response = "Content-Type: text/plain\n"
+    if cookies:
+        response += cookies
     response += "Content-Length: %d\n\n" % len(data)
     response += data
     
@@ -49,6 +51,8 @@ def write_data(data):
 
 class CGIJSONRPCService(JSONRPCServiceBase):
     def __call__(self):
+        self.__cookies = os.environ.get('HTTP_COOKIE', '')
         d = read_data() # TODO: handle partial data
-        write_data(self.process(d))
+        self.__cookies = None
+        write_data(self.process(d), self.__cookies)
 
