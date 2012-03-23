@@ -517,6 +517,13 @@ class ListTest(UnitTest):
         a = list(range(10))
         del a[9::1<<333]        
 
+    def testStr(self):
+        self.assertEqual(str([0,1]), "[0, 1]")
+
+    def testRepr(self):
+        self.assertEqual(repr([0,1]), "[0, 1]")
+
+
 class A:
     def __cmp__(self, other):
         return -1

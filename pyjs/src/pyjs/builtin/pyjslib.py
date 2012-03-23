@@ -4129,6 +4129,9 @@ class tuple:
 
     def __rmul__(self, n):
         return self.__mul__(n)
+JS("@{{tuple}}.__str__ = @{{tuple}}.__repr__;")
+JS("@{{tuple}}.toString = @{{tuple}}.__str__;")
+
 
 class NotImplementedType(object):
     def __repr__(self):

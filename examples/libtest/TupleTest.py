@@ -43,3 +43,9 @@ class TupleTest(UnitTest):
                 break
             self.assertEqual(item, t[i])
             i += 1
+
+    def testStr(self):
+        self.assertEqual(str((0,1)), "(0, 1)")
+
+    def testRepr(self):
+        self.assertEqual(repr((0,1)), "(0, 1)")
