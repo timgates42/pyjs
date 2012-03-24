@@ -60,7 +60,9 @@ class SinkInfo:
         self.instance=None
 
     def createInstance(self):
-        return self.object_type()
+        obj = self.object_type()
+        obj.name = self.name
+        return obj
 
     def getDescription(self):
         return self.description
