@@ -1,7 +1,6 @@
 from pyjamas.ui.Composite import Composite
 from pyjamas.ui.VerticalPanel import VerticalPanel
 from pyjamas.ui.Hyperlink import Hyperlink
-from Logger import Logger
 
 class SinkList(Composite):
     def __init__(self):
@@ -14,7 +13,7 @@ class SinkList(Composite):
         self.initWidget(self.vp_list)
         self.setStyleName("ks-List")
 
-    def addSink(self, info):
+    def add(self, info):
         name = info.getName()
         link = Hyperlink(name, False, TargetHistoryToken=name)
         link.setStyleName("ks-SinkItem")
@@ -40,3 +39,37 @@ class SinkList(Composite):
                 return
 
 
+class Sink(Composite):
+    def __init__(self):
+        Composite.__init__(self)
+    
+    def onHide(self):
+        pass
+        
+    def onShow(self):
+        pass
+
+    def baseURL(self):
+        return ""
+
+class SinkInfo:
+    def __init__(self, name, desc, object_type):
+        self.name=name
+        self.description=desc
+        self.object_type=object_type
+        self.instance=None
+
+    def createInstance(self):
+        return self.object_type()
+
+    def getDescription(self):
+        return self.description
+
+    def getInstance(self):
+        if self.instance is None:
+            self.instance = self.createInstance()
+        return self.instance
+    
+    def getName(self):
+        return self.name
+    

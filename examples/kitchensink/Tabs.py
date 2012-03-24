@@ -1,4 +1,4 @@
-from Sink import Sink, SinkInfo
+from pyjamas.ui.Sink import Sink, SinkInfo
 from pyjamas.ui.TabPanel import TabPanel
 from pyjamas.ui import HasAlignment
 from pyjamas.ui.Image import Image

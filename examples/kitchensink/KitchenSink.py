@@ -8,7 +8,7 @@ from pyjamas.ui import HasAlignment
 from pyjamas.ui.Hyperlink import Hyperlink
 from pyjamas.ui.VerticalPanel import VerticalPanel
 from pyjamas import Window
-from SinkList import SinkList
+from pyjamas.ui.Sink import SinkList
 from pyjamas import History
 import Info
 import Buttons
@@ -94,23 +94,21 @@ class KitchenSink:
         self.curSink.onShow()
         
     def loadSinks(self):
-        self.sink_list.addSink(Info.init())
-        self.sink_list.addSink(Buttons.init())
-        self.sink_list.addSink(Menus.init())
-        self.sink_list.addSink(Images.init())
-        self.sink_list.addSink(Layouts.init())
-        self.sink_list.addSink(Lists.init())
-        self.sink_list.addSink(Popups.init())
-        self.sink_list.addSink(Tables.init())
-        self.sink_list.addSink(Text.init())
-        self.sink_list.addSink(Trees.init())
-        self.sink_list.addSink(Frames.init())
-        self.sink_list.addSink(Tabs.init())
+        self.sink_list.add(Info.init())
+        self.sink_list.add(Buttons.init())
+        self.sink_list.add(Menus.init())
+        self.sink_list.add(Images.init())
+        self.sink_list.add(Layouts.init())
+        self.sink_list.add(Lists.init())
+        self.sink_list.add(Popups.init())
+        self.sink_list.add(Tables.init())
+        self.sink_list.add(Text.init())
+        self.sink_list.add(Trees.init())
+        self.sink_list.add(Frames.init())
+        self.sink_list.add(Tabs.init())
 
     def showInfo(self):
         self.show(self.sink_list.find("Info"), False)
-
-
 
 
 if __name__ == '__main__':
