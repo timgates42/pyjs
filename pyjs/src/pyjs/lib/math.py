@@ -54,5 +54,8 @@ def radians(x):
     return x * pi / 180
 
 def hypot(x,y):
-    return sqrt(x*x + y*y)
-    
+    x = abs (x)
+    y = abs (y)
+    x, y = (max(x, y), min(x, y))
+    return x * sqrt(1 + (y/x) * (y/x))
+
