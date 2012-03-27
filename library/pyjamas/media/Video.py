@@ -22,10 +22,12 @@ from pyjamas import DOM
 """
 class Video(Media):
     
-    def __init__(self, src=None):
+    def __init__(self, src=None, **kwargs):
         self.setElement(DOM.createElement("video"))
         if src:
             self.setSrc(src)
+
+        Media.__init__(self, **kwargs)
 
     def getVideoWidth(self):
         return self.getElement().videoWidth
