@@ -15,9 +15,8 @@
 """
 
 
-from pyjamas import Event
+from pyjamas.ui import Event
 from pyjamas import DOM
-from pyjamas import EventListener
 from pyjamas.ui.Widget import Widget
 
 class Media(Widget):
@@ -32,6 +31,12 @@ class Media(Widget):
     HasStalledHandlers, HasSuspendHandlers, HasTimeUpdateHandlers,
     HasVolumeChangeHandlers, HasWaitingHandlers, HasAllMouseHandlers,
     HasClickHandlers"""
+    
+    def __init__(self, **kwargs):
+        self.mediaEventsToSink = 0
+        self.mediaEventsInitialized = False
+    
+        Widget.__init__(self, **kwargs)
     
     def setSrc(self, src):
         DOM.setAttribute(self.getElement(), 'src', src)
@@ -140,10 +145,10 @@ class Media(Widget):
     * @param controls Whether the browser should show playback controls
     """
     def setControls(self, controls):
-        DOM.setBooleanAttr(self.getElement(), "controls", controls)
+        DOM.setBooleanAttribute(self.getElement(), "controls", controls)
     
     def hasControls(self):
-        DOM.getBooleanAttr(self.getElement(), "controls")
+        DOM.getBooleanAttribute(self.getElement(), "controls")
     
     def isMuted(self):
         return self.getElement().muted
@@ -194,14 +199,12 @@ class Media(Widget):
     * @param handler the {@link CanPlayThroughHandler} to be called
     """
     
-    HandlerRegistration addCanPlayThroughHandler(
-    CanPlayThroughHandler handler) {
+    def addCanPlayThroughHandler(self, handler):
         return self.addMediaEventHandler(handler, CanPlayThroughEvent.getType())
     
     
     
-    HandlerRegistration addDurationChangeHandler(
-    DurationChangeHandler handler) {
+    def addDurationChangeHandle(self, handler):
         return self.addMediaEventHandler(handler, DurationChangeEvent.getType())
     
     
@@ -270,8 +273,7 @@ class Media(Widget):
     * @param handler the {@link LoadedMetadataHandler} to be called
     """
     
-    HandlerRegistration addLoadedMetadataHandler(
-    LoadedMetadataHandler handler) {
+    def addLoadedMetadataHandler(self, handler):
         return self.addMediaEventHandler(handler, LoadedMetadataEvent.getType())
     
     
@@ -402,11 +404,9 @@ class Media(Widget):
         return self.addMediaEventHandler(handler, WaitingEvent.getType())
     
     
-    int mediaEventsToSink = 0
-    
     def addMediaEventHandler(self, handler, etype):
-        assert handler is not None : "handler must not be None"
-        assert etype is not None : "type must not be None"
+        assert handler is not None, "handler must not be None"
+        assert etype is not None, "type must not be None"
         self.maybeInitMediaEvents()
         self.sinkMediaEvents(mediaEventGetTypeInt(etype.getName()))
         return addHandler(handler, etype)
@@ -446,10 +446,10 @@ class Media(Widget):
     
     
     def sinkMediaEvents(self, eventBitsToAdd):
-        if isOrWasAttached():
-            nativeSinkMediaEvents(self.getElement(), eventBitsToAdd)
-         else:
-            mediaEventsToSink |= eventBitsToAdd
+        if self.isOrWasAttached():
+            self.nativeSinkMediaEvents(self.getElement(), eventBitsToAdd)
+        else:
+            self.mediaEventsToSink |= eventBitsToAdd
         
     
     
@@ -459,12 +459,11 @@ class Media(Widget):
     * element.
     """
     def doAttachChildren(self):
-        int bitsToAdd = mediaEventsToSink
-        mediaEventsToSink = -1
+        bitsToAdd = self.mediaEventsToSink
+        self.mediaEventsToSink = -1
         if bitsToAdd > 0:
-            nativeSinkMediaEvents(self.getElement(), bitsToAdd)
+            self.nativeSinkMediaEvents(self.getElement(), bitsToAdd)
         
-    
     
     def nativeSinkMediaEvents(self, elem, bits):
         JS("""
@@ -575,8 +574,6 @@ class Media(Widget):
     def addClickHandler(self, handler):
         return addDomHandler(handler, ClickEvent.getType())
     
-    
-    boolean mediaEventsInitialized = False
     
     def maybeInitMediaEvents(self):
         if not mediaEventsInitialized:

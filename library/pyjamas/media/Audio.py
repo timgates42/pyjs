@@ -22,9 +22,10 @@ from pyjamas import DOM
 """
 class Audio(Media):
     
-    def __init__(self, src=None):
+    def __init__(self, src=None, **kwargs):
         self.setElement(DOM.createElement("audio"))
         if src:
             self.setSrc(src)
     
+        Media.__init__(self, **kwargs)
 
