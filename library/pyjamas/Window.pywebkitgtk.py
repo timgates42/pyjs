@@ -7,3 +7,6 @@ def setMargin(size):
 def prompt(msg, defaultReply=""):
     return wnd().prompt(msg, defaultReply)
 
+def open(url):
+    get_main_frame().open(url)
+

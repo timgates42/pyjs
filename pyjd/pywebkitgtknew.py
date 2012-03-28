@@ -166,6 +166,11 @@ class Browser:
         settings = self._view.get_property('settings')
         settings.set_property('enable-file-access-from-file-uris', True)
 
+    def open(self, url):
+        
+        v = Browser(url)
+        v.load_app()
+
     def getUri(self):
         return self.application
 
