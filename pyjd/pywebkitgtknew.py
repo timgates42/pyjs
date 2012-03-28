@@ -166,10 +166,12 @@ class Browser:
         settings = self._view.get_property('settings')
         settings.set_property('enable-file-access-from-file-uris', True)
 
-    def open(self, url):
-        
-        v = Browser(url)
-        v.load_app()
+    def open(self, url, name="_blank", _specs=""):
+        specs = dict([kv.split('=') for kv in _specs.split(',')])
+        width = int(specs.get('width', 800))
+        height = int(specs.get('height', 600))
+        wv = pywebkit.WebView(width, height, url)
+        return wv.GetDomWindow()
 
     def getUri(self):
         return self.application
