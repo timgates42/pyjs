@@ -6,19 +6,25 @@ from pyjamas import Window
 
 if __name__ == '__main__':
     pyjd.setup("public/Media.html?fred=foo#me")
-    v = Video(Width="640px", Height="480px",
-              StyleName="vteststyle",
+    if False:
+        v = Video(Width="640px", Height="480px",
+              StyleName="teststyle",
               Autoplay=True,
               Controls=True,
-              src="http://127.0.0.1/home/kiss.the.girl.mp4")
+              #src="http://127.0.0.1/home/kiss.the.girl.mp4")
+              #src="file:/home/lkcl/kiss.the.girl.mp4")
+              src="file:/home/lkcl/gizmo.webm")
+        RootPanel().add(v)
     
-    a = Audio(Width="640px", Height="50px",
-              StyleName="ateststyle",
+    if True:
+        a = Audio(Width="640px", Height="50px",
+              StyleName="teststyle",
               Autoplay=True,
               Controls=True,
-              src="http://127.0.0.1/home/Lry_Crane_Copy.mp3")
+              #src="http://127.0.0.1/home/Lry_Crane_Copy.mp3")
+              #src="file:/home/lkcl/Lry_Crane_Copy.mp3")
+              src="file:/home/lkcl/test.ogg")
+        RootPanel().add(a)
     
-    RootPanel().add(a)
-    #RootPanel().add(v)
 
     pyjd.run()
