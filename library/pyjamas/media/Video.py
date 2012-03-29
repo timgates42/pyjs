@@ -29,9 +29,11 @@ class Video(Media):
 
         Media.__init__(self, **kwargs)
 
+    def setSrc(self, src):
+        Media.setSrc(self, src)
+
     def setControls(self, controls):
         Media.setControls(self, controls)
-
 
     def setStatusbar(self, statusbar):
         Media.setStatusbar(self, statusbar)
