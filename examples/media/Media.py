@@ -6,17 +6,17 @@ from pyjamas import Window
 
 if __name__ == '__main__':
     pyjd.setup("public/Media.html?fred=foo#me")
-    if False:
-        v = Video(Width="640px", Height="480px",
+    if True:
+        v = Video(Width="640", Height="480",
               StyleName="teststyle",
               Autoplay=True,
               Controls=True,
-              #src="http://127.0.0.1/home/kiss.the.girl.mp4")
+              src="http://172.20.0.1/home/kiss.the.girl.mp4")
               #src="file:/home/lkcl/kiss.the.girl.mp4")
-              src="file:/home/lkcl/gizmo.webm")
+              #src="file:/home/lkcl/gizmo.webm")
         RootPanel().add(v)
     
-    if True:
+    if False:
         a = Audio(Width="640px", Height="50px",
               StyleName="teststyle",
               Autoplay=True,
