@@ -170,8 +170,8 @@ class Browser:
         specs = dict([kv.split('=') for kv in _specs.split(',')])
         width = int(specs.get('width', 800))
         height = int(specs.get('height', 600))
-        wv = pywebkit.WebView(width, height, url)
-        return wv.GetDomWindow()
+        v = Browser(url, width=width, height=height)
+        v.load_app()
 
     def getUri(self):
         return self.application
