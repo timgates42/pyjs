@@ -23,7 +23,7 @@ class Video(Media):
         self.srcparam = DOM.createElement("PARAM")
         DOM.setAttribute(self.srcparam, "name", "FileName")
         DOM.setAttribute(self.srcparam, "VALUE", src)
-        obj.appendChild(self.srcparam)
+        self.getElement().appendChild(self.srcparam)
 
     def setControls(self, controls):
         print "setControls", controls
@@ -31,7 +31,7 @@ class Video(Media):
         DOM.setAttribute(self.ctrlparam, "name", "ShowControls")
         DOM.setBooleanAttribute(self.ctrlparam, "VALUE",
             controls and "true" or "false")
-        obj.appendChild(self.ctrlparam)
+        self.getElement().appendChild(self.ctrlparam)
 
     def setStatusbar(self, statusbar):
         print "setstatus", statusbar
@@ -39,7 +39,7 @@ class Video(Media):
         DOM.setAttribute(self.statparam, "name", "ShowStatusBar")
         DOM.setBooleanAttribute(self.statparam, "VALUE",
             statusbar and "true" or "false")
-        obj.appendChild(self.statparam)
+        self.getElement().appendChild(self.statparam)
 
     def setLoop(self, autorewind):
         print "autorewind", autorewind
@@ -47,7 +47,7 @@ class Video(Media):
         DOM.setAttribute(self.loopparam, "name", "autorewind")
         DOM.setBooleanAttribute(self.loopparam, "VALUE", 
             autorewind and "true" or "false")
-        obj.appendChild(self.loopparam)
+        self.getElement().appendChild(self.loopparam)
 
     def setAutoplay(self, autostart):
         print "autoplay", autostart
@@ -55,5 +55,5 @@ class Video(Media):
         DOM.setAttribute(self.playparam, "name", "autostart")
         DOM.setBooleanAttribute(self.playparam, "VALUE", 
             autostart and "true" or "false")
-        obj.appendChild(self.playparam)
+        self.getElement().appendChild(self.playparam)
 
