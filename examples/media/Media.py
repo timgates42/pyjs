@@ -9,8 +9,6 @@ if __name__ == '__main__':
     if True:
         v = Video(Width="640", Height="480",
               StyleName="teststyle",
-              Autoplay=True,
-              Controls=True,
               src="http://acfauk/public/services/file.py?video=sample&ext=wmv")
               #src="http://172.20.0.1/home/Downloads/Jungle_alcohol.wmv")
               #src="http://172.20.0.1/home/kiss.the.girl.mp4") 
