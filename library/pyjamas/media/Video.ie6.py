@@ -4,10 +4,10 @@ class Video(Media):
     def __init__(self, src=None, **kwargs):
         print "create object"
         obj = DOM.createElement("object")
-        #DOM.setAttribute(obj, "type", "application/x-mplayer2")
-        DOM.setAttribute(obj, "type", "application/x-oleobject")
-        DOM.setAttribute(obj, "classid",
-                                "CLSID:22D6F312-B0F6-11D0-94AB-0080C74C7E95")
+        DOM.setAttribute(obj, "type", "application/x-mplayer2")
+        #DOM.setAttribute(obj, "type", "application/x-oleobject")
+        #DOM.setAttribute(obj, "classid",
+        #                        "CLSID:22D6F312-B0F6-11D0-94AB-0080C74C7E95")
         print "set element"
         self.setElement(obj)
 
@@ -39,24 +39,20 @@ class Video(Media):
         print "setSrc", src
         DOM.setAttribute(self.srcparam, "value", src)
 
-    def setWidth(self, width):
-        print "setWidth", width
-        DOM.setAttribute(self.element, "width", width)
-
-    def setHeight(self, height):
-        print "setHeight", height
-        DOM.setAttribute(self.element, "height", height)
-
     def setControls(self, controls):
         print "setControls", controls
-        DOM.setBooleanAttribute(self.ctrlparam, "value", controls)
+        DOM.setBooleanAttribute(self.ctrlparam, "value",
+            controls and "true" or "false")
 
     def setStatusbar(self, statusbar):
-        DOM.setBooleanAttribute(self.statparam, "value", statusbar)
+        DOM.setBooleanAttribute(self.statparam, "value",
+            statusbar and "true" or "false")
 
     def setLoop(self, autorewind):
-        DOM.setBooleanAttribute(self.loopparam, "value", autorewind)
+        DOM.setBooleanAttribute(self.loopparam, "value", 
+            autorewind and "true" or "false")
 
     def setAutoplay(self, autostart):
-        DOM.setBooleanAttribute(self.playparam, "value", autostart)
+        DOM.setBooleanAttribute(self.playparam, "value", 
+            autostart and "true" or "false")
 
