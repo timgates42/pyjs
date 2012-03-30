@@ -12,7 +12,7 @@ class Video(Media):
         self.setElement(obj)
 
         self.srcparam = DOM.createElement("param")
-        DOM.setAttribute(self.srcparam, "name", "filename")
+        DOM.setAttribute(self.srcparam, "name", "FileName")
         self.ctrlparam = DOM.createElement("param")
         DOM.setAttribute(self.ctrlparam, "name", "ShowControls")
         self.statparam = DOM.createElement("param")
