@@ -11,7 +11,7 @@ if __name__ == '__main__':
               StyleName="teststyle",
               Autoplay=True,
               Controls=True,
-              src="http://acfauk/public/services/file.py?file=sample&ext=wmv")
+              src="http://acfauk/public/services/file.py?video=sample&ext=wmv")
               #src="http://172.20.0.1/home/Downloads/Jungle_alcohol.wmv")
               #src="http://172.20.0.1/home/kiss.the.girl.mp4") 
               #src="file:/home/lkcl/kiss.the.girl.mp4")
