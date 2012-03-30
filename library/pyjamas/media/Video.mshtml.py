@@ -29,7 +29,7 @@ class Video(Media):
     def setSrc(self, src):
         print "setSrc", src
         self.srcparam = DOM.createElement("PARAM")
-        DOM.setAttribute(self.srcparam, "name", "Filename")
+        DOM.setAttribute(self.srcparam, "name", "URL")
         DOM.setAttribute(self.srcparam, "VALUE", src)
         self.getElement().appendChild(self.srcparam)
         #obj = self.getElement()
