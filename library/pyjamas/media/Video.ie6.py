@@ -4,10 +4,10 @@ class Video(Media):
     def __init__(self, src=None, **kwargs):
         print "create object"
         obj = DOM.createElement("OBJECT")
-        DOM.setAttribute(obj, "type", "application/x-mplayer2")
-        #DOM.setAttribute(obj, "type", "application/x-oleobject")
-        #DOM.setAttribute(obj, "classid",
-        #                        "CLSID:22D6F312-B0F6-11D0-94AB-0080C74C7E95")
+        #DOM.setAttribute(obj, "type", "application/x-mplayer2")
+        DOM.setAttribute(obj, "type", "application/x-oleobject")
+        DOM.setAttribute(obj, "CLASSID",
+                                "CLSID:22D6F312-B0F6-11D0-94AB-0080C74C7E95")
         print "set element"
         self.setElement(obj)
 
@@ -17,6 +17,13 @@ class Video(Media):
         print "setSrc"
         if src:
             self.setSrc(src)
+
+        self.setID("MediaPlayer")
+
+        self.dispparam = DOM.createElement("PARAM")
+        DOM.setAttribute(self.dispparam, "name", "ShowDisplay")
+        DOM.setBooleanAttribute(self.dispparam, "VALUE", "false")
+        self.getElement().appendChild(self.dispparam)
 
     def setSrc(self, src):
         print "setSrc", src
