@@ -28,12 +28,12 @@ class Video(Media):
 
     def setSrc(self, src):
         print "setSrc", src
-        #self.srcparam = DOM.createElement("PARAM")
-        #DOM.setAttribute(self.srcparam, "name", "FileName")
-        #DOM.setAttribute(self.srcparam, "VALUE", src)
-        #self.getElement().appendChild(self.srcparam)
-        obj = self.getElement()
-        obj.URL = src
+        self.srcparam = DOM.createElement("PARAM")
+        DOM.setAttribute(self.srcparam, "name", "Filename")
+        DOM.setAttribute(self.srcparam, "VALUE", src)
+        self.getElement().appendChild(self.srcparam)
+        #obj = self.getElement()
+        #obj.URL = src
 
     def setControls(self, controls):
         print "setControls", controls
