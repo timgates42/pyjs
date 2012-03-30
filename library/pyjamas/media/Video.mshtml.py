@@ -4,8 +4,8 @@ class Video(Media):
     def __init__(self, src=None, **kwargs):
         print "create object"
         obj = DOM.createElement("OBJECT")
-        DOM.setAttribute(obj, "TYPE", "application/x-mplayer2")
-        #DOM.setAttribute(obj, "type", "application/x-oleobject")
+        #DOM.setAttribute(obj, "TYPE", "application/x-mplayer2")
+        DOM.setAttribute(obj, "type", "application/x-oleobject")
         #DOM.setAttribute(obj, "classid",
         #                        "CLSID:22D6F312-B0F6-11D0-94AB-0080C74C7E95")
         print "set element"
