@@ -4,14 +4,15 @@ class Video(Media):
     def __init__(self, src=None, **kwargs):
         print "create object"
         obj = DOM.createElement("object")
-        DOM.setAttribute(obj, "type", "application/x-mplayer2")
-        #obj.pluginspage = \
-        #   "http://www.microsoft.com/windows/windowsmedia/default.aspx"
+        #DOM.setAttribute(obj, "type", "application/x-mplayer2")
+        DOM.setAttribute(obj, "type", "application/x-oleobject")
+        DOM.setAttribute(obj, "classid",
+                                "CLSID:22D6F312-B0F6-11D0-94AB-0080C74C7E95")
         print "set element"
         self.setElement(obj)
 
         self.srcparam = DOM.createElement("param")
-        DOM.setAttribute(self.srcparam, "name", "src")
+        DOM.setAttribute(self.srcparam, "name", "filename")
         self.ctrlparam = DOM.createElement("param")
         DOM.setAttribute(self.ctrlparam, "name", "ShowControls")
         self.statparam = DOM.createElement("param")
