@@ -374,7 +374,7 @@ class Browser(EventSink):
         return self.application
 
     def CoCreateInstanceEx(self, clsid):
-        return CoCreateInstanceEx(clsid)
+        return CoCreateInstanceEx(GUID(clsid))
 
     def _loaded(self):
 

@@ -14,6 +14,7 @@
 * the License.
 """
 
+from __pyjamas__ import get_main_frame
 from pyjamas.media.Media import Media
 from pyjamas import DOM
 

@@ -822,6 +822,7 @@ def removeAttribute(element, attribute):
 
 
 def setAttribute(element, attribute, value):
+    #print element, attribute, value
     setattr(element, attribute, value)
 
 
