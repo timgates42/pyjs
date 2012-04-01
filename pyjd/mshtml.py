@@ -28,7 +28,7 @@ from ctypes import *
 from ctypes.wintypes import *
 
 import comtypes
-from comtypes import IUnknown, GUID, COMMETHOD
+from comtypes import IUnknown, GUID, COMMETHOD, CoCreateInstanceEx
 from comtypes.automation import IDispatch, VARIANT
 from comtypes.client import wrap, GetModule
 from comtypes.client.dynamic import Dispatch
@@ -372,6 +372,9 @@ class Browser(EventSink):
     
     def getUri(self):
         return self.application
+
+    def CoCreateInstanceEx(self, clsid):
+        return CoCreateInstanceEx(clsid)
 
     def _loaded(self):
 
