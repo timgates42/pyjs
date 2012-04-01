@@ -75,6 +75,14 @@ import mshtmlevents
 
 SID_SShellBrowser = GUID("{000214E2-0000-0000-C000-000000000046}")
 
+class IPlayer2(IUnknown):
+    _case_insensitive_ = True
+    _iid_ = GUID('{6BF52A52-394A-11d3-B153-00C04F79FAA6}')
+    _idlflags_ = []
+
+    _methods_ = [
+        ]
+
 class IOleWindow(IUnknown):
     _case_insensitive_ = True
     u'IOleWindow Interface'
@@ -372,6 +380,9 @@ class Browser(EventSink):
     
     def getUri(self):
         return self.application
+
+    def GetPlayer(self, obj):
+        return obj.QueryInterface(IPlayer2)
 
     def CoCreateInstanceEx(self, clsid):
         return CoCreateInstanceEx(GUID(clsid))
