@@ -33,6 +33,7 @@ class Video(Media):
         #DOM.setAttribute(self.srcparam, "VALUE", src)
         #self.getElement().appendChild(self.srcparam)
         obj = self.getElement()
+        print dir(obj)
         DOM.setAttribute(obj, "URL", src)
         #obj.URL = src
 
