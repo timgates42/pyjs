@@ -15,14 +15,14 @@ class Video(Media):
         print "widget init"
         Media.__init__(self, **kwargs)
 
+        #self.dispparam = DOM.createElement("PARAM")
+        #DOM.setAttribute(self.dispparam, "NAME", "ShowDisplay")
+        #DOM.setBooleanAttribute(self.dispparam, "VALUE", "false")
+        #self.getElement().appendChild(self.dispparam)
+
         print "setSrc"
         if src:
             self.setSrc(src)
-
-        #self.dispparam = DOM.createElement("PARAM")
-        #DOM.setAttribute(self.dispparam, "name", "ShowDisplay")
-        #DOM.setBooleanAttribute(self.dispparam, "VALUE", "false")
-        #self.getElement().appendChild(self.dispparam)
 
     def setSrc(self, src):
         print "setSrc", src
