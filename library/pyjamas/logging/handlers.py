@@ -57,3 +57,10 @@ class ConsoleHandler(Handler):
         msg = msg.replace("'", "\\'")
         JS(" console.log(@{{msg}}); ")
 
+class NullHandler(Handler):
+    """A log output handler that does nothing. Use to disable logging."""
+    def __init__(self):
+        Handler.__init__(self)
+
+    def emit(self, record):
+        pass
