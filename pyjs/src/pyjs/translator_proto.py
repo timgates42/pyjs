@@ -4438,14 +4438,15 @@ def translate(sources, output_file, module_name=None, **kw):
         compiler.walk(tree, v)
         return v.imported_modules, v.imported_js
 
-    if output_file == '-':
+    if hasattr(output_file, 'write'):
+        output = output_file
+    elif output_file == '-':
         output = sys.stdout
     else:
         output = file(output_file, 'w')
 
     t = Translator(compiler,
                    module_name, sources[0], src, tree, output, **kw)
-    output.close()
     return t.imported_modules, t.imported_js
 
 def merge(ast, module_name, tree1, tree2, flags):
