@@ -30,27 +30,6 @@ class Video(Media):
 
         Media.__init__(self, **kwargs)
 
-    def setSrc(self, src):
-        Media.setSrc(self, src)
-
-    def setControls(self, controls):
-        Media.setControls(self, controls)
-
-    def setStatusbar(self, statusbar):
-        Media.setStatusbar(self, statusbar)
-
-    def setLoop(self, autorewind):
-        Media.setLoop(self, autorewind)
-
-    def setAutoplay(self, autostart):
-        Media.setAutoplay(self, autostart)
-
-    def setWidth(self, width):
-        Media.setWidth(self, width)
-
-    def setHeight(self, height):
-        Media.setHeight(self, height)
-
     def getVideoWidth(self):
         return self.getElement().videoWidth
     
