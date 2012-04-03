@@ -14,13 +14,13 @@ class Media(Widget):
             controls and "true" or "false")
         self.getElement().appendChild(self.ctrlparam)
 
-    def setStatusbar(self, statusbar):
-        print "setstatus", statusbar
-        self.statparam = DOM.createElement("PARAM")
-        DOM.setAttribute(self.statparam, "name", "ShowStatusBar")
-        DOM.setBooleanAttribute(self.statparam, "VALUE",
-            statusbar and "true" or "false")
-        self.getElement().appendChild(self.statparam)
+#    def setStatusbar(self, statusbar):
+#        print "setstatus", statusbar
+#        self.statparam = DOM.createElement("PARAM")
+#        DOM.setAttribute(self.statparam, "name", "ShowStatusBar")
+#        DOM.setBooleanAttribute(self.statparam, "VALUE",
+#            statusbar and "true" or "false")
+#        self.getElement().appendChild(self.statparam)
 
     def setLoop(self, autorewind):
         print "autorewind", autorewind
