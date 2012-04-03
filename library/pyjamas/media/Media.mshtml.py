@@ -8,9 +8,9 @@ class Media(Widget):
         obj = self.getElement().object.ShowControls = \
                                     controls and "true" or "false"
 
-    def setStatusbar(self, statusbar):
-        obj = self.getElement().object.ShowStatusBar = \
-                                    statusbar and "true" or "false"
+#    def setStatusbar(self, statusbar):
+#        obj = self.getElement().object.ShowStatusBar = \
+#                                    statusbar and "true" or "false"
 
     def setLoop(self, autorewind):
         obj = self.getElement().object.autorewind = \

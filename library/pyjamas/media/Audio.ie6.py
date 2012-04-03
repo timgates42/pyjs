@@ -1,4 +1,4 @@
-class Video(Media):
+class Audio(Media):
 
     def __init__(self, src=None, **kwargs):
         print "create object"

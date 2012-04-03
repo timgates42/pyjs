@@ -1,5 +1,5 @@
 
-class Video(Media):
+class Audio(Media):
 
     def __init__(self, src=None, **kwargs):
         obj = DOM.createElement("OBJECT")
