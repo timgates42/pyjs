@@ -15,7 +15,7 @@ PYJS_NAME = 'pyjs'
 
 def getLoggerForHandler(handler, name=PYJS_NAME, level=DEBUG, fmt=BASIC_FORMAT):
     """Use this function to easily include new loggers in your application,
-    e.g. <code>log = logging.getLoggerForHandler(NullHandler)</code>"""
+    e.g. <code>log = logging.getLoggerForHandler(NullHandler())</code>"""
     formatter = Formatter(fmt)
     handler.setFormatter(formatter)
     logger = getLogger(name)

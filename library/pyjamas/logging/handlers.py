@@ -24,8 +24,12 @@ class AppendHandler(Handler):
 
     def __init__(self, logger_name):
         Handler.__init__(self)
-        self.div_id = "logging_" + logger_name
-        self.div_id = self.div_id.replace(' ', '_').replace('.', '')
+        self.div_id = self.__getSafeNameFor('logging_' + logger_name)
+
+    def __getSafeNameFor(self, name):
+        """Strip out all characters that could be invalid for an element ID"""
+        from string import ascii_letters, digits
+        return ''.join(c for c in name if c in (ascii_letters + digits + '_'))
 
     def __addLogElement(self):
         """Add a container in the DOM where logging output will be written to.
@@ -53,3 +57,10 @@ class ConsoleHandler(Handler):
         msg = msg.replace("'", "\\'")
         JS(" console.log(@{{msg}}); ")
 
+class NullHandler(Handler):
+    """A log output handler that does nothing. Use to disable logging."""
+    def __init__(self):
+        Handler.__init__(self)
+
+    def emit(self, record):
+        pass

@@ -28,7 +28,7 @@ from pyjamas import log
 class KitchenSink:
 
     def onHistoryChanged(self, token):
-        log.writebr("onHistoryChanged: %s" % token)
+        log.debug("onHistoryChanged: %s", token)
         info = self.sink_list.find(token)
         if info is not None:
             self.show(info, False)
@@ -74,9 +74,9 @@ class KitchenSink:
         if info == self.curInfo: return
         self.curInfo = info
 
-        #log.writebr("showing " + info.getName())
+        #log.debug("showing " + info.getName())
         if self.curSink is not None:
-            #log.writebr("removing " + str(self.curSink))
+            #log.debug("removing " + str(self.curSink))
             self.curSink.onHide()
             self.sinkContainer.remove(self.curSink)
 
