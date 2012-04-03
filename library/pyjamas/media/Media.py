@@ -41,6 +41,11 @@ class Media(Widget):
     def setSrc(self, src):
         DOM.setAttribute(self.getElement(), 'src', src)
     
+    def addSrc(self, src):
+        s = DOM.createElement("source")
+        DOM.setAttribute(s, 'src', src)
+        DOM.appendChild(self.getElement(), s)
+
     def getSrc(self):
         return DOM.getAttribute(self.getElement(), 'src')
 
