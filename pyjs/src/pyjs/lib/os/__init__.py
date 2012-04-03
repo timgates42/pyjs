@@ -1,4 +1,8 @@
+# Pyjs replacement of Python's os module
+# Copyright (C) 2012 João Ventura <joaojonesventura@gmail.com>
+
 import path
+from os.path import (walk, curdir, pardir, sep, pathsep, defpath, extsep, altsep, devnull)
 
 name = 'pyjs'
 
