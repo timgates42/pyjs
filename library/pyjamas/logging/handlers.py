@@ -49,12 +49,44 @@ class AppendHandler(Handler):
 
 class ConsoleHandler(Handler):
     """A log output handler making use of Firebug's console.log() function."""
+
+    __consoleFuncForLevel = None
+
     def __init__(self):
         Handler.__init__(self)
+        self.__consoleFuncForLevel = {
+            'DEBUG':    self.__debug,
+            'INFO':     self.__info,
+            'WARNING':  self.__warn,
+            'ERROR':    self.__error,
+            'CRITICAL': self.__error
+        }
 
     def emit(self, record):
+        """Print a message using the console.debug/info/warn/error/log()
+        functions. Use a simple print() as a fallback in browsers that don't
+        support console.log -- including Pyjamas Desktop."""
         msg = self.format(record)
-        msg = msg.replace("'", "\\'")
+        func = self.__consoleFuncForLevel.get(record.levelname, self.__log)
+        try:
+            # NOTE: must be that clumsy, because JS() allows constants only!!
+            func(msg)
+        except:
+            print(msg)
+
+    def __debug(self, msg):
+        JS(" console.debug(@{{msg}}); ")
+
+    def __info(self, msg):
+        JS(" console.info(@{{msg}}); ")
+
+    def __warn(self, msg):
+        JS(" console.warn(@{{msg}}); ")
+
+    def __error(self, msg):
+        JS(" console.error(@{{msg}}); ")
+
+    def __log(self, msg):
         JS(" console.log(@{{msg}}); ")
 
 class NullHandler(Handler):
