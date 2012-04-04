@@ -13,3 +13,6 @@ class Video(Media):
 
         obj = self.getElement().object.ShowDisplay = False
 
+    def setPoster(self, url):
+        self.setStyleAttribute("background", "url(%s)" % url)
+

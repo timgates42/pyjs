@@ -36,4 +36,9 @@ class Video(Media):
     def getVideoHeight(self):
         return self.getElement().videoHeight
     
+    def setPoster(self, url):
+        self.getElement().poster = url
+
+    def getPoster(self):
+        return self.getElement()
 

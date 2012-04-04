@@ -21,4 +21,6 @@ class Video(Media):
         DOM.setBooleanAttribute(self.dispparam, "VALUE", "false")
         self.getElement().appendChild(self.dispparam)
 
+    def setPoster(self, url):
+        self.setStyleAttribute("background", "url(%s)" % url)
 
