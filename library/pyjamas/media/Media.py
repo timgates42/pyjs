@@ -1,7 +1,7 @@
 """
 * Copyright 2009 Mark Renouf
 *
-* Licensed under the Apache License, Version 2.0 (the "License"); you may not
+* Licensed under the Apache License, Version 2.0 (the "License") you may not
 * use this file except in compliance with the License. You may obtain a copy of
 * the License at
 *
@@ -419,7 +419,7 @@ class Media(Widget):
     
     def mediaEventGetTypeInt(self, eventType):
         JS("""
-        window.console.log('mediaEventGetTypeInt: ' + eventType);
+        window.console.log('mediaEventGetTypeInt: ' + eventType)
         switch (eventType) {
             case "abort":             return 0x00001;
             case "canplay":           return 0x00002;
@@ -444,7 +444,7 @@ class Media(Widget):
             case "volumechange":      return 0x100000;
             case "waiting":           return 0x200000;
             default:
-            window.console.debug("Unknown media eventType: " + eventType);
+            window.console.debug("Unknown media eventType: " + eventType)
             return 0;
         }
         """)
@@ -471,79 +471,99 @@ class Media(Widget):
         
     
     def nativeSinkMediaEvents(self, elem, bits):
-        JS("""
-        var chMask = (elem.__mediaEventBits || 0) ^ bits;
+        chMask = (elem.__mediaEventBits or 0) ^ bits
         elem.__mediaEventBits = bits;
-        if (!chMask) return;
+        if not chMask:
+             return
         
-        if (chMask & 0x00001) if (bits & 0x00001)
-        elem.addEventListener('abort', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('abort', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x00002) if (bits & 0x00002)
-        elem.addEventListener('canplay', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('canplay', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x00004) if (bits & 0x00004)
-        elem.addEventListener('canplaythrough', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('canplaythrough', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x00008) if (bits & 0x00008)
-        elem.addEventListener('durationchange', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('durationchange', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x00010) if (bits & 0x00010)
-        elem.addEventListener('emptied', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('emptied', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x00020) if (bits & 0x00020)
-        elem.addEventListener('ended', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('ended', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x00040) if (bits & 0x00040)
-        elem.addEventListener('error', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('error', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x00080) if (bits & 0x00080)
-        elem.addEventListener('loadstart', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('loadstart', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x00100) if (bits & 0x00100)
-        elem.addEventListener('loadeddata', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('loadeddata', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x00200) if (bits & 0x00200)
-        elem.addEventListener('loadedmetadata', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('loadedmetadata', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x00400) if (bits & 0x00400)
-        elem.addEventListener('pause', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('pause', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x00800) if (bits & 0x00800)
-        elem.addEventListener('play', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('play', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x01000) if (bits & 0x01000)
-        elem.addEventListener('playing', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('playing', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x02000) if (bits & 0x02000)
-        elem.addEventListener('progress', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('progress', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x04000) if (bits & 0x04000)
-        elem.addEventListener('ratechange', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('ratechange', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x08000) if (bits & 0x08000)
-        elem.addEventListener('seeked', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('seeked', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x10000) if (bits & 0x10000)
-        elem.addEventListener('seeking', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('seeking', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x20000) if (bits & 0x20000)
-        elem.addEventListener('stalled', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('stalled', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x40000) if (bits & 0x40000)
-        elem.addEventListener('suspend', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('suspend', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x80000) if (bits & 0x80000)
-        elem.addEventListener('timeupdate', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('timeupdate', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x100000) if (bits & 0x100000)
-        elem.addEventListener('volumechange', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('volumechange', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        if (chMask & 0x200000) if (bits & 0x200000)
-        elem.addEventListener('waiting', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false)
-        else elem.removeEventListener('waiting', @com.google.code.gwt.html5.media.client.Media::dispatchEvent, false);
-        """)
-    
+        if (chMask & 0x00001) and (bits & 0x00001):
+            elem.addEventListener('abort', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('abort', mediaDispatchEvent, false)
+        if (chMask & 0x00002) and (bits & 0x00002):
+            elem.addEventListener('canplay', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('canplay', mediaDispatchEvent, false)
+        if (chMask & 0x00004) and (bits & 0x00004):
+            elem.addEventListener('canplaythrough', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('canplaythrough', mediaDispatchEvent, false)
+        if (chMask & 0x00008) and (bits & 0x00008):
+            elem.addEventListener('durationchange', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('durationchange', mediaDispatchEvent, false)
+        if (chMask & 0x00010) and (bits & 0x00010):
+            elem.addEventListener('emptied', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('emptied', mediaDispatchEvent, false)
+        if (chMask & 0x00020) and (bits & 0x00020):
+            elem.addEventListener('ended', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('ended', mediaDispatchEvent, false)
+        if (chMask & 0x00040) and (bits & 0x00040):
+            elem.addEventListener('error', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('error', mediaDispatchEvent, false)
+        if (chMask & 0x00080) and (bits & 0x00080):
+            elem.addEventListener('loadstart', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('loadstart', mediaDispatchEvent, false)
+        if (chMask & 0x00100) and (bits & 0x00100):
+            elem.addEventListener('loadeddata', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('loadeddata', mediaDispatchEvent, false)
+        if (chMask & 0x00200) and (bits & 0x00200):
+            elem.addEventListener('loadedmetadata', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('loadedmetadata', mediaDispatchEvent, false)
+        if (chMask & 0x00400) and (bits & 0x00400):
+            elem.addEventListener('pause', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('pause', mediaDispatchEvent, false)
+        if (chMask & 0x00800) and (bits & 0x00800):
+            elem.addEventListener('play', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('play', mediaDispatchEvent, false)
+        if (chMask & 0x01000) and (bits & 0x01000):
+            elem.addEventListener('playing', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('playing', mediaDispatchEvent, false)
+        if (chMask & 0x02000) and (bits & 0x02000):
+            elem.addEventListener('progress', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('progress', mediaDispatchEvent, false)
+        if (chMask & 0x04000) and (bits & 0x04000):
+            elem.addEventListener('ratechange', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('ratechange', mediaDispatchEvent, false)
+        if (chMask & 0x08000) and (bits & 0x08000):
+            elem.addEventListener('seeked', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('seeked', mediaDispatchEvent, false)
+        if (chMask & 0x10000) and (bits & 0x10000):
+            elem.addEventListener('seeking', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('seeking', mediaDispatchEvent, false)
+        if (chMask & 0x20000) and (bits & 0x20000):
+            elem.addEventListener('stalled', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('stalled', mediaDispatchEvent, false)
+        if (chMask & 0x40000) and (bits & 0x40000):
+            elem.addEventListener('suspend', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('suspend', mediaDispatchEvent, false)
+        if (chMask & 0x80000) and (bits & 0x80000):
+            elem.addEventListener('timeupdate', mediaDispatchEvent, false)
+        else:
+            elem.removeEventListener('timeupdate', mediaDispatchEvent, false)
+        if (chMask & 0x100000) and (bits & 0x100000):
+            elem.addEventListener('volumechange', mediaDispatchEvent, false)
+        else:
+             elem.removeEventListener('volumechange', mediaDispatchEvent, false)
+        if (chMask & 0x200000) and (bits & 0x200000):
+            elem.addEventListener('waiting', mediaDispatchEvent, false)
+        else:
+             elem.removeEventListener('waiting', mediaDispatchEvent, false)
     
     
     def addMouseDownHandler(self, handler):
@@ -592,11 +612,11 @@ class Media(Widget):
     """
     def initMediaEvents(self):
         JS("""
-        @com.google.code.gwt.html5.media.client.Media::dispatchEvent = function(evt) {
+        mediaDispatchEvent = function(evt) {
             var curElem = evt.target;
             var listener = curElem.__listener;
             if (listener) {
-                @{{self.dispatchMediaEvent}}(evt, listener);
+                @{{self.dispatchMediaEvent}}(evt, listener)
             }
         }
         """)
