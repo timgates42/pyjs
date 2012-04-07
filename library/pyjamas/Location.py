@@ -67,8 +67,6 @@ class Location:
         return ""+self.location.search
     
     def getSearchDict(self):
-        if isinstance(self.location, basestring):
-            return {}
         if not self.searchDict:
             self.searchDict = {}
             search = self.getSearch()[1:]

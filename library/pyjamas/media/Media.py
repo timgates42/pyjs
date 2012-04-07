@@ -19,6 +19,38 @@ from pyjamas.ui import Event
 from pyjamas import DOM
 from pyjamas.ui.Widget import Widget
 
+def mediaEventGetTypeInt(eventType):
+    JS("""
+    window.console.log('mediaEventGetTypeInt: ' + eventType)
+    switch (eventType) {
+        case "abort":             return 0x00001;
+        case "canplay":           return 0x00002;
+        case "canplaythrough":    return 0x00004;
+        case "durationchange":    return 0x00008;
+        case "emptied":           return 0x00010;
+        case "ended":             return 0x00020;
+        case "error":             return 0x00040;
+        case "loadstart":         return 0x00080;
+        case "loadeddata":        return 0x00100;
+        case "loadedmetadata":    return 0x00200;
+        case "pause":             return 0x00400;
+        case "play":              return 0x00800;
+        case "playing":           return 0x01000;
+        case "progress":          return 0x02000;
+        case "ratechange":        return 0x04000;
+        case "seeked":            return 0x08000;
+        case "seeking":           return 0x10000;
+        case "stalled":           return 0x20000;
+        case "suspend":           return 0x40000;
+        case "timeupdate":        return 0x80000;
+        case "volumechange":      return 0x100000;
+        case "waiting":           return 0x200000;
+        default:
+        window.console.debug("Unknown media eventType: " + eventType)
+        return 0;
+    }
+    """)
+
 class Media(Widget):
     """
     HasAbortHandlers,
@@ -416,38 +448,6 @@ class Media(Widget):
         self.sinkMediaEvents(mediaEventGetTypeInt(etype.getName()))
         return addHandler(handler, etype)
     
-    
-    def mediaEventGetTypeInt(self, eventType):
-        JS("""
-        window.console.log('mediaEventGetTypeInt: ' + eventType)
-        switch (eventType) {
-            case "abort":             return 0x00001;
-            case "canplay":           return 0x00002;
-            case "canplaythrough":    return 0x00004;
-            case "durationchange":    return 0x00008;
-            case "emptied":           return 0x00010;
-            case "ended":             return 0x00020;
-            case "error":             return 0x00040;
-            case "loadstart":         return 0x00080;
-            case "loadeddata":        return 0x00100;
-            case "loadedmetadata":    return 0x00200;
-            case "pause":             return 0x00400;
-            case "play":              return 0x00800;
-            case "playing":           return 0x01000;
-            case "progress":          return 0x02000;
-            case "ratechange":        return 0x04000;
-            case "seeked":            return 0x08000;
-            case "seeking":           return 0x10000;
-            case "stalled":           return 0x20000;
-            case "suspend":           return 0x40000;
-            case "timeupdate":        return 0x80000;
-            case "volumechange":      return 0x100000;
-            case "waiting":           return 0x200000;
-            default:
-            window.console.debug("Unknown media eventType: " + eventType)
-            return 0;
-        }
-        """)
     
     
     def sinkMediaEvents(self, eventBitsToAdd):
