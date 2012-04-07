@@ -170,6 +170,8 @@ class Browser:
         specs = dict([kv.split('=') for kv in _specs.split(',')])
         width = int(specs.get('width', 800))
         height = int(specs.get('height', 600))
+        if url.find("http") == -1:
+            url = 'http://localhost:8080'+url
         wv = pywebkit.WebView(width, height, url)
         return wv.GetDomWindow()
 
