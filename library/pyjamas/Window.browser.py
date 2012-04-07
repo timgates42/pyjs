@@ -11,7 +11,8 @@ def getTitle():
 def getLocation():
     global location
     if not location:
-        location = Location.Location(wnd().location)
+        l = JS('$wnd.location')
+        location = Location.Location(l)
     return location
 
 def setLocation(url):
