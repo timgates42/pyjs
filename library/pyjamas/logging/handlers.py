@@ -1,6 +1,7 @@
 """Logging handlers for Pyjamas logging based on CPython's logging handlers."""
 __author__ = 'Peter Bittner <peter.bittner@gmx.net>'
 
+from cgi import escape
 from logging import Handler
 from pyjamas import DOM, Window
 from __pyjamas__ import doc, JS
@@ -42,6 +43,7 @@ class AppendHandler(Handler):
 
     def emit(self, record):
         msg = self.format(record)
+        msg = escape(msg)
         msg = msg.replace("\n", "<br/>\n") + "<br/>\n"
         self.output += msg
         self.__addLogElement()
@@ -96,3 +98,4 @@ class NullHandler(Handler):
 
     def emit(self, record):
         pass
+

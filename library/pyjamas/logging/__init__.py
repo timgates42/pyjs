@@ -2,12 +2,13 @@
 
 Usage example:
     from pyjamas import logging
-    log = logging.getPrintLogger()
+    log = logging.getConsoleLogger()
     log.debug('This is a debug message')
 """
 __author__ = 'Peter Bittner <peter.bittner@gmx.net>'
 
-from pyjamas.logging.handlers import AlertHandler, AppendHandler, ConsoleHandler
+from pyjamas.logging.handlers import \
+    AlertHandler, AppendHandler, ConsoleHandler, NullHandler
 # blatantly copy everything from CPython's logging
 from logging import *
 
@@ -34,6 +35,10 @@ def getAppendLogger(name=PYJS_NAME, level=DEBUG, fmt=BASIC_FORMAT):
 def getConsoleLogger(name=PYJS_NAME, level=DEBUG, fmt=BASIC_FORMAT):
     """A logger that uses Firebug's console.log() function."""
     return getLoggerForHandler(ConsoleHandler(), name, level, fmt)
+
+def getNullLogger(name=PYJS_NAME, level=DEBUG, fmt=BASIC_FORMAT):
+    """A logger that does nothing. Use it to disable logging."""
+    return getLoggerForHandler(NullHandler(), name, level, fmt)
 
 def getPrintLogger(name=PYJS_NAME, level=DEBUG, fmt=BASIC_FORMAT):
     """A logger that prints text to cerr, the default error output stream."""
