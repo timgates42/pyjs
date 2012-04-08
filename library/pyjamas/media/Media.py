@@ -471,6 +471,7 @@ class Media(Widget):
         
     
     def nativeSinkMediaEvents(self, elem, bits):
+        """
         chMask = (elem.__mediaEventBits or 0) ^ bits
         elem.__mediaEventBits = bits;
         if not chMask:
@@ -564,7 +565,8 @@ class Media(Widget):
             elem.addEventListener('waiting', mediaDispatchEvent, false)
         else:
              elem.removeEventListener('waiting', mediaDispatchEvent, false)
-    
+        """
+        return
     
     def addMouseDownHandler(self, handler):
         return addDomHandler(handler, MouseDownEvent.getType())
