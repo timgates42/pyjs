@@ -33,8 +33,8 @@ widgethash = {}
 class HTMLTable(Panel):
 
     _props = [ ("border", "Border width", "BorderWidth", int),
-              ("spacing", "Spacing", "Spacing", None),
-              ("padding", "Padding", "Padding", None)
+              ("spacing", "Spacing", "CellSpacing", None),
+              ("padding", "Padding", "CellPadding", None)
              ]
 
     def __init__(self, **kwargs):
