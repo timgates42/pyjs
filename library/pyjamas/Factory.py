@@ -7,8 +7,6 @@
 
 #from __pyjamas__ import doc
 from pyjamas import DOM
-from pyjamas import logging
-log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 
 factory = {}
 

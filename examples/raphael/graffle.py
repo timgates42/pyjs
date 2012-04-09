@@ -9,9 +9,6 @@ from pyjamas.ui.HTML import HTML
 from pyjamas.ui import HasAlignment
 from pyjamas.raphael.raphael import Raphael,DOCK_CONNECTION
 from pyjamas import DOM
-from pyjamas import logging
-
-log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 
 
 class Graffle(SimplePanel):            

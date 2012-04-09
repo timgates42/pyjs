@@ -27,9 +27,6 @@ class ColourThing(object):
              return (self.r, self.g, self.b)
          return property(**locals())
 
-#from pyjamas import logging
-#log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
-
 class C(object):
     @property
     def x(self):

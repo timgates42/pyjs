@@ -26,9 +26,6 @@ from pyjamas.ui.ChangeListener import ChangeHandler
 from pyjamas.ui.DragHandler import DragHandler
 from pyjamas.ui.DropHandler import DropHandler
 
-#from pyjamas import logging
-#log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
-
 class Widget(UIObject):
     """
         Base class for most of the UI classes.  This class provides basic services

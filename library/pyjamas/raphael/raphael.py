@@ -22,10 +22,7 @@ from pyjamas import DOM
 from pyjamas import Window
 from __pyjamas__ import JS
 
-from pyjamas import logging
-log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
-
-#############################################################################      
+#############################################################################
 class RaphaelEventHandler(object):
     def __init__(self,element):
         self._listeners = {'click'      : [],

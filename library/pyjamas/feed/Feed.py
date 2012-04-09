@@ -1,9 +1,7 @@
 from pyjamas.Timer import Timer
 from __pyjamas__ import doc, JS
 from pyjamas import DOM
-#from pyjamas import logging
 
-#log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 frameId = 0
 
 class Feed:

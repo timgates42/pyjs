@@ -15,11 +15,8 @@
 """
 
 from pyjamas import DOM
-#from pyjamas import logging
 from pyjamas.ui.Widget import Widget
 from pyjamas.Canvas.Color import Color
-
-#log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 
 def cvt(s):
     return s
