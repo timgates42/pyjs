@@ -3,9 +3,27 @@ NOTE: This module is for convenience only and uses pyjamas.logging, a ported
 version of Python's logging module. You can use Pyjamas' logging directly as
 you would with Python, at your option."""
 
+raise DeprecationWarning("""pyjamas.log has been replaced by pyjamas.logging!
+  Please replace the import of your logging code as follows:
+    from pyjamas import logging
+    log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
+  All occurrences of 'log.write()' and 'log.writebr()' must be replaced by
+  one of the standard logging functions:
+    log.debug()
+    log.info()
+    log.warning()
+    log.error()
+    log.critical()
+  If you want to continue using pyjamas.log for now remove the raise statement
+  on top of """ + __file__ + """
+
+  See the Pyjamas FAQ at http://pyjs.org#FAQ for more details on logging.""")
+
 from pyjamas import logging
 
-__logger = logging.getAppendLogger(__name__, logging.DEBUG, '%(message)s')
+__logger = logging.getAppendLogger(__name__,
+                                   logging.DEBUG,
+                                   logging.PLAIN_FORMAT)
 
 def setLogger(logger):
     """

@@ -12,9 +12,10 @@ from pyjamas.logging.handlers import \
 # blatantly copy everything from CPython's logging
 from logging import *
 
-PYJS_NAME = 'pyjs'
+# a handy replacement for BASIC_FORMAT printing nothing but the plain text
+PLAIN_FORMAT = '%(message)s'
 
-def getLoggerForHandler(handler, name=PYJS_NAME, level=DEBUG, fmt=BASIC_FORMAT):
+def getLoggerForHandler(handler, name=__name__, level=DEBUG, fmt=BASIC_FORMAT):
     """Use this function to easily include new loggers in your application,
     e.g. <code>log = logging.getLoggerForHandler(NullHandler())</code>"""
     formatter = Formatter(fmt)
@@ -24,23 +25,23 @@ def getLoggerForHandler(handler, name=PYJS_NAME, level=DEBUG, fmt=BASIC_FORMAT):
     logger.addHandler(handler)
     return logger
 
-def getAlertLogger(name=PYJS_NAME, level=DEBUG, fmt=BASIC_FORMAT):
+def getAlertLogger(name=__name__, level=DEBUG, fmt=BASIC_FORMAT):
     """A logger that shows any log message in a browser's alert popup dialog."""
     return getLoggerForHandler(AlertHandler(), name, level, fmt)
 
-def getAppendLogger(name=PYJS_NAME, level=DEBUG, fmt=BASIC_FORMAT):
+def getAppendLogger(name=__name__, level=DEBUG, fmt=BASIC_FORMAT):
     """A logger that appends text to the end of the HTML document body."""
     return getLoggerForHandler(AppendHandler(name), name, level, fmt)
 
-def getConsoleLogger(name=PYJS_NAME, level=DEBUG, fmt=BASIC_FORMAT):
+def getConsoleLogger(name=__name__, level=DEBUG, fmt=BASIC_FORMAT):
     """A logger that uses Firebug's console.log() function."""
     return getLoggerForHandler(ConsoleHandler(), name, level, fmt)
 
-def getNullLogger(name=PYJS_NAME, level=DEBUG, fmt=BASIC_FORMAT):
+def getNullLogger(name=__name__, level=DEBUG, fmt=BASIC_FORMAT):
     """A logger that does nothing. Use it to disable logging."""
     return getLoggerForHandler(NullHandler(), name, level, fmt)
 
-def getPrintLogger(name=PYJS_NAME, level=DEBUG, fmt=BASIC_FORMAT):
+def getPrintLogger(name=__name__, level=DEBUG, fmt=BASIC_FORMAT):
     """A logger that prints text to cerr, the default error output stream."""
     return getLoggerForHandler(StreamHandler(), name, level, fmt)
 
