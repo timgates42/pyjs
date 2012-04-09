@@ -3,7 +3,9 @@ from pyjamas.ui.VerticalPanel import VerticalPanel
 from pyjamas.ui.Label import Label
 from pyjamas.ui.Button import Button
 from SWFUpload import SWFUpload, Settings, SWFUploadInterface
-from pyjamas import log
+from pyjamas import logging
+
+log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 
 
 class SWFUploadExample(SWFUploadInterface):
@@ -57,7 +59,7 @@ class SWFUploadExample(SWFUploadInterface):
         return settings
     
     def onStartUpload(self):
-        #log.writebr('Starting Upload')
+        #log.debug('Starting Upload')
         self.swfUpload.startUpload()
         
     """
@@ -65,43 +67,43 @@ class SWFUploadExample(SWFUploadInterface):
     """
     
     def swfUploadLoaded(self):
-        #log.writebr('swfUploadLoaded')
+        #log.debug('swfUploadLoaded')
         pass
         
     def uploadProgress(self, file, bytesLoaded, totalBytes):
         self.progress.setText('%s - %s of %s uploaded' % (file.name, bytesLoaded, totalBytes))
         
     def uploadError(self, file, errorCode, message):
-        log.writebr('uploadError: %s, %s' % (errorCode, message))
+        log.debug('uploadError: %s, %s' % (errorCode, message))
     
     def uploadSuccess(self, file, receivedResponse, serverData):
         self.fileids.remove(file.id)
         self.showQueue()
         
     def uploadComplete(self, file):
-        #log.writebr('uploadComplete: %s' % file.name)
+        #log.debug('uploadComplete: %s' % file.name)
         if len(self.fileids) > 0:
             self.swfUpload.startUpload()
         else:
             self.progress.setText('All files uploaded')
         
     def fileDialogStart(self):
-        #log.writebr('fileDialogStart')
+        #log.debug('fileDialogStart')
         pass
         
     def fileQueued(self, file):
-        #log.writebr('fileQueued: %s' % file.name)
+        #log.debug('fileQueued: %s' % file.name)
         self.fileids.append(file.id)
         
     def fileQueueError(self, file, errorCode, message):
-        log.writebr('fileQueueError: %s, %s' % (errorCode, message))
+        log.debug('fileQueueError: %s, %s' % (errorCode, message))
         
     def fileDialogComplete(self, sel, qu, tqu):
-        #log.writebr('fileDialogComplete: %s, %s, %s' % (sel, qu, tqu))
+        #log.debug('fileDialogComplete: %s, %s, %s' % (sel, qu, tqu))
         self.showQueue()
         
     def uploadStart(self, file):
-        #log.writebr('uploadStart')
+        #log.debug('uploadStart')
         # Do something before the upload starts, and return True to start the upload
         return True
         

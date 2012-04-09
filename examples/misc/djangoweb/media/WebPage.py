@@ -6,13 +6,13 @@ from pyjamas.ui.HTML import HTML
 
 from pyjamas.JSONService import JSONProxy
 
-from pyjamas import Window
-from pyjamas import History
-from pyjamas import log
 from pyjamas import DOM
 from pyjamas import Factory
-from __pyjamas__ import doc
+from pyjamas import History
+from pyjamas import Window
+from pyjamas import logging
 
+log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 
 from WebPageEdit import WebPageEdit
 from pyjamas.ui.HTMLLinkPanel import HTMLLinkPanel
@@ -49,7 +49,7 @@ class WebApp:
         self.pages[ref] = htp
 
     def onHistoryChanged(self, token):
-        #log.writebr("onHistoryChanged %s" % token)
+        #log.debug("onHistoryChanged %s" % token)
         if self.pages.has_key(token):
             self.setPage(token)
             return

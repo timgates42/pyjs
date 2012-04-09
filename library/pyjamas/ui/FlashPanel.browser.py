@@ -27,7 +27,7 @@ class FlashPanel(Panel):
                 if returnString != 'undefined':
                     returnValue = eval(returnString)
         except:
-            log.writebr('Call to '+functionName+' failed')
+            log.debug('Call to '+functionName+' failed')
         return returnValue
     
     def toJS(self, list_or_dict):

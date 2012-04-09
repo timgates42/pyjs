@@ -1,5 +1,6 @@
 import pyjd # this is dummy in pyjs
 
+from pyjamas import logging
 from pyjamas.ui.Button import Button
 from pyjamas.ui.RootPanel import RootPanel
 from pyjamas.ui.HTML import HTML
@@ -7,9 +8,9 @@ from pyjamas.ui.DockPanel import DockPanel
 from pyjamas.ui import HasAlignment
 from pyjamas.ui.Hyperlink import Hyperlink
 from pyjamas.ui.VerticalPanel import VerticalPanel
-from pyjamas import Window
 from pyjamas.ui.Sink import SinkList
 from pyjamas import History
+from pyjamas import Window
 import Info
 import Buttons
 import Layouts
@@ -23,7 +24,8 @@ import Trees
 import Frames
 import Tabs
 from Logger import Logger
-from pyjamas import log
+
+log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 
 class KitchenSink:
 

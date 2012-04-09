@@ -7,11 +7,12 @@ from pyjamas.ui.TextArea import TextArea
 from pyjamas.ui.Label import Label
 from pyjamas.ui.KeyboardListener import KeyboardHandler
 from pyjamas.JSONService import JSONProxy
-
-from pyjamas import log
 from pyjamas import History
+from pyjamas import logging
 
 from markdown import makeHTML, makeWikiLinks
+
+log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 
 class WikiBox(HTMLLinkPanel):
 
@@ -57,8 +58,8 @@ class Wiki(KeyboardHandler):
             self.t.setText(response['content'])
 
     def onRemoteError(self, code, message, request_info):
-        log.writebr('remote error! ' + str(message))
-        log.writebr('remote error! ' + str(request_info))
+        log.debug('remote error! ' + str(message))
+        log.debug('remote error! ' + str(request_info))
 
     def onKeyUp(self, sender, keycode, modifiers): 
         if sender == self.t:

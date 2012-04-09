@@ -5,7 +5,9 @@ A modification of pyjamas DeferredMethod
 """
 
 from pyjamas.Timer import Timer 
-from pyjamas import log
+from pyjamas import logging
+
+log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 
 global deferredHandlers
 deferredHandlers = []

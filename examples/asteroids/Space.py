@@ -28,7 +28,7 @@ from pyjamas.Canvas import Color
 #from pyjamas.Canvas2D import Canvas, CanvasImage, ImageLoadListener
 from pyjamas.Timer import Timer
 from pyjamas import Window
-from pyjamas import log
+#from pyjamas import logging
 from pyjamas.ui import Event
 from pyjamas.ui import KeyboardListener
 from pyjamas.ui.KeyboardListener import KeyboardHandler
@@ -39,6 +39,8 @@ from pyjamas.ui.Image import Image
 import math
 import pygwt
 import random
+
+#log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 
 NUM_ASTEROIDS = 2
 FPS = 30

@@ -4,6 +4,7 @@
 """
 
 import pyjd
+#from pyjamas.raphael.raphael import Raphael
 from pyjamas.ui.RootPanel   import RootPanel
 from pyjamas.ui.TabPanel import TabPanel
 from pyjamas.ui.SimplePanel import SimplePanel
@@ -12,8 +13,8 @@ from pyjamas.ui.Label import Label
 from pyjamas.ui.HTML import HTML
 from pyjamas.ui import HasAlignment
 from pyjamas import DOM
-from pyjamas import log
-#from pyjamas.raphael.raphael import Raphael
+from pyjamas import logging
+log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 
 import graffle
 import events

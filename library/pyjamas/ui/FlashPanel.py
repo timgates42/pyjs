@@ -9,11 +9,13 @@ Flash embedding Panel
 
 from pyjamas import DOM
 from pyjamas.ui.Panel import Panel
-from pyjamas import log
 from __pyjamas__ import wnd
 import pyjd
 if not pyjd.is_desktop:
     from __javascript__ import Array, Object, eval
+
+#from pyjamas import logging
+#log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 
 def browser():
     return 'w3c'
@@ -49,7 +51,7 @@ class FlashPanel(Panel):
         """ The flashmovie bgcolor parameter. Default: #FFFFFF (white)"""
         self.flashvars = ''
         self.browser = browser()
-        #log.writebr('FlashPanel loaded on %s' % self.browser)
+        #log.debug('FlashPanel loaded on %s' % self.browser)
         
     def onLoad(self):
         DOM.setInnerHTML(self.element, self.__getFlashHTML())

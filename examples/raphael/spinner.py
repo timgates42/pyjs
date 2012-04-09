@@ -7,7 +7,8 @@ from pyjamas.Timer import Timer
 from pyjamas import Window
 
 from pyjamas.raphael.raphael import Raphael
-from pyjamas import log
+from pyjamas import logging
+log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 import pyjd
 
 #############################################################################

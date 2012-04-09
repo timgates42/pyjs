@@ -8,15 +8,15 @@ from pyjamas.ui.TextBox import TextBox
 
 from pyjamas.JSONService import JSONProxy
 
-from pyjamas import Window
-from pyjamas import History
 from pyjamas.django.Form import Form
-from pyjamas import log
+from pyjamas import Factory
+from pyjamas import History
+from pyjamas import Window
+from pyjamas import logging
+log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 
 from WebPageEdit import WebPageEdit
 from HTMLLinkPanel import HTMLLinkPanel
-
-from pyjamas import Factory
 
 class WebApp:
     def onFormLoad(self):
@@ -34,7 +34,7 @@ class WebApp:
         RootPanel().add(self.fetch)
 
     def onRetrieveDone(self, form):
-        log.writebr("onRetrieveDone: %s" % repr(form))
+        log.debug("onRetrieveDone: %s" % repr(form))
 
     def onDescribeDone(self, form):
         form.add_widget("Submit", self.submit)
@@ -43,26 +43,26 @@ class WebApp:
         if sender == self.fetch:
             key = self.search.getText()
             if not key:
-                log.writebr("Please enter id")
+                log.debug("Please enter id")
                 return
             key = int(key)
-            log.writebr("id %d" % key)
+            log.debug("id %d" % key)
             #self.wanted.getItem(key, self)
             self.form.get(id=key)
 
         if sender == self.submit:
             v = self.form.getValue()
-            log.writebr("onClick %s" % repr(v))
+            log.debug("onClick %s" % repr(v))
             if v.get('id', None):
                 self.form.update(v)
             else:
                 self.form.save(v)
  
     def onErrors(self, form, response):
-        log.writebr("onErrors %s" % repr(response))
+        log.debug("onErrors %s" % repr(response))
         
     def onSaveDone(self, form, response):
-        log.writebr("onSave %s" % repr(response))
+        log.debug("onSave %s" % repr(response))
         
     def onModuleLoad(self):
 
@@ -93,7 +93,7 @@ class WebApp:
         self.pages[ref] = htp
 
     def onHistoryChanged(self, token):
-        #log.writebr("onHistoryChanged %s" % token)
+        #log.debug("onHistoryChanged %s" % token)
         if self.pages.has_key(token):
             self.setPage(token)
             return
@@ -113,7 +113,7 @@ class WebApp:
     def onRemoteResponse(self, response, request_info):
         #if (request_info.method == 'getItem'):
         #    data = {'id': response['pk']}
-        #    log.writebr(repr(response))
+        #    log.debug(repr(response))
         #    self.form.update_values(response)
 
         if (request_info.method == 'getPageByName' or

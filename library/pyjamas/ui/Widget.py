@@ -14,7 +14,6 @@
 # limitations under the License.
 from pyjamas import DOM
 from pyjamas import Factory
-from pyjamas import log
 
 from pyjamas.ui.UIObject import UIObject
 from pyjamas.ui import Event
@@ -26,6 +25,9 @@ from pyjamas.ui.InputListener import InputHandler
 from pyjamas.ui.ChangeListener import ChangeHandler
 from pyjamas.ui.DragHandler import DragHandler
 from pyjamas.ui.DropHandler import DropHandler
+
+#from pyjamas import logging
+#log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 
 class Widget(UIObject):
     """

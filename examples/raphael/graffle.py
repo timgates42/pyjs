@@ -7,9 +7,11 @@ from pyjamas.ui.HorizontalPanel import HorizontalPanel
 from pyjamas.ui.Label import Label
 from pyjamas.ui.HTML import HTML
 from pyjamas.ui import HasAlignment
-from pyjamas import DOM
-from pyjamas import log
 from pyjamas.raphael.raphael import Raphael,DOCK_CONNECTION
+from pyjamas import DOM
+from pyjamas import logging
+
+log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 
 
 class Graffle(SimplePanel):            

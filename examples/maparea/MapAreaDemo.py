@@ -1,6 +1,7 @@
 import pyjd
 
 from pyjamas import DOM
+from pyjamas import logging
 
 from pyjamas.ui.RootPanel import RootPanel
 from pyjamas.ui.HTML import HTML
@@ -13,7 +14,7 @@ from pyjamas.ui.MenuBar import MenuBar
 from pyjamas.ui.Image import Image
 from pyjamas.ui.ContextMenuPopupPanel import ContextMenuPopupPanel
 
-from pyjamas import log
+log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 
 
 class MapAreaDemo:
@@ -105,7 +106,7 @@ class MapClickHandler:
         #msg =  "%s %s (%d,%d)" % (name, action, x, y)  # throws JS errors
         msg = name + ' ' + action + ' (' + str(x) + ', ' + str(y) + ')'
         self.msgarea1.setText(msg)
-        log.writebr(msg)
+        log.debug(msg)
 
     def onMouseMove(self, sender, x, y):
         self._mouseActionMessage(sender.areaname, "move", x, y)
@@ -125,7 +126,7 @@ class MapClickHandler:
     def onClick(self, sender):
         msg = "you clicked on baby katie's " + sender.areaname
         self.msgarea2.setText(msg)
-        log.writebr(msg)
+        log.debug(msg)
     
 
 if __name__ == '__main__':
