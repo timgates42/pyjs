@@ -14,7 +14,6 @@ addIndexedItem, getIndex and getIndexedChild.
 
 """
 
-from pyjamas import log
 from pyjamas.ui.BuilderWidget import BuilderWidget
 
 class BuilderPanel(BuilderWidget):

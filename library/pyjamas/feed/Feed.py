@@ -1,7 +1,6 @@
 from pyjamas.Timer import Timer
 from __pyjamas__ import doc, JS
 from pyjamas import DOM
-from pyjamas import log
 
 frameId = 0
 

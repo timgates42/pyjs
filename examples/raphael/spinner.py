@@ -7,7 +7,6 @@ from pyjamas.Timer import Timer
 from pyjamas import Window
 
 from pyjamas.raphael.raphael import Raphael
-from pyjamas import log
 import pyjd
 
 #############################################################################

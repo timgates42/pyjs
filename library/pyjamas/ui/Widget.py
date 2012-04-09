@@ -14,7 +14,6 @@
 # limitations under the License.
 from pyjamas import DOM
 from pyjamas import Factory
-from pyjamas import log
 
 from pyjamas.ui.UIObject import UIObject
 from pyjamas.ui import Event

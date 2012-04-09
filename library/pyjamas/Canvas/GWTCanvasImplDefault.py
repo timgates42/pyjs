@@ -14,13 +14,8 @@
 * the License.
 """
 
-
-
-
 from pyjamas import DOM
-from pyjamas import log
 from pyjamas.ui.Widget import Widget
-
 from pyjamas.Canvas.Color import Color
 
 def cvt(s):

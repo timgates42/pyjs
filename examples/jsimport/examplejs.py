@@ -8,7 +8,8 @@
 # if you ABSOLUTELY MUST use javascript, here's how to do it.
 #
 
-from pyjamas import log
+from pyjamas import logging
+log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 
 # this simply tells the compiler that the two names are to be dropped
 # into the javascript global namespace
@@ -24,11 +25,11 @@ def main():
     global examplevar 
     #examplevar is actually "out of modules", in a super scope
 
-    log.writebr(examplevar)
+    log.debug(examplevar)
     examplevar = 'Altered'
-    log.writebr(get_examplevar())
+    log.debug(get_examplevar())
 
 main()
 
 examplevar = "Realtered"
-log.writebr(get_examplevar())
+log.debug(get_examplevar())

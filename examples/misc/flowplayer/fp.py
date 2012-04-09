@@ -2,7 +2,9 @@
 from pyjamas.ui.RootPanel import RootPanel
 from pyjamas.ui.VerticalPanel import VerticalPanel
 from FlowPlayer import Player, Configuration, ControlsPlugin, ContentPlugin, Clip
-from pyjamas import log
+from pyjamas import logging
+
+log = logging.getAppendLogger(__name__, logging.DEBUG, logging.PLAIN_FORMAT)
 
 
 class FlowPlayerExample:
@@ -46,7 +48,7 @@ class FlowPlayerExample:
         config.setPlaylist(playlist)
         
         # Create the Player Object with the initial configuration
-        #log.writebr('Loading Player')
+        #log.debug('Loading Player')
         player = Player(url, config)
         
         # Add Listener to the player
@@ -134,7 +136,7 @@ class FlowPlayerExample:
         This is a Player Event
         Fired if the Player is loaded
         """
-        #log.writebr('Player loaded')
+        #log.debug('Player loaded')
         # Load a Content-Plugin at runtime into the player
         content = self.getContentBottom()
         self.player.loadPlugin(content)
@@ -144,7 +146,7 @@ class FlowPlayerExample:
         This is a Player Event
         Fired if a plugin is loaded
         """
-        #log.writebr('Plugin %s loaded' % name)
+        #log.debug('Plugin %s loaded' % name)
         if name == 'contentBottom':
             # Animate the content on bottom, if it is loaded
             content = self.player.getPlugin('contentBottom')
@@ -157,7 +159,7 @@ class FlowPlayerExample:
         This is a Player Event
         Fired if a clip is added to playlist
         """
-        #log.writebr('Clip %s on index %s added' % (clip.url, index))
+        #log.debug('Clip %s on index %s added' % (clip.url, index))
         pass
     
     def onPlaylistReplace(self, clips):
@@ -165,7 +167,7 @@ class FlowPlayerExample:
         This is a Player Event
         Fired if the playlist is replaced
         """
-        #log.writebr('Playlist is replaced')
+        #log.debug('Playlist is replaced')
         pass
         
     def onError(self, args):
@@ -173,7 +175,7 @@ class FlowPlayerExample:
         This is a Player Event
         Fired on an error
         """
-        log.writebr('Error: %s' % str(args))
+        log.debug('Error: %s' % str(args))
     
     
     # Plugin events
@@ -183,7 +185,7 @@ class FlowPlayerExample:
         This is a Plugin Event
         Fired if a plugin is clicked
         """
-        #log.writebr('Plugin %s clicked' % plugin.name)
+        #log.debug('Plugin %s clicked' % plugin.name)
         plugin = self.player.getPlugin(plugin.name)
         if plugin.name == 'contentTop':
             # Fade out the top content and start playing
@@ -195,7 +197,7 @@ class FlowPlayerExample:
             # Add one more clip at runtime to the playlist
             #clip = Clip('movies/movie5.flv')
             #clip.addListener(self)
-            #log.writebr('Add Clip')
+            #log.debug('Add Clip')
             #self.player.addClip(clip, 3)
     
     def onAnimatePlugin(self, plugin):
@@ -203,7 +205,7 @@ class FlowPlayerExample:
         This is a Plugin Event
         Fired if a plugin is animated
         """
-        #log.writebr('Plugin %s animated' % plugin.name)
+        #log.debug('Plugin %s animated' % plugin.name)
         pass
     
     # Clip events
@@ -213,7 +215,7 @@ class FlowPlayerExample:
         This is a Clip Event
         Fired if the player is resumed
         """
-        #log.writebr('Clip %s resumed' % clip.url)
+        #log.debug('Clip %s resumed' % clip.url)
         # Get the contentTop plugin, and fade it out
         plugin = self.player.getPlugin('contentTop')
         plugin.fadeOut()
@@ -223,7 +225,7 @@ class FlowPlayerExample:
         This is a Clip Event
         Fired if the player is paused
         """
-        #log.writebr('Clip %s paused' % clip.url)
+        #log.debug('Clip %s paused' % clip.url)
         # Get the contentTop plugin, set some Text
         # and fade it in
         plugin = self.player.getPlugin('contentTop')

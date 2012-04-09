@@ -22,9 +22,7 @@ from pyjamas import DOM
 from pyjamas import Window
 from __pyjamas__ import JS
 
-from pyjamas import log
-
-#############################################################################      
+#############################################################################
 class RaphaelEventHandler(object):
     def __init__(self,element):
         self._listeners = {'click'      : [],
