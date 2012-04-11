@@ -22,25 +22,13 @@ def getModuleName():
     return mod_name
 
 def getModuleBaseURL():
-    
+    import os.path
+
     # get original app base
     s = get_main_frame().getUri()
-    #s = doc().location.href
-    
-    # Pull off any hash.
-    i = s.find('#')
-    if i != -1:
-        s = s[:i]
-    
-    # Pull off any query string.
-    i = s.find('?')
-    if i != -1:
-        s = s[:i]
-    
-    # Rip off everything after the last slash.
-    i = s.rfind('/')
-    if i != -1:
-        s = s[:i]
+
+    # pull out the directory part
+    s = os.path.dirname(s)
 
     if len(s) > 0:
         return s + "/"
