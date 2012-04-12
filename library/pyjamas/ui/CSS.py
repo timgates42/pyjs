@@ -22,13 +22,15 @@ class StyleSheetCssFile:
         parent = DOM.getParent(self._e)
         DOM.removeChild(parent, self._e) 
         
-
+def setStyleElementText(el, text):
+    DOM.appendChild(el, doc().createTextNode(text))
+    
 class StyleSheetCssText:
 
     def __init__(self, text=''):
         self._e = DOM.createElement('style')
         self._e.setAttribute('type', 'text/css')
-        DOM.appendChild(self._e, doc().createTextNode(text))
+        setStyleElementText(self._e, text)
 
         doc().getElementsByTagName("head").item(0).appendChild(self._e) 
 
