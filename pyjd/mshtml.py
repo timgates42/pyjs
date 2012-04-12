@@ -36,7 +36,6 @@ from comtypes.client.dynamic import Dispatch
 import comtypes.gen
 
 if not hasattr(sys, 'frozen'):
-    GetModule('atl.dll')
     GetModule('shdocvw.dll')
     try:
         GetModule('msxml2.dll')
@@ -68,7 +67,11 @@ try:
 except:
     pass
 
-atl = windll.atl                  # If this fails, you need atl.dll
+try:
+    atl = windll.atl                  # If this fails, you need atl.dll
+except:
+    assert not hasattr(sys, 'frozen') # can't get atl.dll if frozen...
+    GetModule('atl.dll')
 
 # do this after gen stuff, above
 import mshtmlevents 
