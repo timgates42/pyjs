@@ -57,6 +57,12 @@ class HTTPRequest(object):
     def doCreateXmlHTTPRequest(self):
         return get_main_frame().getXmlHttpRequest()
 
+    def onProgress(self, sender, event, ignorearg):
+        xmlHttp = event.target
+        localHandler = handlers.get(xmlHttp)
+        if hasattr(localHandler, "onProgress"):
+            localHandler.onProgress(event)
+        
     def onLoad(self, sender, event, ignorearg):
         xmlHttp = event.target
         localHandler = handlers.get(xmlHttp)
@@ -159,6 +165,10 @@ class HTTPRequest(object):
             mf._addXMLHttpRequestEventListener(
                 xmlHttp, "load", self.onLoad,
             )
+
+        mf._addXMLHttpRequestEventListener(
+            xmlHttp, "progress", self.onProgress,
+        )
 
         #try :
         if mf.platform == 'webkit' or mf.platform == 'mshtml':
