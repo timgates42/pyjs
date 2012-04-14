@@ -166,9 +166,10 @@ class HTTPRequest(object):
                 xmlHttp, "load", self.onLoad,
             )
 
-        mf._addXMLHttpRequestEventListener(
-            xmlHttp, "progress", self.onProgress,
-        )
+        if mf.platform != 'mshtml' and platform != 'ie6':
+            mf._addXMLHttpRequestEventListener(
+                xmlHttp, "progress", self.onProgress,
+            )
 
         #try :
         if mf.platform == 'webkit' or mf.platform == 'mshtml':
