@@ -2,14 +2,6 @@
 class HTTPRequest(object):
 
     def doCreateXmlHTTPRequest(self):
-        # Check for IE6/ActiveX
-        try:
-            res = JS("""new ActiveXObject("Msxml2.XMLHTTP")""")
-            return res
-        except:
-            pass
-
-        # now try all others
         if JS("""typeof $wnd.XMLHttpRequest != 'undefined'"""):
             # IE7+, Mozilla, Safari, ...
            res = JS("""new XMLHttpRequest()""")
@@ -52,6 +44,11 @@ class HTTPRequest(object):
                     localHandler.onError(response, status);
         xmlHttp.onreadystatechange = onreadystatechange
 
+        if hasattr(localHandler, 'onProgress'):
+            def onprogress(evnt=None):
+                localHandler.onProgress(evnt)
+            xmlHttp.onprogress = onprogress
+
         try:
             xmlHttp.open(method, url, True);
             for h in headers:
@@ -72,3 +69,4 @@ class HTTPRequest(object):
             localHandler.onError(str(sys.exc_info()[1]), "");
             return None
         return xmlHttp
+
