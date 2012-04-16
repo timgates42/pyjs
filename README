@@ -1,38 +1,46 @@
-Current Release: 0.8alpha1
+Current Release: 0.8.1~+alpha1
 ---------------
 
-This is the 0.8alpha1 release of Pyjamas.  Pyjamas comprises several projects,
-one of which is a stand-alone python-to-javascript compiler; other projects
-include a Graphical Widget Toolkit, such that pyjamas applications can run
-either in web browsers as pure javascript (with no plugins required)
+This is the 0.8.1~+alpha1 release of Pyjamas.  Pyjamas comprises several
+projects, one of which is a stand-alone python-to-javascript compiler; other
+projects include a Graphical Widget Toolkit, such that pyjamas applications
+can run either in web browsers as pure javascript (with no plugins required)
 or stand-alone on the desktop (as a competitor to PyGTK2 and PyQT4).
 
 Features and enhancements of the stand-alone 0.8 series javascript
 compiler and associated modules include:
 
-* behaviour more like python, including sys.exc_info and tb_frame.f_globals,
-  a basic traceback module, class creation using __class__ on the base,
-  __delattr__ support, __setattr__ support and assignment to slices in lists.
+* more behaviour closer to python, thanks to several contributions including
+  from Daniel Kluev
 
-* further changes to pyjsbuild to make it more equivalent to gcc and Make.
+* improvements and additions to the standard modules, including renaming
+  JSONParser to json and changing its interface to match standard python,
+  and a new python-compliant logging module.
 
 In the User-Interface suite, which is separate from the Pyjamas
 stand-alone python-to-javascript compiler, the features and
 enhancements include:
 
-* Enabling of asynchronous module loading (previously present in the 0.5
-  pyjamas release)
+* a new platform override system that puts source files for both
+  browsers and desktop pyjamas applications in the same directory
+  as the module being overridden
 
-* Adding HTML5-compliant drag-and-drop support (both native as well as
-  emulated, so that older browsers appear to have HTML5-style drag-and-drop)
+* Gradient and Text functions for the 2D Canvas module
 
-* Fixing a long-standing bug with DialogBox (still present in GWT) related
-  to mouse events being lost.
+* Fix to long-standing issue with Focus.py
 
-* Addition of an "auto-build" option - based on file-monitoring - to pyjsbuild
+* Addition of Video and Audio Widgets that use HTML5 or Windows Media
+  as appropriate (also operating correctly under pyjd including MSHTML).
 
-* Addition of oninput and onpropertychange event support, as well as
-  DOM.createTextNode
+Also, several JSONRPC server helper routines have been contributed and
+added, including for cherrypy, cgi-bin and mongrel2.  A full JSONRPC
+service with each of these types of web service systems can be added
+usually in about 5 lines of code.
+
+It has also been confirmed that Pyjamas and Pyjamas Desktop run successfully
+under Wine 1.4 when IE8 is installed.  This may make it easier for developers
+to test deployment of applications across a wider range of browsers and
+desktops when working from a GNU/Linux development base.
 
 Pyjamas
 -------
@@ -59,7 +67,6 @@ For more information, see:
     http://pyjs.org/features.html
 
 Known bugs: http://code.google.com/p/pyjamas/issues
-            #290, #227, #228, #230, #304
 
 Pyjamas-Desktop
 ---------------
@@ -76,7 +83,9 @@ with more planned [MacOSX PyObjC; KDE's PyKHTML].
 
 All ports of Pyjamas-Desktop will require a JSON library to be
 installed: as there are plenty already, it is counter-productive
-to write yet another one.  simplejson is recommended.
+to write yet another one.  simplejson is recommended if the version of
+python is 2.5 or less.  Python 2.6 and above come with a json library
+installed by default.
 
 1) - XULRunner
 
@@ -87,15 +96,14 @@ Other users should investigate the installation instructions for
 python-xpcom and hulahop for the operating system of their choice
 on the appropriate web sites.
 
-GNU/Linux, FreeBSD and other POSIX systems are strongly advised
-to use XULRunner for Pyjamas-Desktop: it is the most stable of the
-PyJD ports.
-
 Sadly, modifications made by the Mozilla team to the xulrunner API
 have not propagated through to python-xpcom due to lack of attention
-and support by the Mozilla team.  Until funding is made available to
-keep python-xpcom up-to-date, older versions of XULRunner must be
-used: versions 1.9.0 or 1.9.1 are known to be suitable.
+and support by the Mozilla team.  Older versions of XULRunner must be
+used: versions 1.9.0 or 1.9.1 are known to be suitable, as is version
+9.0.  Versions 10 and above are known to segfault.  The Mozilla
+Foundation is NOT paying attention to the stability of xulrunner for
+embedded purposes: many applications (not just pyjamas-desktop) are
+now being left without working, stable code.
 
 2) - PyWebKitGtk
 
