@@ -44,9 +44,9 @@ class HTTPRequest(object):
                     localHandler.onError(response, status);
         xmlHttp.onreadystatechange = onreadystatechange
 
-        if hasattr(localHandler, 'onProgress'):
+        if hasattr(handler, 'onProgress'):
             def onprogress(evnt=None):
-                localHandler.onProgress(evnt)
+                handler.onProgress(evnt)
             xmlHttp.onprogress = onprogress
 
         try:
