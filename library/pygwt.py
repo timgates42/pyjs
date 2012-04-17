@@ -33,3 +33,16 @@ def getModuleBaseURL():
     if len(s) > 0:
         return s + "/"
     return ""
+
+def getImageBaseURL(images=False):
+    import pyjd
+
+    if images:
+        if isinstance(images, str):
+            return getModuleBaseURL() + images + '/'
+        else:
+            return getModuleBaseURL() + "images/"
+    elif pyjd.is_desktop:
+        return pyjd.pyjdinitpth + "/library/pyjamas/ui/public/"
+    else:
+        return getModuleBaseURL()
