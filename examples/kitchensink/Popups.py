@@ -96,8 +96,15 @@ class MyDialog(DialogBox):
         iframe.setWidth("36em")
         iframe.setHeight("20em")
         self.setWidget(dock)
+        
+        # Work around for IE/MSHTML Issue 511
+        self.initURL = iframe.getUrl()
+        self.iframe = iframe
 
     def onClick(self, sender):
+        # Work around for IE/MSHTML Issue 511
+        self.iframe.setUrl(self.initURL)
+
         self.hide()
 
 
