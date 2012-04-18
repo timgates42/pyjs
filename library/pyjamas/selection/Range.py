@@ -17,7 +17,7 @@
 
 
 
-
+import DOM
 
 
 
@@ -39,23 +39,6 @@ class Range:
     
     """*
     * Returns the next adjacent text node in the given direction.  Will move
-    * down the hierarchy, then through siblings, then up, looking for the first
-    * text node.
-    *
-    * This could be non-statically included in the Node class
-    *
-    * @param current An element to start the search from, can be any type
-    *                of node.
-    * @param forward whether to search forward or backward
-    * @return the next (previous) text node, or None if no more
-    """
-    def getAdjacentTextElement(self, current, forward):
-        res = getAdjacentTextElement(current, None, forward, False)
-        return res
-    
-    
-    """*
-    * Returns the next adjacent text node in the given direction.  Will move
     * down the hierarchy (if traversingUp is not set), then through siblings,
     * then up (but not past topMostNode), looking for the first node
     *
@@ -67,17 +50,24 @@ class Range:
     * @param forward whether to search forward or backward
     * @param traversingUp if True, will not look at the children of this element
     * @return the next (previous) text node, or None if no more
+    *
+    * may also be called as getAdjacentTextElement(current, forward) with
+    * only 2 parameters.
     """
-    def getAdjacentTextElement(self, current, topMostNode, forward, traversingUp):
+    def getAdjacentTextElement(self, current, topMostNode, forward=None, traversingUp=False):
+        if forward is None:
+            forward = topMostNode
+            topMostNode = None
+            
         res = None
         
         # If traversingUp, then the children have already been processed
         if not traversingUp:
-            if current.getChildCount() > 0:
-                node = forward is not None and current.getFirstChild() or \
-                current.getLastChild()
+            if DOM.getChildCount(current) > 0:
+                node = forward is not None and DOM.getFirstChild(current) or \
+                DOM.getLastChild(current)
                 
-                if node.getNodeType() == Node.TEXT_NODE:
+                if DOM.getNodeType(node) == DOM.TEXT_NODE:
                     res = node
                 else:
                     # Depth first traversal, the recursive call deals with
@@ -89,11 +79,11 @@ class Range:
         
         
         if res is None:
-            node = forward is not None and current.getNextSibling() or \
-                            current.getPreviousSibling()
+            node = forward is not None and DOM.getNextSibling(current) or \
+                            DOM.getPreviousSibling(current)
             # Traverse siblings
             if node is not None:
-                if node.getNodeType() == Node.TEXT_NODE:
+                if node.getNodeType() == DOM.TEXT_NODE:
                     res = node
                 else:
                     # Depth first traversal, the recursive call deals with
@@ -105,10 +95,11 @@ class Range:
         
         
         # Go up and over if still not found
-        if (res is None)  and  (current != topMostNode):
-            node = current.getParentNode()
+        if (res is None)  and  (not DOM.isSameNode(current, topMostNode)):
+            node = DOM.getParentNode(current)
             # Stop at document (technically could stop at "html" tag)
-            if (node is not None)  and  (node.getNodeType() != Node.DOCUMENT_NODE):
+            if (node is not None)  and  \
+                    (DOM.getNodeType(node) != DOM.DOCUMENT_NODE):
                 res = self.getAdjacentTextElement(node, topMostNode,
                                             forward, True)
             
@@ -129,7 +120,7 @@ class Range:
         res = []
         
         current = startNode
-        while (current is not None)  and  (current != endNode):
+        while (current is not None) and (not DOM.isSameNode(current, endNode)):
             res.append(current)
             
             current = self.getAdjacentTextElement(current, None, True, False)
@@ -148,50 +139,39 @@ class Range:
     * Creates an empty range on this document
     *
     * @param doc Document to create an empty range in
-    """
-    def __init__(self, doc):
-        self.setDocument(doc)
     
-    
-    """*
     * Creates a range that encompasses the given element
     *
     * @param element Element to create a range around
-    """
-    def __init__(self, element):
-        self.setRange(element)
-    
-    
-    """*
+
     * Creates a range that is a cursor at the given location
     *
     * @param cursorPoint a single point to make a cursor range
-    """
-    def __init__(self, cursorPoint):
-        self.setCursor(cursorPoint)
     
-    
-    """*
     * Create a range that extends between the given points.  Caller must
     * ensure that end comes after start
     *
     * @param startPoint start point of the range
     * @param endPoint end point of the range
-    """
-    def __init__(self, startPoint, endPoint):
-        self.setRange(startPoint, endPoint)
-    
-    
-    """*
+
     * Internal method for creating a range from a JS object
     *
     * @param document
     * @param rangeObj
     """
-    def __init__(self, document, rangeObj):
-        self.m_document = document
-        self.m_range = rangeObj
-    
+    def __init__(self, arg1, arg2=None):
+        if isinstance(arg1, RangeEndPoint):
+            if arg2 and isinstance(arg2, RangeEndPoint):
+                self.setRange(arg1, arg2)
+            else:
+                self.setCursor(arg1)
+        elif hasattr(arg1, "nodeType"): # bad heuristic!  oh well...
+            self.setRange(arg1)
+        elif arg2: 
+            self.m_document = arg1
+            self.m_range = arg2
+        else:
+            self.setDocument(arg1)
     
     """*
     * Internal function for retrieving the range, external callers should NOT

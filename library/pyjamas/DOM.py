@@ -52,6 +52,9 @@ from pyjamas.ui.Event import (
     ONINPUT
 )
 
+ELEMENT_NODE = 1
+TEXT_NODE = 3
+DOCMENT_NODE = 9
 
 def get_listener(item):
     if item is None:
@@ -614,6 +617,13 @@ def getIntElemAttribute(elem, attr):
 
 def getIntStyleAttribute(elem, attr):
     return getIntAttribute(elem.style, attr)
+
+
+def getPrevSibling(elem):
+    sib = elem.previousSibling
+    while sib and sib.nodeType != 1:
+        sib = sib.previousSibling
+    return sib
 
 
 def getNextSibling(elem):

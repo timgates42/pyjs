@@ -34,9 +34,9 @@
 * @param propertyName
 * @return
 """
-def getBoolProp(object, propertyName):
+def getBoolProp(obj, propertyName):
     JS("""
-    return !! object[propertyName];
+    return !! obj[propertyName];
     """)
 
 
