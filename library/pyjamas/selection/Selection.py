@@ -14,7 +14,8 @@
 * the License.
 """
 
-
+import SelectionImpl
+import Range
 
 START_NODE	= "startContainer"
 START_OFFSET	= "startOffset"
@@ -29,128 +30,115 @@ IS_COLLAPSED 	= "isCollapsed"
 *
 * @author John Kozura
 """
-class Selection:
 
-    """*
-    * Clears or removes any current text selection.
-    """
-    def clearAnySelectedText():
-        self.getSelection().clear()
+m_selection = None
+m_document = None
 
-    """*
-    * Convenience for getting the range for the current browser selection
-    *
-    * @return A range object representing the browser window's selection
-    """
-    def getBrowserRange(self):
-        return self.getSelection().getRange()
+"""*
+* Clears or removes any current text selection.
+"""
+def clearAnySelectedText():
+    getSelection()
+    clear()
 
-
-    """*
-    * Returns the selection for a given window, for instance an iframe
-    *
-    * @return The singleton instance
-    """
-    def getSelection(self, window):
-        SelectionImpl.JSSel jsSel = c_impl.getSelection(window)
-        Selection res = Selection()
-        res.self.m_selection = jsSel
-        res.self.m_document = getDocument(window)
-        return res
+"""*
+* Convenience for getting the range for the current browser selection
+*
+* @return A range object representing the browser window's selection
+"""
+def getBrowserRange(self):
+    getSelection()
+    return getRange()
 
 
-    def getDocument(self, window):
-        JS("""
-        return window.document;
-        """)
+"""*
+* Returns the selection for a given window, for instance an iframe
+*
+* @return The singleton instance
+"""
+def getSelection(self, window=None):
+    global m_selection
+    global m_document
+    if window is None:
+        window = getWindow()
+    m_selection = SelectionImpl.getSelection(window)
+    m_document = getDocument(window)
 
 
-    """*
-    * Returns the document Selection singleton
-    *
-    * @return The singleton instance
-    """
-    def getSelection(self):
-        return Selection.getSelection(getWindow())
+def getDocument(self, window):
+    JS("""
+    return window.document;
+    """)
 
 
-    def getImpl(self):
-        return Selection.c_impl
+def getWindow(self):
+    JS("""
+    return $wnd;
+    """)
 
 
-    def getWindow(self):
-        JS("""
-        return $wnd;
-        """)
+
+"""*
+* Clears any current selection.
+"""
+def clear(self):
+    SelectionImpl.clear(m_selection)
+
+"""*
+* Gets the parent document associated with this selection.  Could be
+* different from the browser document if, for example this is the selection
+* within an iframe.
+*
+* @return parent document of this selection
+"""
+def getDocument(self):
+    return m_document
+
+"""*
+* Get the javascript object representing the selection.  Since this is
+* browser dependent object, should probably not use self.
+*
+* @return a JavaScriptObject representing this selection
+"""
+def getJSSelection(self):
+    return m_selection
+
+"""*
+* Gets the range associated with the given selection.  The endpoints are
+* captured immediately, so any changes to the selection will not affect
+* the returned range.  In some browsers (IE) this can return NULL if
+* nothing is selected in the document.
+*
+* @return A range object capturing the current selection
+"""
+def getRange():
+    jsRange = SelectionImpl.getJSRange(m_document, m_selection)
+    if jsRange is None:
+        return None
+    res = Range(m_document, jsRange)
+    res.ensureEndPoints()
+
+    return res
 
 
-    def __init__(self):
-        self.m_document = None
-        self.m_selection = None
+"""*
+* Tests if anything is currently being selected
+*
+* @return True if empty False otherwise
+"""
+def isEmpty(self):
+    return Selection.getImpl().isEmpty(self.m_selection)
 
 
-    """*
-    * Clears any current selection.
-    """
-    def clear(self):
-        Selection.getImpl().clear(self.m_selection)
-
-
-    """*
-    * Gets the parent document associated with this selection.  Could be
-    * different from the browser document if, for example this is the selection
-    * within an iframe.
-    *
-    * @return parent document of this selection
-    """
-    def getDocument(self):
-        return self.m_document
-
-    """*
-    * Get the javascript object representing the selection.  Since this is
-    * browser dependent object, should probably not use self.
-    *
-    * @return a JavaScriptObject representing this selection
-    """
-    def getJSSelection(self):
-        return self.m_selection
-
-    """*
-    * Gets the range associated with the given selection.  The endpoints are
-    * captured immediately, so any changes to the selection will not affect
-    * the returned range.  In some browsers (IE) this can return NULL if
-    * nothing is selected in the document.
-    *
-    * @return A range object capturing the current selection
-    """
-    def getRange(self):
-        res = None
-        jsRange = c_impl.getJSRange(self.m_document, self.m_selection)
-        if jsRange is not None:
-            res = Range(self.m_document, jsRange)
-            res.ensureEndPoints()
-
-        return res
-
-
-    """*
-    * Tests if anything is currently being selected
-    *
-    * @return True if empty False otherwise
-    """
-    def isEmpty(self):
-        return Selection.getImpl().isEmpty(self.m_selection)
-
-
-    """*
-    * Takes a range object and pushes it to be the selection.  The range
-    * must be parented by the same window/document as the selection.  The range
-    * remains separate from the selection after this operation; any changes to
-    * the range are not reflected in the selection, and vice versa.
-    *
-    * @param newSelection What the selection should be
-    """
-    def setRange(self, newSelection):
-        if newSelection.getDocument() == self.m_document:
-            c_impl.setJSRange(self.m_selection, newSelection.getJSRange())
+"""*
+* Takes a range object and pushes it to be the selection.  The range
+* must be parented by the same window/document as the selection.  The range
+* remains separate from the selection after this operation; any changes to
+* the range are not reflected in the selection, and vice versa.
+*
+* @param newSelection What the selection should be
+"""
+def setRange(self, newSelection):
+    if newSelection.getDocument() == self.m_document:
+        c_impl.setJSRange(self.m_selection, newSelection.getJSRange())
 

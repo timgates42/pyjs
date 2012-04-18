@@ -26,87 +26,83 @@
 *
 * @author John Kozura
 """
-class SelectionImpl:
     
-    """*
-    * Reads an object's property as a boolean value.
-    *
-    * @param object
-    * @param propertyName
-    * @return
-    """
-    def getBoolProp(self, object, propertyName):
-        JS("""
-        return !! object[propertyName];
-        """)
-    
-    
-    """*
-    * Clear any selection
-    *
-    * @param selection
-    """
-    def clear(self, selection):
-        JS("""
-        selection.removeAllRanges();
-        """)
-    
-    
-    """*
-    * Get the JS range representing the current selection.  This should be
-    * a range parented by the given document, otherwise NULL is returned.
-    *
-    * @param doc document that must be the parent of the selection
-    * @param selection selection object to fetch the range for
-    * @return A JS object representing the range
-    """
-    def getJSRange(self, doc, selection):
-        JS("""
-        var res = null;
-        try {
-            res = selection.getRangeAt(0);
-        }
-        catch (e) {}
-        return res;
-        """)
-    
-    
-    """*
-    * Get the selection object used for a particular window.
-    *
-    * @param window a DOM window to get selection for
-    * @return The JavaScriptObject for the selection
-    """
-    def getSelection(self, window):
-        JS("""
-        return window.getSelection();
-        """)
-    
-    
-    """*
-    * Return whether this is an empty selection (ie a cursor)..
-    *
-    * @param selection
-    * @return
-    """
-    def isEmpty(self, selection):
-        return self.getBoolProp(selection, Selection.IS_COLLAPSED)
-    
-    
-    
-    """*
-    * Set the document's selection to equal the extends of the given JS range.
-    *
-    * @param selection JS selection to change
-    * @param range JS range to set the selection to
-    """
-    def setJSRange(self, selection, range):
-        JS("""
-        // delete all ranges then recreate...
-        selection.removeAllRanges();
-        selection.addRange(range);
-        """)
-    
-    
+"""*
+* Reads an object's property as a boolean value.
+*
+* @param object
+* @param propertyName
+* @return
+"""
+def getBoolProp(object, propertyName):
+    JS("""
+    return !! object[propertyName];
+    """)
+
+
+"""*
+* Clear any selection
+*
+* @param selection
+"""
+def clear(selection):
+    JS("""
+    selection.removeAllRanges();
+    """)
+
+
+"""*
+* Get the JS range representing the current selection.  This should be
+* a range parented by the given document, otherwise NULL is returned.
+*
+* @param doc document that must be the parent of the selection
+* @param selection selection object to fetch the range for
+* @return A JS object representing the range
+"""
+def getJSRange(doc, selection):
+    JS("""
+    var res = null;
+    try {
+        res = selection.getRangeAt(0);
+    }
+    catch (e) {}
+    return res;
+    """)
+
+
+"""*
+* Get the selection object used for a particular window.
+*
+* @param window a DOM window to get selection for
+* @return The JavaScriptObject for the selection
+"""
+def getSelection(window):
+    JS("""
+    return window.getSelection();
+    """)
+
+
+"""*
+* Return whether this is an empty selection (ie a cursor)..
+*
+* @param selection
+* @return
+"""
+def isEmpty(selection):
+    return getBoolProp(selection, "isCollapsed")
+
+
+"""*
+* Set the document's selection to equal the extends of the given JS range.
+*
+* @param selection JS selection to change
+* @param range JS range to set the selection to
+"""
+def setJSRange(selection, rng):
+    JS("""
+    // delete all ranges then recreate...
+    selection.removeAllRanges();
+    selection.addRange(rng);
+    """)
 
 

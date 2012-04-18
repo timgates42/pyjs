@@ -24,49 +24,47 @@
 *
 * @author John Kozura
 """
-class SelectionImplIE6(SelectionImpl):
 
-    def clear(self, selection):
-        JS("""
-        selection.empty();
-        """)
+def clear(selection):
+    JS("""
+    selection.empty();
+    """)
+
+
+"""*
+* Get the range, and double check that it is actually parented by this
+* document.  If not, then return None.  Also uses duplicate to ensure that
+* the range is decoupled from the selection.
+*
+* @see com.bfr.client.selection.impl.SelectionImpl#getJSRange(com.google.gwt.dom.client.Document, com.bfr.client.selection.impl.SelectionImpl.JSSel)
+"""
+def getJSRange(doc, selection):
+    JS("""
+    var res = selection.createRange();
     
-    
-    """*
-    * Get the range, and double check that it is actually parented by this
-    * document.  If not, then return None.  Also uses duplicate to ensure that
-    * the range is decoupled from the selection.
-    *
-    * @see com.bfr.client.selection.impl.SelectionImpl#getJSRange(com.google.gwt.dom.client.Document, com.bfr.client.selection.impl.SelectionImpl.JSSel)
-    """
-    def getJSRange(self, doc, selection):
-        JS("""
-        var res = selection.createRange();
-        
-        var parent = res.parentElement();
-        if (parent.ownerDocument == doc) {
-            return res.duplicate();
-        }
-        return null;
-        """)
-    
-    
-    def getSelection(self, window):
-        JS("""
-        return window.document.selection;
-        """)
-    
-    
-    def isEmpty(self, selection):
-        JS("""
-        return selection.type == "None";
-        """)
-    
-    
-    def setJSRange(self, selection, rng):
-        JS("""
-        rng.select();
-        """)
-    
+    var parent = res.parentElement();
+    if (parent.ownerDocument == doc) {
+        return res.duplicate();
+    }
+    return null;
+    """)
+
+
+def getSelection(window):
+    JS("""
+    return window.document.selection;
+    """)
+
+
+def isEmpty(selection):
+    JS("""
+    return selection.type == "None";
+    """)
+
+
+def setJSRange(selection, rng):
+    JS("""
+    rng.select();
+    """)
 
 
