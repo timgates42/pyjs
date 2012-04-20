@@ -15,9 +15,7 @@
 """
 
 
-
-
-import DOM
+from pyjamas import DOM
 
 # For use in compareBoundaryPoint, which end points to compare
 START_TO_START	= 0
@@ -46,10 +44,7 @@ m_testElement = None # used in ie6
 * @return The value
 """
 def getIntProp(obj, propertyName):
-    JS("""
-    var value = obj[ propertyName ];
-    return value;
-    """)
+    DOM.getIntAttribute(obj, propertyName)
 
 
 """*
@@ -60,10 +55,7 @@ def getIntProp(obj, propertyName):
 * @return the object
 """
 def getProperty(obj, propertyName):
-    JS("""
-    var value = obj[ propertyName ];
-    return value || null;
-    """)
+    DOM.getAttribute(obj, propertyName)
 
 
 """*
@@ -74,9 +66,7 @@ def getProperty(obj, propertyName):
 * @return a full copy of the range
 """
 def cloneRange(rng):
-    JS("""
-    return rng.cloneRange();
-    """)
+    return rng.cloneRange()
 
 
 """*
@@ -86,9 +76,7 @@ def cloneRange(rng):
 * @param start if True, collapse to start, otherwise to end
 """
 def collapse(rng, start):
-    JS("""
-    rng.collapse(start);
-    """)
+    rng.collapse(start)
 
 
 """*
@@ -102,9 +90,7 @@ def collapse(rng, start):
 * @return -1, 0, or 1 depending on order of the 2 ranges
 """
 def compareBoundaryPoint(rng, compare, how):
-    JS("""
-    return rng.compareBoundaryPoints(compare, how);
-    """)
+    return rng.compareBoundaryPoints(compare, how)
 
 
 """*
@@ -115,9 +101,7 @@ def compareBoundaryPoint(rng, compare, how):
 * @param copyInto an element to copy these contents into
 """
 def copyContents(rng, copyInto):
-    JS("""
-    copyInto.appendChild(rng.cloneContents());
-    """)
+    copyInto.appendChild(rng.cloneContents())
 
 
 """*
@@ -127,9 +111,7 @@ def copyContents(rng, copyInto):
 * @return a empty JS range
 """
 def createFromDocument(doc):
-    JS("""
-    return doc.createRange();
-    """)
+    return doc.createRange()
 
 
 """*
@@ -142,14 +124,11 @@ def createFromDocument(doc):
 * @return A javascript object of this range
 """
 def createRange(doc, startPoint, startOffset, endPoint, endOffset):
-    JS("""
-    var range = doc.createRange();
+    rng = doc.createRange()
+    rng.setStart(startPoint, startOffset)
+    rng.setEnd(endPoint, endOffset)
     
-    range.setStart(startPoint, startOffset);
-    range.setEnd(endPoint, endOffset);
-    
-    return range;
-    """)
+    return rng;
 
 
 """*
@@ -158,9 +137,7 @@ def createRange(doc, startPoint, startOffset, endPoint, endOffset):
 * @param range js range to remove
 """
 def deleteContents(rng):
-    JS("""
-    rng.deleteContents();
-    """)
+    rng.deleteContents()
 
 
 """*
@@ -172,9 +149,7 @@ def deleteContents(rng):
 * @param copyInto an element to extract these contents into
 """
 def extractContents(rng, copyInto):
-    JS("""
-    copyInto.appendChild(rng.extractContents());
-    """)
+    copyInto.appendChild(rng.extractContents())
 
 
 """*
@@ -184,7 +159,7 @@ def extractContents(rng, copyInto):
 * @param fillRange range object to set the endpoints of
 """
 def fillRangePoints(fillRange):
-    JSRange jsRange = fillRange._getJSRange()
+    jsRange = fillRange._getJSRange()
     
     startNode = getProperty(jsRange, Selection.START_NODE)
     startOffset = getIntProp(jsRange, Selection.START_OFFSET)
@@ -204,9 +179,7 @@ def fillRangePoints(fillRange):
 * @return the lowest element that completely encompasses the range
 """
 def getCommonAncestor(rng):
-    JS("""
-    return rng.commonAncestorContainer;
-    """)
+    return rng.commonAncestorContainer
 
 
 """*
@@ -217,12 +190,9 @@ def getCommonAncestor(rng):
 * @return an html string of the range
 """
 def getHtmlText(rng):
-    JS("""
-    var parent = rng.startContainer.ownerDocument.createElement("span");
-    this.@com.bfr.client.selection.impl.RangeImpl::copyContents(Lcom/bfr/client/selection/impl/RangeImpl$JSRange;Lcom/google/gwt/dom/client/Element;)(range, parent);
-    return parent.innerHTML;
-    """)
-
+    parent = DOM.createElement("span")
+    copyContents(rng, parent)
+    return DOM.getInnerHTML(parent)
 
 """*
 * Get the pure text that is included in a js range
@@ -231,9 +201,7 @@ def getHtmlText(rng):
 * @return string of the range's text
 """
 def getText(rng):
-    JS("""
-    return rng.toString();
-    """)
+    return rng.toString()
 
 
 """*
@@ -244,11 +212,9 @@ def getText(rng):
 * @param range js range to surround with this element
 * @param copyInto element to surround the range's contents with
 """
-def surroundContents(range, copyInto):
-    JS("""
-    copyInto.appendChild(range.extractContents());
-    range.insertNode(copyInto);
-    """)
+def surroundContents(rng, copyInto):
+    DOM.appendChild(copyInto, rng.extractContents())
+    rng.insertNode(copyInto)
 
 
 """*
@@ -263,13 +229,13 @@ def surroundContents(range, copyInto):
 def findTextPoint(node, offset):
     if node.getNodeType() == DOM.TEXT_NODE:
         res = RangeEndPoint(node, offset)
-     else:
+    else:
         # search backwards unless this is after the last node
         dirn = offset >= DOM.getChildCount(node)
-        child = (DOM.getChildCount(node) == 0) ? node:
-        DOM.getChild(node, dirn ? offset - 1 : offset)
+        child = (DOM.getChildCount(node) == 0) and node or \
+            DOM.getChild(node, dirn and (offset - 1) or offset)
         # Get the previous/next text node
-        Text text = Range.getAdjacentTextElement(child, dirn)
+        text = Range.getAdjacentTextElement(child, dirn)
         if text is None:
             # If we didn't find a text node in the preferred direction,
             # try the other direction
@@ -459,7 +425,7 @@ class Range:
     """
     def collapse(self, start):
         if self.m_range is not None:
-            c_impl.collapse(self.m_range, start)
+            collapse(self.m_range, start)
             self.m_startPoint = None
         
         elif start:
@@ -483,7 +449,7 @@ class Range:
         self.ensureRange()
         self.compare.ensureRange()
         
-        return c_impl.compareBoundaryPoint(self.m_range, self.getJSRange(), how)
+        return compareBoundaryPoint(self.m_range, self.getJSRange(), how)
     
     
     """*
@@ -495,7 +461,7 @@ class Range:
     """
     def copyContents(self, copyInto):
         self.ensureRange()
-        c_impl.copyContents(self.m_range, copyInto)
+        copyContents(self.m_range, copyInto)
     
     
     """*
@@ -503,7 +469,7 @@ class Range:
     """
     def deleteContents(self):
         self.ensureRange()
-        c_impl.deleteContents(self.m_range)
+        deleteContents(self.m_range)
     
     
     def equals(self, obj):
@@ -547,7 +513,7 @@ class Range:
     """
     def extractContents(self, copyInto):
         self.ensureRange()
-        c_impl.extractContents(self.m_range, copyInto)
+        extractContents(self.m_range, copyInto)
     
     
     """*
@@ -558,7 +524,7 @@ class Range:
     """
     def getCommonAncestor(self):
         self.ensureRange()
-        return c_impl.getCommonAncestor(self.m_range)
+        return getCommonAncestor(self.m_range)
     
     
     """*
@@ -598,7 +564,7 @@ class Range:
     """
     def getHtmlText(self):
         self.ensureRange()
-        return c_impl.getHtmlText(self.m_range)
+        return getHtmlText(self.m_range)
     
     
     """*
@@ -640,7 +606,7 @@ class Range:
     """
     def getText(self):
         self.ensureRange()
-        return c_impl.getText(self.m_range)
+        return getText(self.m_range)
     
     
     """*
@@ -777,7 +743,7 @@ class Range:
     """
     def surroundContents(self, copyInto):
         self.ensureRange()
-        c_impl.surroundContents(self.m_range, copyInto)
+        surroundContents(self.m_range, copyInto)
         self.setRange(copyInto)
     
     
@@ -786,7 +752,7 @@ class Range:
     """
     def ensureEndPoints(self):
         if (self.m_startPoint is None)  or  (self.m_endPoint is None):
-            c_impl.fillRangePoints(this)
+            fillRangePoints(this)
             self.setupLastEndpoints()
         
     
@@ -796,7 +762,7 @@ class Range:
     """
     def ensureRange(self):
         if self.rangeNeedsUpdate():
-            self.m_range = c_impl.createRange(self.m_document,
+            self.m_range = createRange(self.m_document,
                                                 self.m_startPoint.getTextNode(),
                                                 self.m_startPoint.getOffset(),
                                                 self.m_endPoint.getTextNode(),
@@ -827,7 +793,7 @@ class Range:
     def setDocument(self, doc):
         if self.m_document != doc:
             self.m_document = doc
-            self.m_range = c_impl.createFromDocument(doc)
+            self.m_range = createFromDocument(doc)
         
     
 
