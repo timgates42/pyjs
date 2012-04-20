@@ -67,11 +67,7 @@ try:
 except:
     pass
 
-try:
-    atl = windll.atl                  # If this fails, you need atl.dll
-except:
-    assert not hasattr(sys, 'frozen') # can't get atl.dll if frozen...
-    GetModule('atl.dll')
+atl = windll.atl                  # If this fails, you need atl.dll
 
 # do this after gen stuff, above
 import mshtmlevents 
@@ -264,6 +260,12 @@ class Browser(EventSink):
         self.pBrowser = wrap(self.pBrowserUnk)
         self.pBrowser.RegisterAsBrowser = True
         self.pBrowser.AddRef()
+
+        print dir(SHDocVw)
+        print SHDocVw.IWebBrowser
+        print SHDocVw.IWebBrowser2
+
+        print dir(MSHTML)
 
         self.conn = mshtmlevents.GetEvents(self.pBrowser, sink=self,
                         interface=SHDocVw.DWebBrowserEvents2)
