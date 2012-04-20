@@ -17,7 +17,8 @@
 
 
 
-
+m_lastDocument = None # used in ie6
+m_testElement = None # used in ie6
 
 
 """*

@@ -33,8 +33,6 @@ BOUNDARY_STRINGS = [ "StartToStart", "StartToEnd", "EndToEnd", "EndToStart"]
 # Used for deleting/replacing values of a range
 REPLACING_STRING = "DeL3EteTh1s"
 
-m_lastDocument = None
-
 def cloneRange(rng):
     JS("""
     return rng.duplicate();
@@ -42,10 +40,8 @@ def cloneRange(rng):
 
 
 def compareBoundaryPoint(rng, compare, how):
-    return compareBoundaryPoint(rng, compare, BOUNDARY_STRINGS[how])
-
-
-def compareBoundaryPoint(rng, compare, how):
+    if isinstance(how, int):
+        how = BOUNDARY_STRINGS[how]
     JS("""
     return rng.compareEndPoints(how, compare);
     """)
@@ -302,6 +298,8 @@ def getRangeEndPoint(rng, selRange, start):
 
 
 def getTestElement(document):
+    global m_lastDocument
+    global m_testElement
     # Create an element to search for the cursor with, cache it so we
     # don't create a ton of these unnecessarily
     if document != m_lastDocument:
