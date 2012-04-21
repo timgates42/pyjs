@@ -54,7 +54,7 @@ from pyjamas.ui.Event import (
 
 ELEMENT_NODE = 1
 TEXT_NODE = 3
-DOCMENT_NODE = 9
+DOCUMENT_NODE = 9
 
 def get_listener(item):
     if item is None:
@@ -581,6 +581,13 @@ def getFirstChild(elem):
     child = elem and elem.firstChild
     while child and child.nodeType != 1:
         child = child.nextSibling
+    return child
+
+
+def getLastChild(elem):
+    child = elem and elem.lastChild
+    while child and child.nodeType != 1:
+        child = child.previousSibling
     return child
 
 

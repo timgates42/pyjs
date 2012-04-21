@@ -48,13 +48,6 @@ class RangeEndPoint:
 
 
     """*
-    * Create a range end point with nothing set
-    """
-    def __init__(self):
-        super()
-
-
-    """*
     * Create a range end point at the start or end of an element.  The actual
     * selection will occur at the first/last text node within this element.
     *
@@ -316,9 +309,12 @@ class RangeEndPoint:
     * @param element element to set this end point in
     * @param start whether to make the end point at the start or the end
     """
-    def setElement(self, element, start):
-        text = Range.getAdjacentTextElement(element, element, start, False)
-        setTextNode(text, start)
+    def setElement(self, element, start=None):
+        if start is None:
+            self.m_node = element
+        else:
+            text = Range.getAdjacentTextElement(element, element, start, False)
+            self.setTextNode(text, start)
 
 
     """*

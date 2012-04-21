@@ -163,12 +163,15 @@ def extractContents(rng, copyInto):
 def fillRangePoints(fillRange):
     jsRange = fillRange._getJSRange()
 
-    startNode = getProperty(jsRange, Selection.START_NODE)
-    startOffset = getIntProp(jsRange, Selection.START_OFFSET)
+    startNode = jsRange.startContainer
+    startOffset = jsRange.startOffset
+    print "jsRange", jsRange
+    print "startNode", startNode
+    print "startOffset", startOffset
     startPoint = findTextPoint(startNode, startOffset)
 
-    endNode = getProperty(jsRange, Selection.END_NODE)
-    endOffset = getIntProp(jsRange, Selection.END_OFFSET)
+    endNode = jsRange.endNode
+    endOffset = jsRange.endOffset
     endPoint = findTextPoint(endNode, endOffset)
 
     fillRange._setRange(startPoint, endPoint)
@@ -229,7 +232,7 @@ def surroundContents(rng, copyInto):
 * @return A range end point with a proper (or None) text node
 """
 def findTextPoint(node, offset):
-    if node.getNodeType() == DOM.TEXT_NODE:
+    if DOM.getNodeType(node) == DOM.TEXT_NODE:
         res = RangeEndPoint(node, offset)
     else:
         # search backwards unless this is after the last node
@@ -288,8 +291,10 @@ class Range:
         # If traversingUp, then the children have already been processed
         if not traversingUp:
             if DOM.getChildCount(current) > 0:
-                node = forward is not None and DOM.getFirstChild(current) or \
-                DOM.getLastChild(current)
+                if forward:
+                    node = DOM.getFirstChild(current)
+                else:
+                    node = DOM.getLastChild(current)
 
                 if DOM.getNodeType(node) == DOM.TEXT_NODE:
                     res = node
@@ -303,13 +308,16 @@ class Range:
 
 
         if res is None:
-            node = forward is not None and DOM.getNextSibling(current) or \
-                            DOM.getPreviousSibling(current)
+            if forward:
+                node = DOM.getNextSibling(current)
+            else:
+                node = DOM.getPrevSibling(current)
             # Traverse siblings
             if node is not None:
                 if DOM.getNodeType(node) == DOM.TEXT_NODE:
                     res = node
                 else:
+                    print node, DOM.getNodeType(node), node.innerHTML
                     # Depth first traversal, the recursive call deals with
                     # siblings
                     res = self.getAdjacentTextElement(node, topMostNode,
@@ -319,8 +327,8 @@ class Range:
 
 
         # Go up and over if still not found
-        if (res is None)  and  (not DOM.isSameNode(current, topMostNode)):
-            node = DOM.getParentNode(current)
+        if (res is None)  and  (not DOM.compare(current, topMostNode)):
+            node = DOM.getParent(current)
             # Stop at document (technically could stop at "html" tag)
             if (node is not None)  and  \
                     (DOM.getNodeType(node) != DOM.DOCUMENT_NODE):
@@ -344,7 +352,7 @@ class Range:
         res = []
 
         current = startNode
-        while (current is not None) and (not DOM.isSameNode(current, endNode)):
+        while (current is not None) and (not DOM.compare(current, endNode)):
             res.append(current)
 
             current = self.getAdjacentTextElement(current, None, True, False)
@@ -384,18 +392,25 @@ class Range:
     * @param rangeObj
     """
     def __init__(self, arg1, arg2=None):
+        print "range", arg1, arg2
+        print dir(arg1)
+        self.m_startPoint = None
+        self.m_endPoint = None
+        self.m_range = None
         if isinstance(arg1, RangeEndPoint):
             if arg2 and isinstance(arg2, RangeEndPoint):
                 self.setRange(arg1, arg2)
             else:
                 self.setCursor(arg1)
-        elif hasattr(arg1, "nodeType"): # bad heuristic!  oh well...
-            self.setRange(arg1)
-        elif arg2:
+        elif arg2 is not None:
             self.m_document = arg1
             self.m_range = arg2
         else:
-            self.setDocument(arg1)
+            if hasattr(arg1, "nodeType") and \
+                    arg1.nodeType == DOM.DOCUMENT_NODE:
+                self.setDocument(arg1)
+            else:
+                self.setRange(arg1)
 
     """*
     * Internal function for retrieving the range, external callers should NOT
@@ -752,7 +767,7 @@ class Range:
     """
     def ensureEndPoints(self):
         if (self.m_startPoint is None)  or  (self.m_endPoint is None):
-            fillRangePoints(this)
+            fillRangePoints(self)
             self.setupLastEndpoints()
 
 
