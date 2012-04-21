@@ -8,36 +8,39 @@ from pyjamas.ui.Image import Image
 from pyjamas.ui import Event
 from pyjamas.Timer import Timer
 
+from __pyjamas__ import doc
+
 import EventLinkPopup
 
 class Icons:
     bold_icon = "bold.png"
-    italics_icon = "Italic"
-    underline_icon = "Underline"
-    subscript_icon = "Subscript"
-    superscript_icon = "Superscript"
-    strikethrough_icon = "Strikethrough"
-    indentmore_icon = "Indent Right"
-    indentless_icon = "Indent Left"
-    justifyleft_icon = "Justify Left"
-    justifycenter_icon = "Justify Center"
-    justifyright_icon = "Justify Right"
-    horizontalrule_icon = "Horizontal Rule"
-    numberedlist_icon = "Numbered List"
-    list_icon = "List"
-    link_icon = "Link Document"
-    noformat_icon = "No Format"
+    italics_icon = "Italic.png"
+    underline_icon = "Underline.png"
+    subscript_icon = "Subscript.png"
+    superscript_icon = "Superscript.png"
+    strikethrough_icon = "Strikethrough.png"
+    indentmore_icon = "Indent Right.png"
+    indentless_icon = "Indent Left.png"
+    justifyleft_icon = "Justify Left.png"
+    justifycenter_icon = "Justify Center.png"
+    justifyright_icon = "Justify Right.png"
+    horizontalrule_icon = "Horizontal Rule.png"
+    numberedlist_icon = "Numbered List.png"
+    list_icon = "List.png"
+    link_icon = "Link Document.png"
+    noformat_icon = "No Format.png"
 
+
+BUTTON_WIDTH = "25px"
 
 class RichTextEditor(Composite):
-    #String BUTTON_WIDTH = "25px"
 
 
     def run(self):
         try:
             rng = getSelection().getRange()
             if (self.m_timerRange is None)  or  (not self.m_timerRange.equals(rng)):
-                onSelectionChange(rng)
+                self.onSelectionChange(rng)
                 self.m_timerRange = rng
 
         except:
@@ -56,7 +59,9 @@ class RichTextEditor(Composite):
 
         self.m_mainPanel = DockPanel()
         self.m_toolbarPanel = HorizontalPanel()
-        #self.m_toolbarPanel.setWidth("100%")
+        self.m_toolbarPanel.setWidth("100%")
+        self.m_toolbarPanel.setHeight("25px")
+        self.m_toolbarPanel.setBorderWidth(1)
         self.m_toolbarPanel.addStyleName("timeline-RichTextToolbar")
 
         self.m_textW = RichTextArea()
@@ -117,13 +122,20 @@ class RichTextEditor(Composite):
         return self.m_textW
 
     def addPushButton(self, panel, imagep, tip):
-        pb = PushButton(Image(imagep))
+        img = Image(imagep)
+        img.setWidth("20px")
+        img.setHeight("20px")
+
+        pb = PushButton(img)
         self.addAnyButton(panel, pb, tip)
         return pb
 
 
     def addToggleButton(self, panel, imagep, tip):
-        tb = ToggleButton(Image(imagep))
+        img = Image(imagep)
+        img.setWidth("20px")
+        img.setHeight("20px")
+        tb = ToggleButton(img)
         self.addAnyButton(panel, tb, tip)
         return tb
 
@@ -131,10 +143,10 @@ class RichTextEditor(Composite):
     def addAnyButton(self, panel, button, tip):
         button.addStyleName("richText-button")
         button.setTitle(tip)
-        #button.setWidth(BUTTON_WIDTH)
+        button.setWidth(BUTTON_WIDTH)
         button.setHeight("100%")
         panel.add(button)
-        #panel.setCellWidth(button, BUTTON_WIDTH)
+        panel.setCellWidth(button, BUTTON_WIDTH)
         button.addClickListener(self)
 
 
@@ -170,17 +182,20 @@ class RichTextEditor(Composite):
         elif sender == self.m_removeFormatW:
             self.m_formatter.removeFormat()
         elif sender == self.m_newLinkW:
-            EventLinkPopup.open(RichTextEditor.this)
+            EventLinkPopup.open(self)
         elif sender == self.m_textW:
-            updateStatus()
+            self.updateStatus()
 
-        checkForChange()
+        self.checkForChange()
 
-    def onKeyUp(self, event):
+    def onKeyDown(self, sender, keycode, modifiers):
+        pass
+
+    def onKeyUp(self, sender, keycode, modifiers):
         sender = event.getSource()
         if sender == self.m_textW:
-            updateStatus()
-            checkForChange()
+            self.updateStatus()
+            self.checkForChange()
 
     def onMouseLeave(self, event):
         pass
@@ -188,10 +203,13 @@ class RichTextEditor(Composite):
     def onMouseEnter(self, event):
         pass
 
+    def onMouseUp(self, event, x, y):
+        pass
+
     def onMouseMove(self, event, x, y):
         pass
 
-    def onMouseDown(self, event):
+    def onMouseDown(self, event, x, y):
         self.trigger = True
 
     def onFocus(self, event):
@@ -201,17 +219,17 @@ class RichTextEditor(Composite):
         self.checkForChange()
 
     def onMouseOut(self, event):
-        if self.m_isInText  and  isOnTextBorder(event):
+        if self.m_isInText  and  self.isOnTextBorder(event):
             self.m_isInText = False
-            captureSelection()
-            endSelTimer()
+            self.captureSelection()
+            self.endSelTimer()
 
     def onMouseOver(self, event):
         if not self.m_isInText:
             self.m_isInText = True
             self.m_textW.setFocus(True)
             self.m_lastRange = None
-            startSelTimer()
+            self.startSelTimer()
 
     """*
     * This captures the selection when the mouse leaves the RTE, because in IE
@@ -293,8 +311,9 @@ class RichTextEditor(Composite):
     def checkForChange(self):
         text = self.m_textW.getHTML()
         if text != self.m_lastText:
-            nEvt = Document.get().createChangeEvent()
-            ChangeEvent.fireNativeEvent(nEvt, RichTextEditor.this)
+            nEvt = doc().createEvent("HTMLEvents")
+            nEvt.initEvent("change", False, True)
+            self.getElement().dispatchEvent(nEvt)
             self.m_lastText = text
 
 

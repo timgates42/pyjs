@@ -5,12 +5,13 @@ from pyjamas.ui.Label import Label
 from pyjamas.ui.HorizontalPanel import HorizontalPanel
 from pyjamas.ui.CheckBox import CheckBox
 from pyjamas.ui.Button import Button
+from pyjamas.ui.TextBox import TextBox
 
 
 LABEL_WIDTH = 85
 ROW_HEIGHT = 24
 
-def open(self, editor):
+def open(editor):
     popup = EventLinkPopup(editor)
     if popup.refresh():
         popup.center()
@@ -22,7 +23,7 @@ def open(self, editor):
 class EventLinkPopup(PopupPanel):
     
     def __init__(self, editor):
-        PopupPanel.__init__(False, True)
+        PopupPanel.__init__(self, False, True)
 
         self.m_origTargetText = ""
         self.m_editor = editor
@@ -33,7 +34,7 @@ class EventLinkPopup(PopupPanel):
         vpanel.setWidth("300px")
         
         self.m_webPageText = TextBox()
-        self.m_webPageText.setValue("http:#")
+        self.m_webPageText.setText("http:#")
         self.m_webPageText.setWidth("100%")
         
         vpanel.add(self.m_webPageText)
@@ -55,13 +56,13 @@ class EventLinkPopup(PopupPanel):
         
         self.m_fillOutCB = CheckBox("Change entire link")
         self.m_fillOutCB.setVisible(False)
-        self.m_fillOutCB.addClickHandler(this)
+        self.m_fillOutCB.addClickListener(self)
         vpanel.add(self.m_fillOutCB)
         
-        self.m_okBut = Button("Ok", this)
+        self.m_okBut = Button("Ok", self)
         self.m_okBut.addStyleName("float-left")
         
-        self.m_cancelBut = Button("Cancel", this)
+        self.m_cancelBut = Button("Cancel", self)
         self.m_cancelBut.addStyleName("float-left")
         
         hpanel = FlowPanel()
@@ -70,8 +71,8 @@ class EventLinkPopup(PopupPanel):
         
         vpanel.add(hpanel)
         
-        setWidget(vpanel)
-    
+        self.add(vpanel)
+        self.show()
     
     def refresh(self):
         try:
@@ -273,7 +274,7 @@ class EventLinkPopup(PopupPanel):
         
         return selText
     
-    def onClick(self, sender, event):
+    def onClick(self, sender):
         if sender == self.m_cancelBut:
             hide()
         
