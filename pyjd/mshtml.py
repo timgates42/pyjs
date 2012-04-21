@@ -36,7 +36,6 @@ from comtypes.client.dynamic import Dispatch
 import comtypes.gen
 
 if not hasattr(sys, 'frozen'):
-    GetModule('atl.dll')
     GetModule('shdocvw.dll')
     try:
         GetModule('msxml2.dll')
@@ -261,6 +260,12 @@ class Browser(EventSink):
         self.pBrowser = wrap(self.pBrowserUnk)
         self.pBrowser.RegisterAsBrowser = True
         self.pBrowser.AddRef()
+
+        print dir(SHDocVw)
+        print SHDocVw.IWebBrowser
+        print SHDocVw.IWebBrowser2
+
+        print dir(MSHTML)
 
         self.conn = mshtmlevents.GetEvents(self.pBrowser, sink=self,
                         interface=SHDocVw.DWebBrowserEvents2)
