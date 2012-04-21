@@ -18,6 +18,7 @@
 
 
 
+from pyjamas import DOM
 
 
 """*
@@ -35,9 +36,7 @@
 * @return
 """
 def getBoolProp(obj, propertyName):
-    JS("""
-    return !! obj[propertyName];
-    """)
+    return DOM.getBooleanAttribute(obj, propertyName)
 
 
 """*
@@ -46,9 +45,7 @@ def getBoolProp(obj, propertyName):
 * @param selection
 """
 def clear(selection):
-    JS("""
-    selection.removeAllRanges();
-    """)
+    selection.removeAllRanges()
 
 
 """*
@@ -60,14 +57,12 @@ def clear(selection):
 * @return A JS object representing the range
 """
 def getJSRange(doc, selection):
-    JS("""
-    var res = null;
-    try {
-        res = selection.getRangeAt(0);
-    }
-    catch (e) {}
-    return res;
-    """)
+    res = None;
+    try:
+        res = selection.getRangeAt(0)
+    except:
+        pass
+    return res
 
 
 """*
@@ -77,9 +72,7 @@ def getJSRange(doc, selection):
 * @return The JavaScriptObject for the selection
 """
 def getSelection(window):
-    JS("""
-    return window.getSelection();
-    """)
+    return window.getSelection()
 
 
 """*
@@ -99,10 +92,8 @@ def isEmpty(selection):
 * @param range JS range to set the selection to
 """
 def setJSRange(selection, rng):
-    JS("""
-    // delete all ranges then recreate...
+    #delete all ranges then recreate...
     selection.removeAllRanges();
     selection.addRange(rng);
-    """)
 
 

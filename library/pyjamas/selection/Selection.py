@@ -14,6 +14,8 @@
 * the License.
 """
 
+from __pyjamas__ import wnd
+
 import SelectionImpl
 import Range
 
@@ -66,15 +68,11 @@ def getSelection(self, window=None):
 
 
 def getDocument(self, window):
-    JS("""
     return window.document;
-    """)
 
 
 def getWindow(self):
-    JS("""
-    return $wnd;
-    """)
+    return wnd()
 
 
 

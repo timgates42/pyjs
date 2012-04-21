@@ -26,9 +26,7 @@
 """
 
 def clear(selection):
-    JS("""
-    selection.empty();
-    """)
+    selection.empty()
 
 
 """*
@@ -39,32 +37,24 @@ def clear(selection):
 * @see com.bfr.client.selection.impl.SelectionImpl#getJSRange(com.google.gwt.dom.client.Document, com.bfr.client.selection.impl.SelectionImpl.JSSel)
 """
 def getJSRange(doc, selection):
-    JS("""
-    var res = selection.createRange();
+    res = selection.createRange()
     
-    var parent = res.parentElement();
-    if (parent.ownerDocument == doc) {
-        return res.duplicate();
-    }
-    return null;
-    """)
+    parent = res.parentElement()
+    if parent.ownerDocument == doc:
+        return res.duplicate()
+
+    return None
 
 
 def getSelection(window):
-    JS("""
-    return window.document.selection;
-    """)
+    return window.document.selection
 
 
 def isEmpty(selection):
-    JS("""
-    return selection.type == "None";
-    """)
+    return selection.type == "None"
 
 
 def setJSRange(selection, rng):
-    JS("""
-    rng.select();
-    """)
+    rng.select()
 
 
