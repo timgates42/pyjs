@@ -17,7 +17,7 @@
 from __pyjamas__ import wnd
 
 import SelectionImpl
-import Range
+from Range import Range
 
 START_NODE	= "startContainer"
 START_OFFSET	= "startOffset"
@@ -48,7 +48,7 @@ def clearAnySelectedText():
 *
 * @return A range object representing the browser window's selection
 """
-def getBrowserRange(self):
+def getBrowserRange():
     getSelection()
     return getRange()
 
@@ -58,7 +58,7 @@ def getBrowserRange(self):
 *
 * @return The singleton instance
 """
-def getSelection(self, window=None):
+def getSelection(window=None):
     global m_selection
     global m_document
     if window is None:
@@ -67,19 +67,14 @@ def getSelection(self, window=None):
     m_document = getDocument(window)
 
 
-def getDocument(self, window):
-    return window.document;
-
-
-def getWindow(self):
+def getWindow():
     return wnd()
-
 
 
 """*
 * Clears any current selection.
 """
-def clear(self):
+def clear():
     SelectionImpl.clear(m_selection)
 
 """*
@@ -89,7 +84,9 @@ def clear(self):
 *
 * @return parent document of this selection
 """
-def getDocument(self):
+def getDocument(window=None):
+    if window:
+        return window.document;
     return m_document
 
 """*
@@ -98,7 +95,7 @@ def getDocument(self):
 *
 * @return a JavaScriptObject representing this selection
 """
-def getJSSelection(self):
+def getJSSelection():
     return m_selection
 
 """*
@@ -124,8 +121,8 @@ def getRange():
 *
 * @return True if empty False otherwise
 """
-def isEmpty(self):
-    return Selection.getImpl().isEmpty(self.m_selection)
+def isEmpty():
+    return Selection.getImpl().isEmpty(m_selection)
 
 
 """*
@@ -136,7 +133,7 @@ def isEmpty(self):
 *
 * @param newSelection What the selection should be
 """
-def setRange(self, newSelection):
-    if newSelection.getDocument() == self.m_document:
-        c_impl.setJSRange(self.m_selection, newSelection.getJSRange())
+def setRange(newSelection):
+    if newSelection.getDocument() == m_document:
+        c_impl.setJSRange(m_selection, newSelection.getJSRange())
 

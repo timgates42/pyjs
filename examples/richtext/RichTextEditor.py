@@ -10,7 +10,11 @@ from pyjamas.Timer import Timer
 
 from __pyjamas__ import doc
 
+import traceback
+
 import EventLinkPopup
+
+from pyjamas.selection import Selection
 
 class Icons:
     bold_icon = "bold.png"
@@ -38,7 +42,8 @@ class RichTextEditor(Composite):
 
     def run(self):
         try:
-            rng = getSelection().getRange()
+            self.getSelection()
+            rng = Selection.getRange()
             if (self.m_timerRange is None)  or  (not self.m_timerRange.equals(rng)):
                 self.onSelectionChange(rng)
                 self.m_timerRange = rng
@@ -52,6 +57,7 @@ class RichTextEditor(Composite):
         self.m_isInText = False
         self.m_lastText = ""
         self.trigger = False
+        self.m_lastRange = None
 
         # Timer for trying real time selection change stuff
         self.m_timerRange = None
@@ -238,7 +244,8 @@ class RichTextEditor(Composite):
     """
     def captureSelection(self):
         try:
-            self.m_lastRange = getSelection().getRange()
+            self.getSelection()
+            self.m_lastRange = Selection.getRange()
 
         except:
             GWT.log("Error capturing selection for IE", ex)
@@ -267,7 +274,8 @@ class RichTextEditor(Composite):
 
     def getRange(self):
         if self.m_lastRange is None:
-            return getSelection().getRange()
+            self.getSelection()
+            return Selection.getRange()
 
         else:
             return self.m_lastRange
@@ -275,27 +283,24 @@ class RichTextEditor(Composite):
     def getSelection(self):
         res = None
         try:
-            window = getWindow()
-            res = Selection.getSelection(window)
+            window = self.getWindow()
+            Selection.getSelection(window)
 
         except:
-            GWT.log("Error getting the selection", ex)
+            print "Error getting the selection"
+            traceback.print_exc()
 
-        return res
+    def getWindow(self, iFrame=None):
+        if iFrame is None:
+            iFrame = self.m_textW.getElement()
+        iFrameWin = iFrame.contentWindow or iFrame.contentDocument
 
-    def getWindow(self):
-        frame = self.m_textW.getElement().cast()
-        return getWindow(frame)
+        if not iFrameWin.document:
+            iFrameWin = iFrameWin.getParentNode() # FBJS version of parentNode
 
-    def getWindow(self, iFrame):
-        JS("""
-        var iFrameWin = iFrame.contentWindow || iFrame.contentDocument;
+        print "getWindow", iFrameWin
 
-        if( !iFrameWin.document )  {
-            iFrameWin = iFrameWin.getParentNode(); //FBJS version of parentNode
-        }
-        return iFrameWin;
-        """)
+        return iFrameWin
 
 
     def getDocument(self):

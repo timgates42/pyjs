@@ -17,6 +17,8 @@
 
 from pyjamas import DOM
 
+from RangeEndPoint import RangeEndPoint
+
 # For use in compareBoundaryPoint, which end points to compare
 START_TO_START	= 0
 START_TO_END	= 1
@@ -34,7 +36,7 @@ m_testElement = None # used in ie6
 *
 * @author John Kozura
 """
-    
+
 
 """*
 * Reads an object's property as an integer value.
@@ -127,7 +129,7 @@ def createRange(doc, startPoint, startOffset, endPoint, endOffset):
     rng = doc.createRange()
     rng.setStart(startPoint, startOffset)
     rng.setEnd(endPoint, endOffset)
-    
+
     return rng;
 
 
@@ -160,15 +162,15 @@ def extractContents(rng, copyInto):
 """
 def fillRangePoints(fillRange):
     jsRange = fillRange._getJSRange()
-    
+
     startNode = getProperty(jsRange, Selection.START_NODE)
     startOffset = getIntProp(jsRange, Selection.START_OFFSET)
     startPoint = findTextPoint(startNode, startOffset)
-    
+
     endNode = getProperty(jsRange, Selection.END_NODE)
     endOffset = getIntProp(jsRange, Selection.END_OFFSET)
     endPoint = findTextPoint(endNode, endOffset)
-    
+
     fillRange._setRange(startPoint, endPoint)
 
 
@@ -241,9 +243,9 @@ def findTextPoint(node, offset):
             # try the other direction
             dirn = not dirn
             text = Range.getAdjacentTextElement(child, dirn)
-        
+
         res = RangeEndPoint(text, dirn)
-    
+
     return res
 
 
@@ -280,15 +282,15 @@ class Range:
         if forward is None:
             forward = topMostNode
             topMostNode = None
-            
+
         res = None
-        
+
         # If traversingUp, then the children have already been processed
         if not traversingUp:
             if DOM.getChildCount(current) > 0:
                 node = forward is not None and DOM.getFirstChild(current) or \
                 DOM.getLastChild(current)
-                
+
                 if DOM.getNodeType(node) == DOM.TEXT_NODE:
                     res = node
                 else:
@@ -296,26 +298,26 @@ class Range:
                     # siblings
                     res = self.getAdjacentTextElement(node, topMostNode,
                                             forward, False)
-                
-            
-        
-        
+
+
+
+
         if res is None:
             node = forward is not None and DOM.getNextSibling(current) or \
                             DOM.getPreviousSibling(current)
             # Traverse siblings
             if node is not None:
-                if node.getNodeType() == DOM.TEXT_NODE:
+                if DOM.getNodeType(node) == DOM.TEXT_NODE:
                     res = node
                 else:
                     # Depth first traversal, the recursive call deals with
                     # siblings
                     res = self.getAdjacentTextElement(node, topMostNode,
                                             forward, False)
-                
-            
-        
-        
+
+
+
+
         # Go up and over if still not found
         if (res is None)  and  (not DOM.isSameNode(current, topMostNode)):
             node = DOM.getParentNode(current)
@@ -324,12 +326,12 @@ class Range:
                     (DOM.getNodeType(node) != DOM.DOCUMENT_NODE):
                 res = self.getAdjacentTextElement(node, topMostNode,
                                             forward, True)
-            
-        
-        
+
+
+
         return res
-    
-    
+
+
     """*
     * Returns all text nodes between (and including) two arbitrary text nodes.
     * Caller must ensure startNode comes before endNode.
@@ -340,28 +342,28 @@ class Range:
     """
     def getSelectedTextElements(self, startNode, endNode):
         res = []
-        
+
         current = startNode
         while (current is not None) and (not DOM.isSameNode(current, endNode)):
             res.append(current)
-            
+
             current = self.getAdjacentTextElement(current, None, True, False)
-        
+
         if current is None:
             # With the old way this could have been backwards, but should not
             # happen now, so this is an error
             res = None
         else:
             res.append(current)
-        
+
         return res
-    
-    
+
+
     """*
     * Creates an empty range on this document
     *
     * @param doc Document to create an empty range in
-    
+
     * Creates a range that encompasses the given element
     *
     * @param element Element to create a range around
@@ -369,7 +371,7 @@ class Range:
     * Creates a range that is a cursor at the given location
     *
     * @param cursorPoint a single point to make a cursor range
-    
+
     * Create a range that extends between the given points.  Caller must
     * ensure that end comes after start
     *
@@ -389,12 +391,12 @@ class Range:
                 self.setCursor(arg1)
         elif hasattr(arg1, "nodeType"): # bad heuristic!  oh well...
             self.setRange(arg1)
-        elif arg2: 
+        elif arg2:
             self.m_document = arg1
             self.m_range = arg2
         else:
             self.setDocument(arg1)
-    
+
     """*
     * Internal function for retrieving the range, external callers should NOT
     * USE THIS
@@ -403,8 +405,8 @@ class Range:
     """
     def _getJSRange(self):
         return self.m_range
-    
-    
+
+
     """*
     * Internal call to set the range, which skips some checks and settings
     * this SHOULD NOT be used externally.
@@ -416,8 +418,8 @@ class Range:
         self.m_document = startPoint and startPoint.getNode().getOwnerDocument()
         self.m_startPoint = startPoint
         self.m_endPoint = endPoint
-    
-    
+
+
     """*
     * Collapses the range into a cursor, either to the start or end point
     *
@@ -427,14 +429,14 @@ class Range:
         if self.m_range is not None:
             collapse(self.m_range, start)
             self.m_startPoint = None
-        
+
         elif start:
             self.m_endPoint = self.m_startPoint
         else:
             self.m_startPoint = self.m_endPoint
-        
-    
-    
+
+
+
     """*
     * Compares an endpoint of this range with an endpoint in another range,
     * returning -1, 0, or 1 depending whether the comparison endpoint comes
@@ -448,10 +450,10 @@ class Range:
     def compareBoundaryPoint(self, compare, how):
         self.ensureRange()
         self.compare.ensureRange()
-        
+
         return compareBoundaryPoint(self.m_range, self.getJSRange(), how)
-    
-    
+
+
     """*
     * Make a copy of the contents of this range, into the given element.  All
     * tags required to make the range complete will be included
@@ -462,22 +464,22 @@ class Range:
     def copyContents(self, copyInto):
         self.ensureRange()
         copyContents(self.m_range, copyInto)
-    
-    
+
+
     """*
     * Remove the contents of this range from the DOM.
     """
     def deleteContents(self):
         self.ensureRange()
         deleteContents(self.m_range)
-    
-    
+
+
     def equals(self, obj):
         res = False
-        
+
         try:
             cm = obj
-            
+
             ensureEndPoints()
             cm.ensureEndPoints()
             res = (cm == this)  or  \
@@ -485,10 +487,10 @@ class Range:
                         self.m_endPoint.equals(cm.getEndPoint()))
         except:
             pass
-        
+
         return res
-    
-    
+
+
     """*
     * Place the contents of this range into a SPAN element, removing them
     * from the DOM.  All tags required to make the range complete will be
@@ -501,8 +503,8 @@ class Range:
         res = self.m_document.createSpanElement()
         self.extractContents(res)
         return res
-    
-    
+
+
     """*
     * Place the contents of this range into the given element, removing them
     * from the DOM.  All tags required to make the range complete will be
@@ -514,8 +516,8 @@ class Range:
     def extractContents(self, copyInto):
         self.ensureRange()
         extractContents(self.m_range, copyInto)
-    
-    
+
+
     """*
     * Get the element that is the lowest common ancestor of both ends of the
     * range.  In other words, the smallest element that includes the range.
@@ -525,8 +527,8 @@ class Range:
     def getCommonAncestor(self):
         self.ensureRange()
         return getCommonAncestor(self.m_range)
-    
-    
+
+
     """*
     * Gets a single point of the cursor location if this is a cursor, otherwise
     * returns None.
@@ -535,8 +537,8 @@ class Range:
     """
     def getCursor(self):
         return self.isCursor() and self.m_startPoint or None
-    
-    
+
+
     """*
     * Get the DOM Document this range is within
     *
@@ -544,8 +546,8 @@ class Range:
     """
     def getDocument(self):
         return self.m_document
-    
-    
+
+
     """*
     * Get the end point of the range.  Not a copy, so changing this alters
     * the range.
@@ -555,8 +557,8 @@ class Range:
     def getEndPoint(self):
         self.ensureEndPoints()
         return self.m_endPoint
-    
-    
+
+
     """*
     * Gets an HTML string represnting all elements enclosed by this range.
     *
@@ -565,8 +567,8 @@ class Range:
     def getHtmlText(self):
         self.ensureRange()
         return getHtmlText(self.m_range)
-    
-    
+
+
     """*
     * Get the JS object representing this range.  Since it is highly browser
     * dependent, it is not recommended to operate on this
@@ -576,8 +578,8 @@ class Range:
     def getJSRange(self):
         self.ensureRange()
         return self.m_range
-    
-    
+
+
     """*
     * Returns a list of all text elements that are part of this range, in order.
     *
@@ -586,8 +588,8 @@ class Range:
     def getSelectedTextElements(self):
         return self.getSelectedTextElements(self.m_startPoint.getTextNode(),
                             self.m_endPoint.getTextNode())
-    
-    
+
+
     """*
     * Get the start point of the range.  Not a copy, so changing this alters
     * the range.
@@ -597,8 +599,8 @@ class Range:
     def getStartPoint(self):
         self.ensureEndPoints()
         return self.m_startPoint
-    
-    
+
+
     """*
     * Gets the plain text that is enclosed by this range
     *
@@ -607,8 +609,8 @@ class Range:
     def getText(self):
         self.ensureRange()
         return getText(self.m_range)
-    
-    
+
+
     """*
     * Returns whether this is a cursor, ie the start and end point are equal
     *
@@ -617,8 +619,8 @@ class Range:
     def isCursor(self):
         self.ensureEndPoints()
         return self.m_startPoint.equals(self.m_endPoint)
-    
-    
+
+
     """*
     * Minimize the number of text nodes included in this range.  If the start
     * point is at the end of a text node, move it to the beginning of the
@@ -629,8 +631,8 @@ class Range:
         self.ensureEndPoints()
         self.m_startPoint.minimizeBoundaryTextNodes(True)
         self.m_endPoint.minimizeBoundaryTextNodes(False)
-    
-    
+
+
     """*
     * TODO NOT IMPLEMENTED YET
     * Move the end points to encompass a boundary type, such as a word.
@@ -642,8 +644,8 @@ class Range:
         self.ensureEndPoints()
         self.m_startPoint.move(False, topMostNode, None, type, 1)
         self.m_endPoint.move(True, topMostNode, None, type, 1)
-    
-    
+
+
     """*
     * Sets the range to a point cursor.
     *
@@ -651,8 +653,8 @@ class Range:
     """
     def setCursor(self, cursorPoint):
         self.setRange(cursorPoint, cursorPoint)
-    
-    
+
+
     """*
     * Sets just the end point of the range.  New endPoint must reside within
     * the same document as the current startpoint, and must occur after it.
@@ -660,48 +662,46 @@ class Range:
     * @param startPoint New start point for this range
     """
     def setEndPoint(self, endPoint):
-        assert ((self.m_startPoint is not None)  or 
+        assert ((self.m_startPoint is not None)  or
         (endPoint.getNode().getOwnerDocument() == self.m_document))
         self.m_endPoint = endPoint
         self.m_range = None
-    
-    
+
+
     """*
     * Sets the range to encompass the given element.  May not work around
     * non-text containing elements.
     *
     * @param element Element to surround by this range
     * @return whether a range can be placed around this element.
-    """
-    def setRange(self, element):
-        firstText = self.getAdjacentTextElement(element, element, True, False)
-        lastText = self.getAdjacentTextElement(element, element, False, False)
-        
-        if (firstText is None)  or  (lastText is None):
-            return False
-        
-        
-        self.setRange(self.RangeEndPoint(firstText, 0),
-        self.RangeEndPoint(lastText, lastText.getLength()))
-        
-        return True
-    
-    
-    """*
+
     * Set the range to be between the two given points.  Both points must be
     * within the same document, and end must come after start.
     *
     * @param startPoint Start point to set the range to
     * @param endPoint End point to set the range to
     """
-    def setRange(self, startPoint, endPoint):
+    def setRange(self, arg1, arg2=None):
+        if arg2 is None:
+            firstText = self.getAdjacentTextElement(arg1, arg1, True, False)
+            lastText = self.getAdjacentTextElement(arg1, arg1, False, False)
+
+            if (firstText is None)  or  (lastText is None):
+                return False
+
+            startPoint = self.RangeEndPoint(firstText, 0)
+            endPoint = self.RangeEndPoint(lastText, lastText.getLength())
+
+        else:
+            startPoint = arg1
+            endPoint = arg2
+
         assert (startPoint.getNode().getOwnerDocument() ==
                     endPoint.getNode().getOwnerDocument())
-        
+
         self._setRange(startPoint, endPoint)
         self.m_range = None
-    
-    
+
     """*
     * Sets just the start point of the range.  New startPoint must reside within
     * the same document as the current endpoint, and must occur before it.
@@ -709,13 +709,13 @@ class Range:
     * @param startPoint New start point for this range
     """
     def setStartPoint(self, startPoint):
-        assert ((self.m_endPoint is not None)  and 
-        (startPoint.getNode().getOwnerDocument() == self.m_document))
-        
+        assert ((self.m_endPoint is not None)  and
+                (startPoint.getNode().getOwnerDocument() == self.m_document))
+
         self.m_startPoint = startPoint
         self.m_range = None
-    
-    
+
+
     """*
     * Surround all of the contents of the range with a SPAN element, which
     * replaces the content in the DOM.  All tags required to make the range
@@ -729,8 +729,8 @@ class Range:
         res = self.m_document.createSpanElement()
         self.surroundContents(res)
         return res
-    
-    
+
+
     """*
     * Surround all of the contents of the range with the given element, which
     * replaces the content in the DOM.  All tags required to make the range
@@ -745,8 +745,8 @@ class Range:
         self.ensureRange()
         surroundContents(self.m_range, copyInto)
         self.setRange(copyInto)
-    
-    
+
+
     """*
     * Ensure the end points exists and are consisent with the javascript range
     """
@@ -754,9 +754,9 @@ class Range:
         if (self.m_startPoint is None)  or  (self.m_endPoint is None):
             fillRangePoints(this)
             self.setupLastEndpoints()
-        
-    
-    
+
+
+
     """*
     * Ensure the javascript range exists and is consistent with the end points
     """
@@ -768,9 +768,9 @@ class Range:
                                                 self.m_endPoint.getTextNode(),
                                                 self.m_endPoint.getOffset())
             self.setupLastEndpoints()
-        
-    
-    
+
+
+
     def rangeNeedsUpdate(self):
         return (self.m_range is None)  or  \
         ((self.m_startPoint is not None)  and  \
@@ -778,13 +778,13 @@ class Range:
         not self.m_lastStartPoint.equals(self.m_startPoint)  or  \
         (self.m_lastEndPoint is None)  or  \
         not self.m_lastEndPoint.equals(self.m_endPoint)))
-    
-    
+
+
     def setupLastEndpoints(self):
         self.m_lastStartPoint = self.RangeEndPoint(self.m_startPoint)
         self.m_lastEndPoint = self.RangeEndPoint(self.m_endPoint)
-    
-    
+
+
     """*
     * Set the document this range is contained within
     *
@@ -794,7 +794,7 @@ class Range:
         if self.m_document != doc:
             self.m_document = doc
             self.m_range = createFromDocument(doc)
-        
-    
+
+
 
 
