@@ -1,176 +1,159 @@
+from pyjamas import DOM
+from pyjamas.ui.PopupPanel import PopupPanel
+from pyjamas.ui.FlowPanel import FlowPanel
+from pyjamas.ui.Label import Label
+from pyjamas.ui.HorizontalPanel import HorizontalPanel
+from pyjamas.ui.CheckBox import CheckBox
+from pyjamas.ui.Button import Button
 
 
+LABEL_WIDTH = 85
+ROW_HEIGHT = 24
 
-
-
-
-
-
-from pyjamas import *
-from pyjamas.ui.* import *
-from pyjamas.ui.RichTextArea.Formatter import RichTextArea.Formatter
-
-
-
-class EventLinkPopup extends DecoratedPopupPanel implements ClickHandler:
-    int LABEL_WIDTH = 85
-    int ROW_HEIGHT = 24
+def open(self, editor):
+    popup = EventLinkPopup(editor)
+    if popup.refresh():
+        popup.center()
+    else:
+        popup = None
     
-    RichTextEditor m_editor
-    Selection m_sel
-    Range m_range
-    List<Text> m_selTexts
-    String m_origTargetText = ""
-    RangeEndPoint m_origAnchorStart
-    RangeEndPoint m_origAnchorEnd
-    
-    TextBox m_webPageText
-    TextBox m_targetText
-    CheckBox m_fillOutCB
-    Button m_okBut
-    Button m_cancelBut
+    return popup
+
+class EventLinkPopup(PopupPanel):
     
     def __init__(self, editor):
-        super(False, True)
-        m_editor = editor
+        PopupPanel.__init__(False, True)
+
+        self.m_origTargetText = ""
+        self.m_editor = editor
         
-        setGlassEnabled(True)
+        self.setGlassEnabled(True)
         
-        FlowPanel vpanel = FlowPanel()
+        vpanel = FlowPanel()
         vpanel.setWidth("300px")
         
-        m_webPageText = TextBox()
-        m_webPageText.setValue("http:#")
-        m_webPageText.setWidth("100%")
+        self.m_webPageText = TextBox()
+        self.m_webPageText.setValue("http:#")
+        self.m_webPageText.setWidth("100%")
         
-        vpanel.add(m_webPageText)
+        vpanel.add(self.m_webPageText)
         
-        Label lbl = Label("Display:")
+        lbl = Label("Display:")
         
-        m_targetText = TextBox()
-        m_targetText.setWidth("100%")
+        self.m_targetText = TextBox()
+        self.m_targetText.setWidth("100%")
         
-        LayoutPanel lpanel = LayoutPanel()
+        lpanel = HorizontalPanel()
         lpanel.add(lbl)
-        lpanel.setWidgetLeftWidth(lbl, 0, Unit.PX, LABEL_WIDTH, Unit.PX)
-        lpanel.add(m_targetText)
-        lpanel.setWidgetLeftRight(m_targetText, LABEL_WIDTH, Unit.PX,
-        0, Unit.PX)
-        lpanel.setPixelSize(300, ROW_HEIGHT)
+        #lpanel.setWidgetLeftWidth(lbl, 0, Unit.PX, LABEL_WIDTH, Unit.PX)
+        lpanel.add(self.m_targetText)
+        #lpanel.setWidgetLeftRight(self.m_targetText, LABEL_WIDTH, Unit.PX,
+        #0, Unit.PX)
+        #lpanel.setPixelSize(300, ROW_HEIGHT)
         
         vpanel.add(lpanel)
         
-        m_fillOutCB = CheckBox("Change entire link")
-        m_fillOutCB.setVisible(False)
-        m_fillOutCB.addClickHandler(this)
-        vpanel.add(m_fillOutCB)
+        self.m_fillOutCB = CheckBox("Change entire link")
+        self.m_fillOutCB.setVisible(False)
+        self.m_fillOutCB.addClickHandler(this)
+        vpanel.add(self.m_fillOutCB)
         
-        m_okBut = Button("Ok", this)
-        m_okBut.addStyleName("float-left")
+        self.m_okBut = Button("Ok", this)
+        self.m_okBut.addStyleName("float-left")
         
-        m_cancelBut = Button("Cancel", this)
-        m_cancelBut.addStyleName("float-left")
+        self.m_cancelBut = Button("Cancel", this)
+        self.m_cancelBut.addStyleName("float-left")
         
-        FlowPanel hpanel = FlowPanel()
-        hpanel.add(m_okBut)
-        hpanel.add(m_cancelBut)
+        hpanel = FlowPanel()
+        hpanel.add(self.m_okBut)
+        hpanel.add(self.m_cancelBut)
         
         vpanel.add(hpanel)
         
         setWidget(vpanel)
     
     
-    def open(self, editor):
-        EventLinkPopup popup = EventLinkPopup(editor)
-        if popup.refresh():
-            popup.center()
-        else:
-            popup = None
-        
-        return popup
-    
-    
     def refresh(self):
         try:
-            m_sel = m_editor.getSelection()
+            self.m_sel = self.m_editor.getSelection()
             
-            m_range = m_editor.getRange()
-            if m_range is None:
+            self.m_range = self.m_editor.getRange()
+            if self.m_range is None:
                 return False
             
             else:
-                m_selTexts = m_range.getSelectedTextElements()
-                if m_selTexts is None:
+                self.m_selTexts = self.m_range.getSelectedTextElements()
+                if self.m_selTexts is None:
                     return False
                 else:
-                    m_origTargetText = m_range.getText()
-                    m_targetText.setValue(m_origTargetText)
+                    self.m_origTargetText = self.m_range.getText()
+                    self.m_targetText.setValue(self.m_origTargetText)
                     
-                    AnchorElement anchor = getAnchor(m_selTexts)
+                    anchor = getAnchor(self.m_selTexts)
                     if anchor is not None:
-                        String href = anchor.getHref().trim()
+                        href = anchor.getHref().trim()
                         if not href.isEmpty():
-                            m_webPageText.setValue(href)
+                            self.m_webPageText.setValue(href)
                         
                         
-                        m_origAnchorStart = getAnchorLimit(
-                        m_range.getStartPoint().getTextNode(),
+                        self.m_origAnchorStart = getAnchorLimit(
+                        self.m_range.getStartPoint().getTextNode(),
                         anchor, False)
-                        m_origAnchorEnd = getAnchorLimit(
-                        m_range.getStartPoint().getTextNode(),
+                        self.m_origAnchorEnd = getAnchorLimit(
+                        self.m_range.getStartPoint().getTextNode(),
                         anchor, True)
                         
-                        if m_range.getStartPoint().equals(m_origAnchorStart)  and  m_range.getStartPoint().equals(m_origAnchorEnd):
-                            m_origAnchorStart = None
-                            m_origAnchorEnd = None
+                        if self.m_range.getStartPoint().equals(self.m_origAnchorStart)  and  self.m_range.getStartPoint().equals(self.m_origAnchorEnd):
+                            self.m_origAnchorStart = None
+                            self.m_origAnchorEnd = None
                         
                         else:
-                            m_fillOutCB.setVisible(True)
-                            m_fillOutCB.setValue(True)
+                            self.m_fillOutCB.setVisible(True)
+                            self.m_fillOutCB.setValue(True)
                             
-                            m_origTargetText = fetchStringFromTexts(
-                            m_origAnchorStart, m_origAnchorEnd)
-                            m_targetText.setValue(m_origTargetText)
+                            self.m_origTargetText = fetchStringFromTexts(
+                            self.m_origAnchorStart, self.m_origAnchorEnd)
+                            self.m_targetText.setValue(self.m_origTargetText)
                         
                     
                 
             
         
-        def (self, ex):
+        except:
+            print "exception"
             return False
         
         return True
     
     
-    def apply(self):
-        Formatter formatter = m_editor.getFormatter()
+    def _apply(self):
+        formatter = self.m_editor.getFormatter()
         
-        String link
-        link = m_webPageText.getValue().trim()
+        link = self.m_webPageText.getValue().trim()
         if link.isEmpty():
             return False
         
         
-        if (m_origAnchorStart is not None)  and  m_fillOutCB.getValue():
+        if (self.m_origAnchorStart is not None)  and  self.m_fillOutCB.getValue():
             # Expand selection to these bounds
-            m_range.setRange(m_origAnchorStart, m_origAnchorEnd)
+            self.m_range.setRange(self.m_origAnchorStart, self.m_origAnchorEnd)
         
         # Ensure the selection hasn't changed, or at least changes to the
         # expanded bounds we want
-        m_sel.setRange(m_range)
+        self.m_sel.setRange(self.m_range)
         
-        String targetText = m_targetText.getValue()
+        targetText = self.m_targetText.getValue()
         
-        if m_range.isCursor():
+        if self.m_range.isCursor():
             # Insert into a single cursor location
-            AnchorElement newEle = AnchorElement.as(DOM.createAnchor())
+            newEle = DOM.createAnchor()
             newEle.setHref(link)
             newEle.setInnerText(targetText)
             
-            Text startNode = m_range.getStartPoint().getTextNode()
-            Element parentEle = startNode.getParentElement()
-            int offset = m_range.getStartPoint().getOffset()
-            String text = startNode.getData()
+            startNode = self.m_range.getStartPoint().getTextNode()
+            parentEle = startNode.getParentElement()
+            offset = self.m_range.getStartPoint().getOffset()
+            text = startNode.getData()
             
             if offset == 0:
                 parentEle.insertBefore(newEle, startNode)
@@ -182,17 +165,17 @@ class EventLinkPopup extends DecoratedPopupPanel implements ClickHandler:
                 
                 parentEle.insertAfter(newEle, startNode)
             
-            m_sel.setRange(Range(newEle))
+            self.m_sel.setRange(Range(newEle))
         
-        elif not targetText.equals(m_origTargetText):
+        elif not targetText.equals(self.m_origTargetText):
             # Replace whatever was selected with this text
-            Element ele = m_range.surroundContents()
-            AnchorElement newEle = AnchorElement.as(DOM.createAnchor())
+            ele = self.m_range.surroundContents()
+            newEle = DOM.createAnchor()
             newEle.setHref(link)
             newEle.setInnerText(targetText)
             ele.getParentElement().replaceChild(newEle, ele)
             
-            m_sel.setRange(Range(newEle))
+            self.m_sel.setRange(Range(newEle))
         else:
             formatter.createLink(link)
         
@@ -201,59 +184,57 @@ class EventLinkPopup extends DecoratedPopupPanel implements ClickHandler:
     
     
     def getAnchor(self, nodes):
-        AnchorElement res = None
+        res = None
         
-        for Text node : nodes:
+        for node in nodes:
             res = getAnchor(node)
             if res is not None:
                 break
-            
         
         return res
     
     
     def getAnchor(self, node):
-        AnchorElement res = None
-        for Element ele = node.getParentElement(); ele is not None; ele = ele.getParentElement():
-            String tag = ele.getTagName()
-            if tag.equalsIgnoreCase("A"):
-                res = AnchorElement.as(ele)
+        res = None
+        ele = node.getParentElement()
+        while ele is not None:
+            tag = ele.getTagName()
+            if tag.lower == "a":
+                res = ele
                 break
             
+            ele = ele.getParentElement()
         
         return res
     
     
-    RangeEndPoint getAnchorLimit(Text node,
-    AnchorElement anchor,
-    boolean forward) {
-        Text prevNode
-        String href = anchor.getHref()
-        do {
+    def getAnchorLimit(self, node, anchor, forward):
+        href = anchor.getHref()
+        while True:
             prevNode = node
             node = Range.getAdjacentTextElement(prevNode, forward)
             if node is not None:
-                AnchorElement cmpAnchor = getAnchor(node)
-                if (cmpAnchor is None)  or  not href.equals(cmpAnchor.getHref()):
+                cmpAnchor = getAnchor(node)
+                if (cmpAnchor is None) or not href == cmpAnchor.getHref():
                     break
                 
-            
-         while node is not None)
+            if node is None:
+                break
         
-        RangeEndPoint res = RangeEndPoint()
+        res = RangeEndPoint()
         res.setTextNode(prevNode)
-        res.setOffset(forward ? prevNode.getData().length() : 0)
+        res.setOffset(forward and prevNode.getData().length() or 0)
         return res
     
     
     def parseEventLink(self, href):
-        long res = 0
-        int idx = href.indexOf("#event=")
+        res = 0
+        idx = href.index("#event=")
         if idx > 0:
             try:
-                res = Long.parseLong(href.substring(idx + 7))
-            
-            catch (Exception ex) {}
+                res = href[idx+7:]
+            except:
+                pass
         
         return res
     
@@ -263,9 +244,9 @@ class EventLinkPopup extends DecoratedPopupPanel implements ClickHandler:
     
     
     def fetchStringFromTexts(self, startPoint, endPoint):
-        String res = None
-        List<Text> texts = Range.getSelectedTextElements(
-        startPoint.getTextNode(), endPoint.getTextNode())
+        res = None
+        texts = Range.getSelectedTextElements(
+                        startPoint.getTextNode(), endPoint.getTextNode())
         if texts is not None:
             res = fetchStringFromTexts(texts, startPoint, endPoint)
         
@@ -273,58 +254,48 @@ class EventLinkPopup extends DecoratedPopupPanel implements ClickHandler:
     
     
     def fetchStringFromTexts(self, allTexts, startPoint, endPoint):
-        String selText = ""
-        for Text node : allTexts:
-            String val = node.getData()
+        selText = ""
+        for node in allTexts:
+            val = node.getData()
             if node == startPoint.getTextNode():
                 if node == endPoint.getTextNode():
-                    val = val.substring(startPoint.getOffset(),
-                    endPoint.getOffset())
+                    val = val.substring[startPoint.getOffset():
+                                        endPoint.getOffset()]
                 
                 else:
-                    val = val.substring(startPoint.getOffset())
+                    val = val[startPoint.getOffset():]
                 
             
             elif node == endPoint.getTextNode():
-                val = val.substring(0, endPoint.getOffset())
+                val = val[:endPoint.getOffset()]
             
             selText += val
         
         return selText
     
-    
-    @Override
-    def onClick(self, event):
-        Widget sender = (Widget)event.getSource()
-        if sender == m_cancelBut:
+    def onClick(self, sender, event):
+        if sender == self.m_cancelBut:
             hide()
         
-        elif sender == m_okBut:
-            if apply():
+        elif sender == self.m_okBut:
+            if self._apply():
                 hide()
-            
         
-        elif sender == m_fillOutCB:
-            if m_fillOutCB.getValue():
-                m_origTargetText = fetchStringFromTexts(m_origAnchorStart,
-                m_origAnchorEnd)
-                m_targetText.setValue(m_origTargetText)
+        elif sender == self.m_fillOutCB:
+            if self.m_fillOutCB.getValue():
+                self.m_origTargetText = fetchStringFromTexts(self.m_origAnchorStart,
+                self.m_origAnchorEnd)
+                self.m_targetText.setValue(self.m_origTargetText)
             
             else:
-                m_origTargetText = m_range.getText()
-                m_targetText.setValue(m_origTargetText)
+                self.m_origTargetText = self.m_range.getText()
+                self.m_targetText.setValue(self.m_origTargetText)
             
-        
-    
-    
     def checkSuggestValid(self):
-        m_okBut.setEnabled(True)
+        self.m_okBut.setEnabled(True)
     
-    {
-        def execute(self):
-            checkSuggestValid()
-        
-    
+    def execute(self):
+        self.checkSuggestValid()
     
     def deferredCheckValid(self):
         DeferredCommand.addCommand(self)

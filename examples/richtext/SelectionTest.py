@@ -1,12 +1,13 @@
 import pyjd
 
-from pyjamas import Command
 from pyjamas import DeferredCommand
 from pyjamas.ui.DockPanel import DockPanel
 from pyjamas.ui.Button import Button
 from pyjamas.ui.FlowPanel import FlowPanel
 from pyjamas.ui.Grid import Grid
 from pyjamas.ui.TextBox import TextBox
+from pyjamas.ui.TextArea import TextArea
+from pyjamas.ui import RootPanel
 
 from RichTextEditor import RichTextEditor
 
@@ -30,31 +31,31 @@ class SelectionTest:
         self.m_rte = RichTextEditor()
 
         buts = FlowPanel()
-        #self.m_getCurr = Button("Refresh v", this)
-        self.m_setHtml = Button("Set html ^", this)
+        #self.m_getCurr = Button("Refresh v", self)
+        self.m_setHtml = Button("Set html ^", self)
         self.m_setHtml.setTitle("Set html from the lower left text area")
-        self.m_toSCursor = Button("< To Cursor", this)
+        self.m_toSCursor = Button("< To Cursor", self)
         self.m_toSCursor.setTitle("Set the selection to be a cursor at the beginning of the current selection")
-        self.m_toECursor = Button("To Cursor >", this)
+        self.m_toECursor = Button("To Cursor >", self)
         self.m_toECursor.setTitle("Set the selection to be a cursor at the end of the current selection")
-        self.m_surround = Button("Surround", this)
+        self.m_surround = Button("Surround", self)
 
         grid = Grid(2, 2)
-        self.m_startNode = createTextBox(1)
-        self.m_startOffset = createTextBox(3)
-        self.m_endNode = createTextBox(4)
-        self.m_endOffset = createTextBox(5)
-        self.m_select = Button("`>Select", this)
+        self.m_startNode = self.createTextBox(1)
+        self.m_startOffset = self.createTextBox(3)
+        self.m_endNode = self.createTextBox(4)
+        self.m_endOffset = self.createTextBox(5)
+        self.m_select = Button("`>Select", self)
         self.m_select.setTitle("Select the texts/offsets in the boxes above")
-        self.m_cursor = Button("`>Cursor", this)
+        self.m_cursor = Button("`>Cursor", self)
         self.m_cursor.setTitle("Set cursor to text/offset of top 2 boxes above")
         grid.setWidget(0, 0, self.m_startNode)
         grid.setWidget(0, 1, self.m_startOffset)
         grid.setWidget(1, 0, self.m_endNode)
         grid.setWidget(1, 1, self.m_endOffset)
 
-        self.m_deleteSel = Button("Delete", this)
-        self.m_reset = Button("Reset", this)
+        self.m_deleteSel = Button("Delete", self)
+        self.m_reset = Button("Reset", self)
 
         #buts.add(self.m_getCurr)
         buts.add(self.m_setHtml)
@@ -87,9 +88,9 @@ class SelectionTest:
         rp = RootPanel.get()
         rp.add(dlp)
 
-        DeferredCommand.addCommand(getattr(self, "set_html_focus"))
+        DeferredCommand.add(getattr(self, "set_html_focus"))
 
-        reset()
+        self.reset()
 
     def set_html_focus(self):
         self.m_html.setFocus(True)
@@ -97,7 +98,7 @@ class SelectionTest:
     def createTextBox(self, startVal):
         res = TextBox()
         res.setWidth("35px")
-        res.setValue("" + startVal)
+        res.setText(str(startVal))
         return res
 
     def reset(self):
@@ -220,7 +221,7 @@ class SelectionTest:
 
 if __name__ == '__main__':
     pyjd.setup("public/SelectionTest.html")
-    app = SelectionText()
+    app = SelectionTest()
     app.onModuleLoad()
     pyjd.run()
 
