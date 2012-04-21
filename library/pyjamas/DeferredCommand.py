@@ -14,7 +14,7 @@ def flushDeferredCommands():
         current = deferredCommands[0]
         del deferredCommands[0]
         if current:
-            if current.has_attr("execute"):
+            if hasattr(current, "execute"):
                 current.execute()
             else:
                 current()
