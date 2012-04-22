@@ -9,6 +9,8 @@ from pyjamas.ui.TextBox import TextBox
 
 import traceback
 
+from pyjamas.selection import Selection
+
 LABEL_WIDTH = 85
 ROW_HEIGHT = 24
 
@@ -16,6 +18,7 @@ def open(editor):
     popup = EventLinkPopup(editor)
     if popup.refresh():
         popup.center()
+        popup.show()
     else:
         popup = None
 
@@ -26,6 +29,8 @@ class EventLinkPopup(PopupPanel):
     def __init__(self, editor):
         PopupPanel.__init__(self, False, True)
 
+        self.m_origAnchorStart = None
+        self.m_origAnchorEnd = None
         self.m_origTargetText = ""
         self.m_editor = editor
 
@@ -73,12 +78,10 @@ class EventLinkPopup(PopupPanel):
         vpanel.add(hpanel)
 
         self.add(vpanel)
-        self.show()
 
     def refresh(self):
         try:
-            self.m_sel = self.m_editor.getSelection()
-
+            self.m_editor.getSelection()
             self.m_range = self.m_editor.getRange()
             if self.m_range is None:
                 return False
@@ -88,13 +91,13 @@ class EventLinkPopup(PopupPanel):
                     return False
                 else:
                     self.m_origTargetText = self.m_range.getText()
-                    self.m_targetText.setValue(self.m_origTargetText)
+                    self.m_targetText.setText(self.m_origTargetText)
 
-                    anchor = getAnchor(self.m_selTexts)
+                    anchor = self.getAnchor(self.m_selTexts)
                     if anchor is not None:
                         href = anchor.getHref().strip()
                         if href:
-                            self.m_webPageText.setValue(href)
+                            self.m_webPageText.setText(href)
 
                         self.m_origAnchorStart = self.getAnchorLimit(
                                 self.m_range.getStartPoint().getTextNode(),
@@ -142,9 +145,9 @@ class EventLinkPopup(PopupPanel):
 
         # Ensure the selection hasn't changed, or at least changes to the
         # expanded bounds we want
-        self.m_sel.setRange(self.m_range)
+        Selection.setRange(self.m_range)
 
-        targetText = self.m_targetText.getValue()
+        targetText = self.m_targetText.getText()
 
         if self.m_range.isCursor():
             # Insert into a single cursor location
@@ -152,10 +155,12 @@ class EventLinkPopup(PopupPanel):
             newEle.setHref(link)
             newEle.setInnerText(targetText)
 
-            startNode = self.m_range.getStartPoint().getTextNode()
-            parentEle = startNode.getParentElement()
-            offset = self.m_range.getStartPoint().getOffset()
-            text = startNode.getData()
+            sp = self.m_range.getStartPoint()
+            startNode = sp.getTextNode()
+            offset = sp.getOffset()
+            print "sp", sp, startNode, offset
+            parentEle = startNode.parentElement
+            text = startNode.data
 
             if offset == 0:
                 parentEle.insertBefore(newEle, startNode)
@@ -167,17 +172,17 @@ class EventLinkPopup(PopupPanel):
 
                 parentEle.insertAfter(newEle, startNode)
 
-            self.m_sel.setRange(Range(newEle))
+            Selection.setRange(Range(newEle))
 
-        elif not targetText.equals(self.m_origTargetText):
+        elif targetText != self.m_origTargetText:
             # Replace whatever was selected with this text
             ele = self.m_range.surroundContents()
             newEle = DOM.createAnchor()
-            newEle.setHref(link)
-            newEle.setInnerText(targetText)
-            ele.getParentElement().replaceChild(newEle, ele)
+            newEle.href = link
+            newEle.innerText = targetText
+            ele.parentElement.replaceChild(newEle, ele)
 
-            self.m_sel.setRange(Range(newEle))
+            Selection.setRange(Range(newEle))
         else:
             formatter.createLink(link)
 
@@ -185,39 +190,37 @@ class EventLinkPopup(PopupPanel):
         return True
 
 
-    def getAnchor(self, nodes):
-        res = None
-
-        for node in nodes:
-            res = getAnchor(node)
-            if res is not None:
-                break
-
-        return res
-
-
     def getAnchor(self, node):
         res = None
-        ele = node.getParentElement()
+        if isinstance(node, list):
+            nodes = node
+            for node in nodes:
+                res = self.getAnchor(node)
+                if res is not None:
+                    break
+
+            return res
+
+        ele = node.parentElement
         while ele is not None:
-            tag = ele.getTagName()
+            tag = ele.tagName
             if tag.lower == "a":
                 res = ele
                 break
 
-            ele = ele.getParentElement()
+            ele = ele.parentElement
 
         return res
 
 
     def getAnchorLimit(self, node, anchor, forward):
-        href = anchor.getHref()
+        href = anchor.href
         while True:
             prevNode = node
             node = Range.getAdjacentTextElement(prevNode, forward)
             if node is not None:
-                cmpAnchor = getAnchor(node)
-                if (cmpAnchor is None) or not href == cmpAnchor.getHref():
+                cmpAnchor = self.getAnchor(node)
+                if (cmpAnchor is None) or not href == cmpAnchor.href:
                     break
 
             if node is None:
@@ -277,11 +280,11 @@ class EventLinkPopup(PopupPanel):
 
     def onClick(self, sender):
         if sender == self.m_cancelBut:
-            hide()
+            self.hide()
 
         elif sender == self.m_okBut:
             if self._apply():
-                hide()
+                self.hide()
 
         elif sender == self.m_fillOutCB:
             if self.m_fillOutCB.getValue():

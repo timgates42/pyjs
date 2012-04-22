@@ -135,5 +135,5 @@ def isEmpty():
 """
 def setRange(newSelection):
     if newSelection.getDocument() == m_document:
-        c_impl.setJSRange(m_selection, newSelection.getJSRange())
+        SelectionImpl.setJSRange(m_selection, newSelection.getJSRange())
 

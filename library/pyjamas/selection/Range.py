@@ -168,9 +168,10 @@ def fillRangePoints(fillRange):
     print "jsRange", jsRange
     print "startNode", startNode
     print "startOffset", startOffset
+    print dir(jsRange)
     startPoint = findTextPoint(startNode, startOffset)
 
-    endNode = jsRange.endNode
+    endNode = jsRange.endContainer
     endOffset = jsRange.endOffset
     endPoint = findTextPoint(endNode, endOffset)
 
@@ -348,8 +349,14 @@ class Range:
     * @param endNode end node to finish traversal
     * @return A list of all text nodes between these two text nodes
     """
-    def getSelectedTextElements(self, startNode, endNode):
+    def getSelectedTextElements(self, startNode=None, endNode=None):
+        if startNode is None and endNode is None:
+            startNode = self.m_startPoint.getTextNode()
+            endNode = self.m_endPoint.getTextNode()
+
         res = []
+
+        print "getSelectedTextElements", startNode, endNode
 
         current = startNode
         while (current is not None) and (not DOM.compare(current, endNode)):
@@ -430,7 +437,7 @@ class Range:
     * @param endPoint
     """
     def _setRange(self, startPoint, endPoint):
-        self.m_document = startPoint and startPoint.getNode().getOwnerDocument()
+        self.m_document = startPoint and startPoint.getNode().ownerDocument
         self.m_startPoint = startPoint
         self.m_endPoint = endPoint
 
@@ -593,16 +600,6 @@ class Range:
     def getJSRange(self):
         self.ensureRange()
         return self.m_range
-
-
-    """*
-    * Returns a list of all text elements that are part of this range, in order.
-    *
-    * @return all elements in this range
-    """
-    def getSelectedTextElements(self):
-        return self.getSelectedTextElements(self.m_startPoint.getTextNode(),
-                            self.m_endPoint.getTextNode())
 
 
     """*
@@ -796,8 +793,9 @@ class Range:
 
 
     def setupLastEndpoints(self):
-        self.m_lastStartPoint = self.RangeEndPoint(self.m_startPoint)
-        self.m_lastEndPoint = self.RangeEndPoint(self.m_endPoint)
+        self.m_lastStartPoint = RangeEndPoint(self.m_startPoint)
+        self.m_lastEndPoint = RangeEndPoint(self.m_endPoint)
+        print "setupLastEndpoints:", self.m_lastStartPoint, self.m_lastEndPoint
 
 
     """*

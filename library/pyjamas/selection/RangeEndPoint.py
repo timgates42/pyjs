@@ -96,21 +96,19 @@ class RangeEndPoint:
         cmpRng = Range(comp)
         return thisRng.compareBoundaryPoint(cmpRng, Range.START_TO_START)
 
-
     def equals(self, obj):
         res = False
 
         try:
             comp = obj
 
-            res = (comp == this)  or  \
-            ((comp.getNode() == getNode())  and  \
-            (comp.getOffset() == getOffset()))
+            res = (comp == self)  or  \
+            (DOM.compare(comp.getNode(), self.getNode())  and  \
+            (comp.getOffset() == self.getOffset()))
         except ex:
             pass
 
         return res
-
 
     """*
     * Get the offset into the text node
@@ -119,7 +117,6 @@ class RangeEndPoint:
     """
     def getOffset(self):
         return self.m_offset
-
 
     """*
     * Get the string of the text node of this end point, either up to or
@@ -136,17 +133,16 @@ class RangeEndPoint:
         if not self.isTextNode():
             return None
 
-        res = self.m_node.getData()
-        return asStart and res.substring(self.m_offset) or \
-               res.substring(0, self.m_offset)
-
+        res = self.m_node.data
+        if asStart:
+            return res[self.m_offset:]
+        return res[:self.m_offset]
 
     """*
     * Get this as a node (be it text or element)
     """
     def getNode(self):
         return self.m_node
-
 
     """*
     * Get the text node of this end point, note this can be None if there are
@@ -557,8 +553,8 @@ class RangeEndPoint:
         if (start  or  (textNode is None)):
             offs = 0
         else:
-            offs = textNode.getLength()
-        setOffset(offs)
+            offs = textNode.length
+        self.setOffset(offs)
 
     """*
     * Set the range end point at the start or end of an element.  The actual
