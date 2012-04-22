@@ -14,11 +14,50 @@
 * the License.
 """
 
+from pyjamas import DOM
+
+def isTextNode(node):
+    if node is None:
+        return False
+    return DOM.getNodeType(node) == DOM.TEXT_NODE
 
 
+class FindLocRes:
+
+    def __init__(self, ept, dist=0):
+        self.ep = ept
+        self.distance = dist
+
+    def replace(self, curr, comp):
+        res = curr
+        if (comp is not None)  and  ((curr is None)  or  (curr.ep is None)  or  (comp.distance < curr.distance)):
+            res = comp
+
+        return res
+
+    def isExact():
+        return (self.ep is not None)  and  (self.distance == 0)
 
 
+'''
+import re
 
+# All unicode whitespace characters
+DEFAULT_WS_REXP = \
+"[\t-\r \u0085\u00A0\u1680\u180E\u2000-\u200B\u2028\u2029\u202F\u205F\u3000\uFEFF]+"
+
+"""*
+* Set the regular expression used for detecting consecutive whitespace in a
+* string.  It must be of the form "[ \t\n]+", with all desired whitespace
+* characters between the braces.  This is used for word detection for
+* the move method.
+*
+* @param regExp String of the regular expression
+"""
+def setWhitespaceRexp(self, regExp):
+    c_wsRexp = re.compile(regExp, "gm")
+
+'''
 
 """*
 * An end point of a range, represented as a text node and offset in to it.
@@ -31,21 +70,6 @@ class RangeEndPoint:
     MOVE_WORDSTART	= 2
     MOVE_WORDEND	= 3
 
-    # All unicode whitespace characters
-    DEFAULT_WS_REXP = \
-    "[\t-\r \u0085\u00A0\u1680\u180E\u2000-\u200B\u2028\u2029\u202F\u205F\u3000\uFEFF]+"
-
-    """*
-    * Set the regular expression used for detecting consecutive whitespace in a
-    * string.  It must be of the form "[ \t\n]+", with all desired whitespace
-    * characters between the braces.  This is used for word detection for
-    * the move method.
-    *
-    * @param regExp String of the regular expression
-    """
-    def setWhitespaceRexp(self, regExp):
-        c_wsRexp = RegExp.compile(regExp, "gm")
-
 
     """*
     * Create a range end point at the start or end of an element.  The actual
@@ -54,56 +78,21 @@ class RangeEndPoint:
     * @param element element to create this end point in
     * @param start whether to make the end point at the start or the end
     """
-    def __init__(self, element, start):
-        this()
-        setElement(element, start)
-
-
-    """*
-    * Create a non-textual range end point that just points to this element
-    *
-    * @param element Non-textual element to point to
-    """
-    def __init__(self, element):
-        this()
-        setElement(element)
-
-
-    """*
-    * Create a range end point at the start or end of a text node
-    *
-    * @param text text node this end point starts/end in
-    * @param start whether to make the end point at the start or the end
-    """
-    def __init__(self, text, start):
-        this()
-        setTextNode(text, start)
-
-
-    """*
-    * Create a range end point with a text node and offset into it
-    *
-    * @param text text node this end point occurs in
-    * @param offset offset characters into the text node
-    """
-    def __init__(self, text, offset):
-        this()
-
-        setTextNode(text)
-        setOffset(offset)
-
-
-    """*
-    * Clone a range end point
-    *
-    * @param endPoint point to clone
-    """
-    def __init__(self, endPoint):
-        this(endPoint.getTextNode(), endPoint.getOffset())
-
+    def __init__(self, arg1, arg2=None):
+        if isinstance(arg1, RangeEndPoint):
+            arg2 = arg1.getOffset()
+            arg1 = arg1.getTextNode()
+        if isTextNode(arg1):
+            if isinstance(arg2, int):
+                self.setTextNode(arg1)
+                self.setOffset(arg2)
+            else:
+                self.setTextNode(arg1, arg2)
+        else:
+            self.setElement(arg1, arg2)
 
     def compareTo(self, comp):
-        thisRng = Range(this)
+        thisRng = Range(self)
         cmpRng = Range(comp)
         return thisRng.compareBoundaryPoint(cmpRng, Range.START_TO_START)
 
@@ -144,7 +133,7 @@ class RangeEndPoint:
     * @return the text before or after the offset, or None if this is not set
     """
     def getString(self, asStart):
-        if not isTextNode():
+        if not self.isTextNode():
             return None
 
         res = self.m_node.getData()
@@ -166,8 +155,9 @@ class RangeEndPoint:
     * @return the text node
     """
     def getTextNode(self):
-        return isTextNode() and self.m_node or None
-
+        if isTextNode(self.m_node):
+            return self.m_node
+        return None
 
     """*
     * Get the Element of this end point, if this is not a textual end point.
@@ -175,17 +165,12 @@ class RangeEndPoint:
     * @return the text node
     """
     def getElement(self):
-        return isTextNode() and None or self.m_node
-
-
-    def isSpace(self, check):
-        return check.isspace()
-
+        if self.isTextNode():
+            return None
+        return self.m_node
 
     def isTextNode(self):
-        return (self.m_node is None) and False or \
-               (self.m_node.getNodeType() == Node.TEXT_NODE)
-
+        return isTextNode(self.m_node)
 
     """*
     * If the offset occurs at the beginning/end of the text node, potentially
@@ -197,15 +182,15 @@ class RangeEndPoint:
     * @param asStart Whether to do this as a start or end range point
     """
     def minimizeBoundaryTextNodes(self, asStart):
-        text = getTextNode()
+        text = self.getTextNode()
         if (text is not None)  and  (self.m_offset == (asStart and text.getLength() or 0)):
             nxt = Range.getAdjacentTextElement(text, asStart)
             if nxt is not None:
-                setTextNode(nxt)
-                self.m_offset = asStart and 0 or nxt.getLength()
-
-
-
+                self.setTextNode(nxt)
+                if asStart:
+                    self.m_offset = 0
+                else:
+                    self.m_offset = nxt.getLength()
 
     """*
     * TODO IMPLEMENTED ONLY FOR CHARACTER
@@ -222,7 +207,7 @@ class RangeEndPoint:
     def move(self, forward, topMostNode, limit, type, count):
         res = 0
 
-        limitText = (limit is None) and None or limit.getTextNode()
+        limitText = limit and limit.getTextNode()
         curr = getTextNode()
         if curr is not None:
             last = curr
@@ -262,7 +247,10 @@ class RangeEndPoint:
                             break
 
                     if curr is not None:
-                        offset = forward and 0 or curr.getLength()
+                        if forward:
+                            offset = 0
+                        else:
+                            offset = curr.getLength()
 
 
                 """
@@ -289,33 +277,10 @@ class RangeEndPoint:
             else:
                 assert(False)
 
-            setTextNode(last)
-            setOffset(offset)
+            self.setTextNode(last)
+            self.setOffset(offset)
 
         return res
-
-
-    """*
-    * Sets this start point to be a non-textual element (like an image)
-    """
-    def setElement(self, element):
-        self.m_node = element
-
-
-    """*
-    * Set the range end point at the start or end of an element.  The actual
-    * selection will occur at the first/last text node within this element.
-    *
-    * @param element element to set this end point in
-    * @param start whether to make the end point at the start or the end
-    """
-    def setElement(self, element, start=None):
-        if start is None:
-            self.m_node = element
-        else:
-            text = Range.getAdjacentTextElement(element, element, start, False)
-            self.setTextNode(text, start)
-
 
     """*
     * Given an absolute x/y coordinate and an element where that coordinate
@@ -351,16 +316,12 @@ class RangeEndPoint:
 
         return locRes and locRes.ep
 
-
     def getTotalOffsetY(self, doc):
-        JS("""
-        var res = 0;
-        var wind = doc.defaultView || doc.parentWindow;
-        if (wind) {
-            res = wind.pageYOffset;
-        }
-        return res;
-        """)
+        res = 0
+        wind = doc.defaultView or doc.parentWindow
+        if wind:
+            res = wind.pageYOffset
+        return res
 
 
     """
@@ -374,25 +335,6 @@ class RangeEndPoint:
         # webkit?
 
     """
-
-    class FindLocRes:
-
-        def __init__(self, ept, dist=0):
-            self.ep = ept
-            self.distance = dist
-
-
-        def replace(self, curr, comp):
-            res = curr
-            if (comp is not None)  and  ((curr is None)  or  (curr.ep is None)  or  (comp.distance < curr.distance)):
-                res = comp
-
-            return res
-
-
-        def isExact():
-            return (self.ep is not None)  and  (self.distance == 0)
-
 
     def findLocation(self, doc, ele, relX, relY):
         res = None
@@ -469,44 +411,42 @@ class RangeEndPoint:
         res = None
 
         while res is None:
-            if contains(span2, relX, relY):
+            if self.contains(span2, relX, relY):
                 st = span2.getInnerText()
                 if st.length() <= 1:
-                    res = FindLocRes(
-                    RangeEndPoint(origText,
-                    span1.getInnerText().length() +
-                    closerOffset(span2, relX)))
+                    res = FindLocRes(RangeEndPoint(origText,
+                                            span1.getInnerText().length() +
+                                            closerOffset(span2, relX)))
 
                 else:
                     span4.setInnerHTML(span3.getInnerHTML() +
-                    span4.getInnerHTML())
+                                        span4.getInnerHTML())
                     len = st.length() / 2
-                    span2.setInnerHTML(st.substring(0, len))
-                    span3.setInnerHTML(st.substring(len))
+                    span2.setInnerHTML(st[:len])
+                    span3.setInnerHTML(st[len:])
 
 
             elif contains(span3, relX, relY):
                 st = span3.getInnerText()
                 if st.length() <= 1:
-                    res = FindLocRes(
-                    RangeEndPoint(origText,
-                    span1.getInnerText().length() +
-                    span2.getInnerHTML().length() +
-                    closerOffset(span3, relX)))
+                    res = FindLocRes( RangeEndPoint(origText,
+                                            span1.getInnerText().length() +
+                                            span2.getInnerHTML().length() +
+                                            closerOffset(span3, relX)))
 
                 else:
                     span1.setInnerHTML(span1.getInnerHTML() +
                     span2.getInnerHTML())
                     len = st.length() / 2
-                    span2.setInnerHTML(st.substring(0, len))
-                    span3.setInnerHTML(st.substring(len))
+                    span2.setInnerHTML(st[:len])
+                    span3.setInnerHTML(st[len:])
 
 
             else:
                 # This might be close to one end or the other of this
-                dist1 = getLocDistance(span1.hasChildNodes() and span2 \
+                dist1 = self.getLocDistance(span1.hasChildNodes() and span2 \
                                         or span1, relX, relY)
-                dist2 = getLocDistance(span4.hasChildNodes() and span4 \
+                dist2 = self.getLocDistance(span4.hasChildNodes() and span4 \
                                         or span3,
                                         relX, relY)
                 res = FindLocRes(RangeEndPoint(origText, dist1 < dist2),
@@ -607,28 +547,32 @@ class RangeEndPoint:
 
 
     """*
-    * Set the text node this end point occurs in
-    *
-    * @param text text node this end point occurs in
-    """
-    def setTextNode(self, textNode):
-        self.m_node = textNode
-
-
-    """*
     * Set this range end point at the start or end of a text node
     *
     * @param text text node this end point starts/end in
     * @param start whether to make the end point at the start or the end
     """
-    def setTextNode(self, textNode, start):
-        setTextNode(textNode)
+    def setTextNode(self, textNode, start=None):
+        self.m_node = textNode
         if (start  or  (textNode is None)):
             offs = 0
         else:
             offs = textNode.getLength()
         setOffset(offs)
 
+    """*
+    * Set the range end point at the start or end of an element.  The actual
+    * selection will occur at the first/last text node within this element.
+    *
+    * @param element element to set this end point in
+    * @param start whether to make the end point at the start or the end
+    """
+    def setElement(self, element, start=None):
+        if start is None:
+            self.m_node = element
+        else:
+            text = Range.getAdjacentTextElement(element, element, start, False)
+            self.setTextNode(text, start)
 
     """*
     * Get the text of this with a "|" at the offset
@@ -636,7 +580,5 @@ class RangeEndPoint:
     * @return a string representation of this endpoint
     """
     def __str__(self):
-        return getString(False) + "|" + getString(True)
-
-
+        return self.getString(False) + "|" + self.getString(True)
 
