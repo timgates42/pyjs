@@ -15,6 +15,7 @@
 """
 
 from pyjamas import DOM
+import RangeUtil
 
 def isTextNode(node):
     if node is None:
@@ -180,7 +181,7 @@ class RangeEndPoint:
     def minimizeBoundaryTextNodes(self, asStart):
         text = self.getTextNode()
         if (text is not None)  and  (self.m_offset == (asStart and text.getLength() or 0)):
-            nxt = Range.getAdjacentTextElement(text, asStart)
+            nxt = RangeUtil.getAdjacentTextElement(text, asStart)
             if nxt is not None:
                 self.setTextNode(nxt)
                 if asStart:
@@ -237,7 +238,7 @@ class RangeEndPoint:
 
                     while True:
                         # Next node, skipping any 0-length texts
-                        curr = Range.getAdjacentTextElement(curr, topMostNode,
+                        curr = RangeUtil.getAdjacentTextElement(curr, topMostNode,
                                                             forward, False)
                         if (curr is None)  or  (curr.getLength() != 0):
                             break
@@ -260,7 +261,7 @@ class RangeEndPoint:
 
                     do {
                         # Next node, skipping any 0-length texts
-                        curr = Range.getAdjacentTextElement(curr, topMostNode,
+                        curr = RangeUtil.getAdjacentTextElement(curr, topMostNode,
                         forward, False)
                      while  ((curr is not None)  and  (curr.getLength() == 0))
 
@@ -567,7 +568,7 @@ class RangeEndPoint:
         if start is None:
             self.m_node = element
         else:
-            text = Range.getAdjacentTextElement(element, element, start, False)
+            text = RangeUtil.getAdjacentTextElement(element, element, start, False)
             self.setTextNode(text, start)
 
     """*

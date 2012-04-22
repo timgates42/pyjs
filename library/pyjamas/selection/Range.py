@@ -18,6 +18,7 @@
 from pyjamas import DOM
 
 from RangeEndPoint import RangeEndPoint
+import RangeUtil
 
 # For use in compareBoundaryPoint, which end points to compare
 START_TO_START	= 0
@@ -241,19 +242,16 @@ def findTextPoint(node, offset):
         child = (DOM.getChildCount(node) == 0) and node or \
             DOM.getChild(node, dirn and (offset - 1) or offset)
         # Get the previous/next text node
-        text = Range.getAdjacentTextElement(child, dirn)
+        text = RangeUtil.getAdjacentTextElement(child, dirn)
         if text is None:
             # If we didn't find a text node in the preferred direction,
             # try the other direction
             dirn = not dirn
-            text = Range.getAdjacentTextElement(child, dirn)
+            text = RangeUtil.getAdjacentTextElement(child, dirn)
 
         res = RangeEndPoint(text, dirn)
 
     return res
-
-
-
 
 
 """*
@@ -265,82 +263,6 @@ def findTextPoint(node, offset):
 * @author John Kozura
 """
 class Range:
-    """*
-    * Returns the next adjacent text node in the given direction.  Will move
-    * down the hierarchy (if traversingUp is not set), then through siblings,
-    * then up (but not past topMostNode), looking for the first node
-    *
-    * This could be non-statically included in the Node class
-    *
-    * @param current An element to start the search from, can be any type
-    *                of node.
-    * @param topMostNode A node that this will traverse no higher than
-    * @param forward whether to search forward or backward
-    * @param traversingUp if True, will not look at the children of this element
-    * @return the next (previous) text node, or None if no more
-    *
-    * may also be called as getAdjacentTextElement(current, forward) with
-    * only 2 parameters.
-    """
-    def getAdjacentTextElement(self, current, topMostNode, forward=None, traversingUp=False):
-        if forward is None:
-            forward = topMostNode
-            topMostNode = None
-
-        res = None
-
-        # If traversingUp, then the children have already been processed
-        if not traversingUp:
-            if DOM.getChildCount(current) > 0:
-                if forward:
-                    node = DOM.getFirstChild(current)
-                else:
-                    node = DOM.getLastChild(current)
-
-                if DOM.getNodeType(node) == DOM.TEXT_NODE:
-                    res = node
-                else:
-                    # Depth first traversal, the recursive call deals with
-                    # siblings
-                    res = self.getAdjacentTextElement(node, topMostNode,
-                                            forward, False)
-
-
-
-
-        if res is None:
-            if forward:
-                node = DOM.getNextSibling(current)
-            else:
-                node = DOM.getPrevSibling(current)
-            # Traverse siblings
-            if node is not None:
-                if DOM.getNodeType(node) == DOM.TEXT_NODE:
-                    res = node
-                else:
-                    print node, DOM.getNodeType(node), node.innerHTML
-                    # Depth first traversal, the recursive call deals with
-                    # siblings
-                    res = self.getAdjacentTextElement(node, topMostNode,
-                                            forward, False)
-
-
-
-
-        # Go up and over if still not found
-        if (res is None)  and  (not DOM.compare(current, topMostNode)):
-            node = DOM.getParent(current)
-            # Stop at document (technically could stop at "html" tag)
-            if (node is not None)  and  \
-                    (DOM.getNodeType(node) != DOM.DOCUMENT_NODE):
-                res = self.getAdjacentTextElement(node, topMostNode,
-                                            forward, True)
-
-
-
-        return res
-
-
     """*
     * Returns all text nodes between (and including) two arbitrary text nodes.
     * Caller must ensure startNode comes before endNode.
@@ -362,7 +284,7 @@ class Range:
         while (current is not None) and (not DOM.compare(current, endNode)):
             res.append(current)
 
-            current = self.getAdjacentTextElement(current, None, True, False)
+            current = RangeUtil.getAdjacentTextElement(current, None, True, False)
 
         if current is None:
             # With the old way this could have been backwards, but should not
@@ -695,21 +617,21 @@ class Range:
     """
     def setRange(self, arg1, arg2=None):
         if arg2 is None:
-            firstText = self.getAdjacentTextElement(arg1, arg1, True, False)
-            lastText = self.getAdjacentTextElement(arg1, arg1, False, False)
+            firstText = RangeUtil.getAdjacentTextElement(arg1, arg1, True, False)
+            lastText = RangeUtil.getAdjacentTextElement(arg1, arg1, False, False)
 
             if (firstText is None)  or  (lastText is None):
                 return False
 
-            startPoint = self.RangeEndPoint(firstText, 0)
-            endPoint = self.RangeEndPoint(lastText, lastText.getLength())
+            startPoint = RangeEndPoint(firstText, 0)
+            endPoint = RangeEndPoint(lastText, lastText.length)
 
         else:
             startPoint = arg1
             endPoint = arg2
 
-        assert (startPoint.getNode().getOwnerDocument() ==
-                    endPoint.getNode().getOwnerDocument())
+        assert (startPoint.getNode().ownerDocument ==
+                    endPoint.getNode().ownerDocument)
 
         self._setRange(startPoint, endPoint)
         self.m_range = None
@@ -729,21 +651,6 @@ class Range:
 
 
     """*
-    * Surround all of the contents of the range with a SPAN element, which
-    * replaces the content in the DOM.  All tags required to make the range
-    * complete are included in the child content.  This does not preserve the
-    * element object ids of the contents.  The range will surround the new
-    * element after this operation.
-    *
-    * @return The span element that now surround the contents
-    """
-    def surroundContents(self):
-        res = self.m_document.createSpanElement()
-        self.surroundContents(res)
-        return res
-
-
-    """*
     * Surround all of the contents of the range with the given element, which
     * replaces the content in the DOM.  All tags required to make the range
     * complete are included in the child content.  This does not preserve the
@@ -753,7 +660,9 @@ class Range:
     * @param copyInto an element to place the contents into, which will replace
     *                 them in the DOM after this operation
     """
-    def surroundContents(self, copyInto):
+    def surroundContents(self, copyInto=None):
+        if copyInto is None:
+            copyInto = self.m_document.createElement("span")
         self.ensureRange()
         surroundContents(self.m_range, copyInto)
         self.setRange(copyInto)

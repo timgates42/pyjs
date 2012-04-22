@@ -296,15 +296,15 @@ class RichTextEditor(Composite):
         iFrameWin = iFrame.contentWindow or iFrame.contentDocument
 
         if not iFrameWin.document:
-            iFrameWin = iFrameWin.getParentNode() # FBJS version of parentNode
+            iFrameWin = iFrameWin.parentNode # FBJS version of parentNode
 
-        print "getWindow", iFrameWin
+        print "getWindow", iFrameWin, dir(iFrameWin)
 
         return iFrameWin
 
 
     def getDocument(self):
-        return Selection.getDocument(getWindow())
+        return Selection.getDocument(self.getWindow())
 
     def setHtml(self, text):
         self.m_textW.setHTML(text)

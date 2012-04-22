@@ -239,7 +239,7 @@ def buttonClick(element):
 
 
 def compare(elem1, elem2):
-    if hasattr(elem1, "isSameNode"):
+    if hasattr(elem1, "isSameNode") and hasattr(elem2, "isSameNode"):
         return elem1.isSameNode(elem2)
     return elem1 == elem2
 

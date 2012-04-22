@@ -11,8 +11,10 @@ from pyjamas.ui import RootPanel
 
 from RichTextEditor import RichTextEditor
 
-from pyjamas.selection.Range import Range
 from pyjamas.selection.RangeEndPoint import RangeEndPoint
+from pyjamas.selection.Range import Range
+from pyjamas.selection.RangeUtil import getAdjacentTextElement
+from pyjamas.selection import Selection
 
 """*
 * Entry point classes define <code>onModuleLoad()</code>.
@@ -31,7 +33,7 @@ class SelectionTest:
         self.m_rte = RichTextEditor()
 
         buts = FlowPanel()
-        #self.m_getCurr = Button("Refresh v", self)
+        self.m_getCurr = Button("Refresh v", self)
         self.m_setHtml = Button("Set html ^", self)
         self.m_setHtml.setTitle("Set html from the lower left text area")
         self.m_toSCursor = Button("< To Cursor", self)
@@ -57,7 +59,7 @@ class SelectionTest:
         self.m_deleteSel = Button("Delete", self)
         self.m_reset = Button("Reset", self)
 
-        #buts.add(self.m_getCurr)
+        buts.add(self.m_getCurr)
         buts.add(self.m_setHtml)
         buts.add(self.m_toSCursor)
         buts.add(self.m_toECursor)
@@ -115,17 +117,17 @@ class SelectionTest:
     def refresh(self, rng=None):
         if rng is None:
             rng = self.m_rte.getRange()
-        self.m_html.setValue(self.m_rte.getHtml())
+        self.m_html.setText(self.m_rte.getHtml())
         if rng is not None:
             if rng.isCursor():
                 rep = rng.getCursor()
-                self.m_sel.setValue(rep.toString())
+                self.m_sel.setText(str(rep))
 
             else:
-                self.m_sel.setValue(rng.getHtmlText())
+                self.m_sel.setText(rng.getHtmlText())
 
         else:
-            self.m_sel.setValue("")
+            self.m_sel.setText("")
 
     def delete(self):
         rng = self.m_rte.getRange()
@@ -134,41 +136,49 @@ class SelectionTest:
             refresh()
 
     def toHtml(self):
-        self.m_rte.setHtml(self.m_html.getValue())
+        self.m_rte.setHtml(self.m_html.getText())
 
     def toCursor(self, start):
         rng = self.m_rte.getRange()
         if (rng is not None)  and  not rng.isCursor():
             rng.collapse(start)
-            self.m_rte.getSelection().setRange(rng)
-            refresh()
+            self.m_rte.getSelection()
+            Selection.setRange(rng)
+            self.refresh()
 
     def surround(self):
         rng = self.m_rte.getRange()
         if (rng is not None)  and  not rng.isCursor():
             rng.surroundContents()
-            self.m_rte.getSelection().setRange(rng)
-            refresh()
+            self.m_rte.getSelection()
+            Selection.setRange(rng)
+            self.refresh()
 
     def findNodeByNumber(self, num):
 
         doc = self.m_rte.getDocument()
-        res = Range.getAdjacentTextElement(doc, True)
+        print "findNodeByNumber:doc", doc
+        res = getAdjacentTextElement(doc, True)
+        print "findNodeByNumber:startat", res
         while (res is not None)  and  (num > 0):
+            print "findNodeByNumber?", res, num
             num -= 1
-            res = Range.getAdjacentTextElement(res, True)
+            res = getAdjacentTextElement(res, True)
 
+        print "findNodeByNumber=", res
         return res
 
     def selectNodes(self, fullSel):
         startNode = int(self.m_startNode.getText())
         startOffset = int(self.m_startOffset.getText())
 
-        startText = findNodeByNumber(startNode)
+        startText = self.findNodeByNumber(startNode)
+        print "startNode", startNode, startOffset
+        print "startText", startText
         if fullSel:
             endNode = int(self.m_endNode.getText())
             endOffset = int(self.m_endOffset.getText())
-            endText = findNodeByNumber(endNode)
+            endText = self.findNodeByNumber(endNode)
         else:
             endText = startText
             endOffset = startOffset
@@ -176,39 +186,39 @@ class SelectionTest:
         rng = Range(RangeEndPoint(startText, startOffset),
                     RangeEndPoint(endText, endOffset))
 
-        self.m_rte.getSelection().setRange(rng)
+        self.m_rte.getSelection()
+        Selection.setRange(rng)
 
         self.refresh()
 
-    def onClick(self, event):
-        wid = event.getSource()
+    def onClick(self, wid):
 
         if wid == self.m_getCurr:
-            refresh()
+            self.refresh()
 
         elif wid == self.m_deleteSel:
-            delete()
+            self.delete()
 
         elif wid == self.m_reset:
-            reset()
+            self.reset()
 
         elif wid == self.m_toECursor:
-            toCursor(False)
+            self.toCursor(False)
 
         elif wid == self.m_toSCursor:
-            toCursor(True)
+            self.toCursor(True)
 
         elif wid == self.m_surround:
-            surround()
+            self.surround()
 
         elif wid == self.m_setHtml:
-            toHtml()
+            self.toHtml()
 
         elif wid == self.m_select:
-            selectNodes(True)
+            self.selectNodes(True)
 
         elif wid == self.m_cursor:
-            selectNodes(False)
+            self.selectNodes(False)
 
 
     def setFocus(self, wid):
