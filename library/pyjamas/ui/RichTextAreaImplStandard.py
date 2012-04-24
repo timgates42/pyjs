@@ -21,8 +21,7 @@ from pyjamas import DOM
 from pyjamas.Timer import Timer
 
 from pyjamas.ui.RichTextAreaImpl import RichTextAreaImpl
-#from pyjamas.ui import FontSize
-#from pyjamas.ui import Justification
+from pyjamas.ui import RichTextAreaConsts
 
 elem_focussers = {}
 
@@ -187,11 +186,11 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
 
 
     def setJustification(self, justification):
-        if justification == RichTextArea.CENTER:
+        if justification == RichTextAreaConsts.CENTER:
             self.execCommand("JustifyCenter", '')
-        elif justification == RichTextArea.LEFT:
+        elif justification == RichTextAreaConsts.LEFT:
             self.execCommand("JustifyLeft", '')
-        elif justification == RichTextArea.RIGHT:
+        elif justification == RichTextAreaConsts.RIGHT:
             self.execCommand("JustifyRight", '')
 
 

@@ -28,7 +28,7 @@ from pyjamas.ui.HorizontalPanel import HorizontalPanel
 from pyjamas.ui.KeyboardListener import KeyboardHandler
 from pyjamas.ui.ListBox import ListBox
 from pyjamas.ui.PushButton import PushButton
-from pyjamas.ui import RichTextArea 
+from pyjamas.ui import RichTextAreaConsts
 from pyjamas.ui.ToggleButton import ToggleButton
 from pyjamas.ui.VerticalPanel import VerticalPanel
 from pyjamas.ui.Widget import Widget
@@ -143,10 +143,10 @@ class CustomStyleManager:
 class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
 
     fontSizesConstants = [
-        RichTextArea.XX_SMALL, RichTextArea.X_SMALL,
-        RichTextArea.SMALL, RichTextArea.MEDIUM,
-        RichTextArea.LARGE, RichTextArea.X_LARGE,
-        RichTextArea.XX_LARGE
+        RichTextAreaConsts.XX_SMALL, RichTextAreaConsts.X_SMALL,
+        RichTextAreaConsts.SMALL, RichTextAreaConsts.MEDIUM,
+        RichTextAreaConsts.LARGE, RichTextAreaConsts.X_LARGE,
+        RichTextAreaConsts.XX_LARGE
     ]
 
     """*
@@ -223,9 +223,9 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
             self.hr = self.createPushButton(Images.hr,
                                             "hr")
             self.ol = self.createPushButton(Images.ol,
-                                            "ol")
+                                            "ordered list")
             self.ul = self.createPushButton(Images.ul,
-                                            "underline")
+                                            "unordered list")
             self.insertImage = self.createPushButton(Images.insertImage,
                                             "insert image")
             self.createLink = self.createPushButton(Images.createLink,
@@ -368,11 +368,11 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
         elif sender == self.outdent:
             self.extended.leftIndent()
         elif sender == self.justifyLeft:
-            self.basic.setJustification(RichTextArea.LEFT)
+            self.basic.setJustification(RichTextAreaConsts.LEFT)
         elif sender == self.justifyCenter:
-            self.basic.setJustification(RichTextArea.CENTER)
+            self.basic.setJustification(RichTextAreaConsts.CENTER)
         elif sender == self.justifyRight:
-            self.basic.setJustification(RichTextArea.RIGHT)
+            self.basic.setJustification(RichTextAreaConsts.RIGHT)
         elif sender == self.insertImage:
             url = Window.prompt("Enter an image URL:", "http:#")
             if url is not None:
@@ -694,5 +694,8 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
 
     def getDocument(self):
         return Selection.getDocument(self.getWindow())
+
+    def getFormatter(self):
+        return self.richText.getExtendedFormatter()
 
 

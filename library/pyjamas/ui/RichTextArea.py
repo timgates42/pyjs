@@ -22,67 +22,6 @@ from pyjamas.ui.FocusWidget import FocusWidget
 from pyjamas.ui.RichTextAreaImplStandard import RichTextAreaImplStandard
 
 
-"""*
-* Font size enumeration. Represents the seven basic HTML font sizes, as
-* defined in CSS.
-"""
-
-"""*
-* Represents an XX-Small font.
-"""
-XX_SMALL = 1
-
-"""*
-* Represents an X-Small font.
-"""
-X_SMALL = 2
-
-"""*
-* Represents a Small font.
-"""
-SMALL = 3
-
-"""*
-* Represents a Medium font.
-"""
-MEDIUM = 4
-
-"""*
-* Represents a Large font.
-"""
-LARGE = 5
-
-"""*
-* Represents an X-Large font.
-"""
-X_LARGE = 6
-
-"""*
-* Represents an XX-Large font.
-"""
-XX_LARGE = 7
-
-"""*
-* Justification enumeration. The three values are <code>left</code>,
-* <code>right</code>, <code>center</code>.
-"""
-
-"""*
-* Center justification.
-"""
-CENTER = "Center"
-
-"""*
-* Left justification.
-"""
-LEFT = "Left"
-
-"""*
-* Right justification.
-"""
-RIGHT = "Right"
-
-
 
 """*
 * A rich text editor that allows complex styling and formatting.
@@ -104,7 +43,6 @@ RIGHT = "Right"
 * </ul>
 """
 class RichTextArea (FocusWidget) :
-
 
     """*
     * Creates a new, blank {@link RichTextArea} object with no stylesheet.
