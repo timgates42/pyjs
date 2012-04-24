@@ -655,7 +655,9 @@ def getParent(elem):
 
 def getStyleAttribute(elem, attr):
     try:
-        if hasattr(elem.style, 'getProperty'):
+        if hasattr(elem.style, 'getPropertyValue'):
+            return elem.style.getPropertyValue(mash_name_for_glib(attr))
+        elif hasattr(elem.style, 'getProperty'):
             return elem.style.getProperty(mash_name_for_glib(attr))
         return elem.style.getAttribute(attr)
     except AttributeError:
