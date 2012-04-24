@@ -8,85 +8,10 @@ from pyjamas.ui.Grid import Grid
 from pyjamas.ui.TextBox import TextBox
 from pyjamas.ui.TextArea import TextArea
 from pyjamas.ui import RootPanel
+from pyjamas.ui.RichTextArea import RichTextArea
 
-from pyjamas import DOM
-
-from RichTextEditor import RichTextEditor
-
-from pyjamas.selection.RangeEndPoint import RangeEndPoint
-from pyjamas.selection.Range import Range
-from pyjamas.selection.RangeUtil import getAdjacentTextElement
-from pyjamas.selection import Selection
-
-import string
-
-def print_tree(parent):
-    child = parent.firstChild
-    while child:
-        child = child.nextSibling
-
-def remove_node(doc, element):
-    """ removes a specific node, adding its children in its place
-    """
-    fragment = doc.createDocumentFragment()
-    while element.firstChild:
-        fragment.appendChild(element.firstChild)
-
-    parent = element.parentNode
-    parent.insertBefore(fragment, element)
-    parent.removeChild(element)
-
-def remove_editor_styles(doc, csm, tree):
-    """ removes all other <span> nodes with an editor style
-    """
-
-    element = tree.lastChild
-    while element:
-        if not csm.identify(element):
-            element = element.previousSibling
-            continue
-        prev_el = element
-        remove_editor_styles(doc, csm, prev_el)
-        element = element.previousSibling
-        remove_node(doc, prev_el)
-
-class FontFamilyManager:
-
-    def __init__(self, doc, fontname):
-        self.fontname = fontname
-        self.doc = doc
-
-    def create(self):
-        element = self.doc.createElement("span")
-        DOM.setStyleAttribute(element, "font-family", self.fontname)
-        return element
-
-    def identify(self, element):
-        if element.nodeType != 1:
-            return False
-        if str(string.lower(element.tagName)) != 'span':
-            return False
-        style = DOM.getStyleAttribute(element, "font-family")
-        return style is not None
-
-class CustomStyleManager:
-
-    def __init__(self, doc, stylename):
-        self.stylename = stylename
-        self.doc = doc
-
-    def create(self):
-        element = self.doc.createElement("span")
-        DOM.setAttribute(element, "className", self.stylename)
-        return element
-
-    def identify(self, element):
-        if element.nodeType != 1:
-            return False
-        if str(string.lower(element.tagName)) != 'span':
-            return False
-        style = DOM.getAttribute(element, "className")
-        return style and style.startswith("editor-")
+from RichTextToolbar import RichTextToolbar, FontFamilyManager
+from RichTextToolbar import CustomStyleManager
 
 """*
 * Entry point classes define <code>onModuleLoad()</code>.
@@ -102,7 +27,8 @@ class SelectionTest:
     def onModuleLoad(self):
         dlp = DockPanel(Width="100%", Height="100%")
 
-        self.m_rte = RichTextEditor()
+        self.m_rte = RichTextArea(Width="500px", Height="400px")
+        self.m_tb = RichTextToolbar(self.m_rte, self)
 
         buts = FlowPanel()
         self.m_getCurr = Button("Refresh v", self)
@@ -162,7 +88,7 @@ class SelectionTest:
         textPanels.add(self.m_html, DockPanel.WEST)
 
         dlp.add(textPanels, DockPanel.SOUTH)
-
+        dlp.add(self.m_tb, DockPanel.NORTH)
         dlp.add(self.m_rte, DockPanel.CENTER)
 
         rp = RootPanel.get()
@@ -182,7 +108,7 @@ class SelectionTest:
         return res
 
     def reset(self):
-        self.m_rte.setHtml(
+        self.m_rte.setHTML(
         "The <span style=\"font-weight: bold;\">quick</span> " +
         "<span style=\"font-style: italic;\">brown </span>" +
         "fox jumped<br>ov" +
@@ -194,8 +120,8 @@ class SelectionTest:
 
     def refresh(self, rng=None):
         if rng is None:
-            rng = self.m_rte.getRange()
-        self.m_html.setText(self.m_rte.getHtml())
+            rng = self.m_tb.getRange()
+        self.m_html.setText(self.m_tb.getHtml())
         if rng is not None:
             if rng.isCursor():
                 rep = rng.getCursor()
@@ -207,154 +133,17 @@ class SelectionTest:
         else:
             self.m_sel.setText("")
 
-    def delete(self):
-        rng = self.m_rte.getRange()
-        if (rng is not None)  and  not rng.isCursor():
-            rng.deleteContents()
-            refresh()
-
-    def toHtml(self):
-        self.m_rte.setHtml(self.m_html.getText())
-
-    def toCursor(self, start):
-        rng = self.m_rte.getRange()
-        if (rng is not None)  and  not rng.isCursor():
-            rng.collapse(start)
-            self.m_rte.getSelection()
-            Selection.setRange(rng)
-            self.refresh()
-
-    def _surround(self, kls, cls):
-        """ this is possibly one of the most truly dreadful bits of code
-            for manipulating DOM ever written.  its purpose is to add only
-            the editor class required, and no more.  unfortunately, DOM gets
-            chopped up by the range thing, and a bit more besides.  so we
-            have to:
-
-            * extract the range contents
-            * clean up removing any blank text nodes that got created above
-            * slap a span round it
-            * clean up removing any blank text nodes that got created above
-            * remove any prior editor styles on the range contents
-            * go hunting through the entire document for stacked editor styles
-
-            this latter is funfunfun because only "spans with editor styles
-            which themselves have no child elements but a single span with
-            an editor style" must be removed.  e.g. if an outer editor span
-            has another editor span and also some text, the outer span must
-            be left alone.
-        """
-        rng = self.m_rte.getRange()
-        if (rng is None)  or rng.isCursor():
-            return
-
-        csm = kls(rng.m_document, cls)
-
-        rng.ensureRange()
-        dfrag = rng.m_range.extractContents()
-        remove_editor_styles(rng.m_document, csm, dfrag)
-        element = csm.create()
-        DOM.appendChild(element, dfrag)
-        rng.m_range.insertNode(element)
-
-        it = DOM.IterWalkChildren(element, True)
-        while True:
-            try:
-                node = it.next()
-            except StopIteration:
-                break
-            if node.nodeType == 3 and unicode(node.data) == u'':
-                DOM.removeChild(node.parentNode, node)
-
-        rng.setRange(element)
-
-        it = DOM.IterWalkChildren(rng.m_document, True)
-        while True:
-            try:
-                node = it.next()
-            except StopIteration:
-                break
-            if node.nodeType == 3 and unicode(node.data) == u'':
-                DOM.removeChild(node.parentNode, node)
-
-        # clears out all nodes with no children.
-        it = DOM.IterWalkChildren(rng.m_document)
-        while True:
-            try:
-                node = it.next()
-            except StopIteration:
-                break
-            if node.firstChild or not csm.identify(node):
-                continue
-            DOM.removeChild(node.parentNode, node)
-
-        it = DOM.IterWalkChildren(rng.m_document, True)
-        while True:
-            try:
-                node = it.next()
-            except StopIteration:
-                break
-            if not csm.identify(node):
-                continue
-            if node.firstChild is None:
-                continue
-            if not csm.identify(node.firstChild):
-                continue
-            if node.firstChild.nextSibling:
-                continue
-            # remove the *outer* one because the range was added to
-            # the inner, and the inner one overrides anyway
-
-            remove_node(rng.m_document, node)
-
-        doc = self.m_rte.getDocument()
-
-        self.m_rte.getSelection()
-        Selection.setRange(rng)
-        self.refresh()
-
     def font1(self):
-        self._surround(FontFamilyManager, "Times New Roman")
+        self.m_tb._surround(FontFamilyManager, "Times New Roman")
 
     def font2(self):
-        self._surround(FontFamilyManager, "Arial")
+        self.m_tb._surround(FontFamilyManager, "Arial")
 
     def surround1(self):
-        self._surround(CustomStyleManager, "editor-cls1")
+        self.m_tb._surround(CustomStyleManager, "editor-cls1")
 
     def surround2(self):
-        self._surround(CustomStyleManager, "editor-cls2")
-
-    def findNodeByNumber(self, num):
-
-        doc = self.m_rte.getDocument()
-        res = getAdjacentTextElement(doc, True)
-        while (res is not None)  and  (num > 0):
-            num -= 1
-            res = getAdjacentTextElement(res, True)
-
-        return res
-
-    def selectNodes(self, fullSel):
-        startNode = int(self.m_startNode.getText())
-        startOffset = int(self.m_startOffset.getText())
-
-        startText = self.findNodeByNumber(startNode)
-        if fullSel:
-            endNode = int(self.m_endNode.getText())
-            endOffset = int(self.m_endOffset.getText())
-            endText = self.findNodeByNumber(endNode)
-        else:
-            endText = startText
-            endOffset = startOffset
-
-        rng = Range(RangeEndPoint(startText, startOffset),
-                    RangeEndPoint(endText, endOffset))
-
-        self.m_rte.getSelection()
-        Selection.setRange(rng)
-
-        self.refresh()
+        self.m_tb._surround(CustomStyleManager, "editor-cls2")
 
     def onClick(self, wid):
 
@@ -362,16 +151,16 @@ class SelectionTest:
             self.refresh()
 
         elif wid == self.m_deleteSel:
-            self.delete()
+            self.m_tb.delete()
 
         elif wid == self.m_reset:
             self.reset()
 
         elif wid == self.m_toECursor:
-            self.toCursor(False)
+            self.m_tb.toCursor(False)
 
         elif wid == self.m_toSCursor:
-            self.toCursor(True)
+            self.m_tb.toCursor(True)
 
         elif wid == self.m_font1:
             self.font1()
@@ -394,13 +183,21 @@ class SelectionTest:
         elif wid == self.m_cursor:
             self.selectNodes(False)
 
+    def toHtml(self):
+        self.m_tb.setHtml(self.m_html.getText())
 
-    def setFocus(self, wid):
-        self._wid = wid # hack
-        DeferredCommand.add(getattr(self, "execute_set_focus"))
+    def selectNodes(self, fullSel):
+        startNode = int(self.m_startNode.getText())
+        startOffset = int(self.m_startOffset.getText())
 
-    def execute_set_focus(self):
-        self._wid.setFocus(True)
+        if fullSel:
+            endNode = int(self.m_endNode.getText())
+            endOffset = int(self.m_endOffset.getText())
+        else:
+            endNode = startNode
+            endOffset = startOffset
+
+        self.m_tb.selectNodes(startNode, startOffset, endNode, endOffset)
 
 
 if __name__ == '__main__':

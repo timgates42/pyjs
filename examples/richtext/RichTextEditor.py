@@ -198,7 +198,6 @@ class RichTextEditor(Composite):
         pass
 
     def onKeyUp(self, sender, keycode, modifiers):
-        sender = event.getSource()
         if sender == self.m_textW:
             self.updateStatus()
             self.checkForChange()

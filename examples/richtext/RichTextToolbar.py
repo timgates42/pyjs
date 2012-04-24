@@ -16,8 +16,9 @@
 #package com.google.gwt.sample.kitchensink.client
 
 
+from __pyjamas__ import doc
 
-
+from pyjamas import DOM
 from pyjamas import Window
 from pyjamas.ui.Image import Image
 from pyjamas.ui.ChangeListener import ChangeHandler
@@ -32,12 +33,18 @@ from pyjamas.ui.ToggleButton import ToggleButton
 from pyjamas.ui.VerticalPanel import VerticalPanel
 from pyjamas.ui.Widget import Widget
 
+from pyjamas.Timer import Timer
+
 from pyjamas.selection.RangeEndPoint import RangeEndPoint
 from pyjamas.selection.Range import Range
 from pyjamas.selection.RangeUtil import getAdjacentTextElement
 from pyjamas.selection import Selection
 
+import EventLinkPopup
+
 import string
+import traceback
+
 
 def print_tree(parent):
     child = parent.firstChild
@@ -147,16 +154,17 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
     *
     * @param richText the rich text area to be controlled
     """
-    def __init__(self, richText, **kwargs):
+    def __init__(self, richText, _parent, **kwargs):
 
         self.isInText = False
         self.lastText = ""
         self.trigger = False
         self.lastRange = None
+        self._parent = _parent
 
         # Timer for trying real time selection change stuff
         self.timerRange = None
-        self.selTimer = Timer(self)
+        self.selTimer = Timer(notify=self.run)
 
         self.outer = VerticalPanel()
         self.topPanel = HorizontalPanel(BorderWidth=1)
@@ -371,9 +379,7 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
                 self.extended.insertImage(url)
 
         elif sender == self.createLink:
-            url = Window.prompt("Enter a link URL:", "http:#")
-            if url is not None:
-                self.extended.createLink(url)
+            EventLinkPopup.open(self)
 
         elif sender == self.removeLink:
             self.extended.removeLink()
@@ -385,8 +391,6 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
             self.extended.insertUnorderedList()
         elif sender == self.removeFormat:
             self.extended.removeFormat()
-        elif sender == self.newLinkW:
-            EventLinkPopup.open(self)
         elif sender == self.richText:
             # We use the RichTextArea's onKeyUp event to update the
             # toolbar status.  This will catch any cases where the
@@ -452,7 +456,7 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
 
     def findNodeByNumber(self, num):
 
-        doc = self.richText.getDocument()
+        doc = self.getDocument()
         res = getAdjacentTextElement(doc, True)
         while (res is not None)  and  (num > 0):
             num -= 1
@@ -460,14 +464,10 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
 
         return res
 
-    def selectNodes(self, fullSel):
-        startNode = int(self.startNode.getText())
-        startOffset = int(self.startOffset.getText())
+    def selectNodes(self, startNode, startOffset, endNode=None, endOffset=None):
 
         startText = self.findNodeByNumber(startNode)
-        if fullSel:
-            endNode = int(self.endNode.getText())
-            endOffset = int(self.endOffset.getText())
+        if endNode is not None:
             endText = self.findNodeByNumber(endNode)
         else:
             endText = startText
@@ -476,7 +476,7 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
         rng = Range(RangeEndPoint(startText, startOffset),
                     RangeEndPoint(endText, endOffset))
 
-        self.richText.getSelection()
+        self.getSelection()
         Selection.setRange(rng)
 
         self.refresh()
@@ -513,18 +513,18 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
             has another editor span and also some text, the outer span must
             be left alone.
         """
-        rng = self.richText.getRange()
+        rng = self.getRange()
         if (rng is None)  or rng.isCursor():
             return
 
-        csm = kls(rng.document, cls)
+        csm = kls(rng.m_document, cls)
 
         rng.ensureRange()
-        dfrag = rng.range.extractContents()
-        remove_editor_styles(rng.document, csm, dfrag)
+        dfrag = rng.m_range.extractContents()
+        remove_editor_styles(rng.m_document, csm, dfrag)
         element = csm.create()
         DOM.appendChild(element, dfrag)
-        rng.range.insertNode(element)
+        rng.m_range.insertNode(element)
 
         it = DOM.IterWalkChildren(element, True)
         while True:
@@ -537,7 +537,7 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
 
         rng.setRange(element)
 
-        it = DOM.IterWalkChildren(rng.document, True)
+        it = DOM.IterWalkChildren(rng.m_document, True)
         while True:
             try:
                 node = it.next()
@@ -547,7 +547,7 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
                 DOM.removeChild(node.parentNode, node)
 
         # clears out all nodes with no children.
-        it = DOM.IterWalkChildren(rng.document)
+        it = DOM.IterWalkChildren(rng.m_document)
         while True:
             try:
                 node = it.next()
@@ -557,7 +557,7 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
                 continue
             DOM.removeChild(node.parentNode, node)
 
-        it = DOM.IterWalkChildren(rng.document, True)
+        it = DOM.IterWalkChildren(rng.m_document, True)
         while True:
             try:
                 node = it.next()
@@ -574,43 +574,38 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
             # remove the *outer* one because the range was added to
             # the inner, and the inner one overrides anyway
 
-            remove_node(rng.document, node)
+            remove_node(rng.m_document, node)
 
-        doc = self.richText.getDocument()
+        doc = self.getDocument()
 
-        self.richText.getSelection()
+        self.getSelection()
         Selection.setRange(rng)
         self.refresh()
 
-    def refresh(self, rng=None):
-        if rng is None:
-            rng = self.richText.getRange()
-        self.html.setText(self.richText.getHtml())
-        if rng is not None:
-            if rng.isCursor():
-                rep = rng.getCursor()
-                self.sel.setText(str(rep))
-
-            else:
-                self.sel.setText(rng.getHtmlText())
-
-        else:
-            self.sel.setText("")
+    def refresh(self):
+        self._parent.refresh()
 
     def delete(self):
-        rng = self.richText.getRange()
-        if (rng is not None)  and  not rng.isCursor():
-            rng.deleteContents()
-            refresh()
+        rng = self.getRange()
+        if rng is None  or  rng.isCursor():
+            return
+        rng.deleteContents()
+        refresh()
 
-    def toHtml(self):
-        self.richText.setHtml(self.html.getText())
+    def toCursor(self, start):
+        rng = self.getRange()
+        if rng is None  or  rng.isCursor():
+            return
+        rng.collapse(start)
+        self.getSelection()
+        Selection.setRange(rng)
+        self.refresh()
 
     def run(self):
         try:
             self.getSelection()
             rng = Selection.getRange()
-            if (self.timerRange is None)  or  (not self.timerRange.equals(rng)):
+            if (self.timerRange is None) or (not self.timerRange.equals(rng)):
                 self.onSelectionChange(rng)
                 self.timerRange = rng
 
@@ -629,7 +624,7 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
 
     def getWindow(self, iFrame=None):
         if iFrame is None:
-            iFrame = self.m_textW.getElement()
+            iFrame = self.richText.getElement()
         iFrameWin = iFrame.contentWindow or iFrame.contentDocument
 
         if not iFrameWin.document:
@@ -678,7 +673,26 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
         if self.lastRange is None:
             self.getSelection()
             return Selection.getRange()
-
         else:
             return self.lastRange
+
+    def checkForChange(self):
+        text = self.richText.getHTML()
+        if text == self.lastText:
+            return
+        nEvt = doc().createEvent("HTMLEvents")
+        nEvt.initEvent("change", False, True)
+        self.getElement().dispatchEvent(nEvt)
+        self.lastText = text
+
+    def setHtml(self, text):
+        self.richText.setHTML(text)
+        self.lastText = text
+
+    def getHtml(self):
+        return self.richText.getHTML()
+
+    def getDocument(self):
+        return Selection.getDocument(self.getWindow())
+
 
