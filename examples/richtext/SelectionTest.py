@@ -21,17 +21,8 @@ from pyjamas.selection import Selection
 import string
 
 def print_tree(parent):
-    if parent.nodeType == 1:
-        print "parent", parent, parent.tagName, parent.innerHTML
-    else:
-        print "parent", parent, parent.nodeName
     child = parent.firstChild
     while child:
-        print "child", child,
-        if child.nodeType == 1:
-            print child.tagName, repr(child.innerHTML)
-        else:
-            print repr(child.data)
         child = child.nextSibling
 
 def remove_node(doc, element):
@@ -44,9 +35,6 @@ def remove_node(doc, element):
     parent = element.parentNode
     parent.insertBefore(fragment, element)
     parent.removeChild(element)
-
-    print_tree(parent)
-    #print "element", element, element.tagName, element.innerHTML
 
 def remove_editor_styles(doc, csm, tree):
     """ removes all other <span> nodes with an editor style
@@ -61,8 +49,6 @@ def remove_editor_styles(doc, csm, tree):
         remove_editor_styles(doc, csm, prev_el)
         element = element.previousSibling
         remove_node(doc, prev_el)
-        print "post-remove"
-        print_tree(tree)
 
 class FontFamilyManager:
 
@@ -81,7 +67,6 @@ class FontFamilyManager:
         if str(string.lower(element.tagName)) != 'span':
             return False
         style = DOM.getStyleAttribute(element, "font-family")
-        print "font identify", element, style
         return style is not None
 
 class CustomStyleManager:
@@ -267,14 +252,7 @@ class SelectionTest:
 
         rng.ensureRange()
         dfrag = rng.m_range.extractContents()
-        print "doc pre remove"
-        print_tree(rng.m_document)
         remove_editor_styles(rng.m_document, csm, dfrag)
-        print "dfrag post remove styles"
-        print_tree(dfrag)
-        print "doc after dfrag remove"
-        print_tree(rng.m_document)
-        print "extract", dfrag, dir(dfrag)
         element = csm.create()
         DOM.appendChild(element, dfrag)
         rng.m_range.insertNode(element)
@@ -285,9 +263,7 @@ class SelectionTest:
                 node = it.next()
             except StopIteration:
                 break
-            print node, node.nodeType
             if node.nodeType == 3 and unicode(node.data) == u'':
-                print "removing blank text"
                 DOM.removeChild(node.parentNode, node)
 
         rng.setRange(element)
@@ -298,9 +274,7 @@ class SelectionTest:
                 node = it.next()
             except StopIteration:
                 break
-            print node, node.nodeType
             if node.nodeType == 3 and unicode(node.data) == u'':
-                print "removing blank text"
                 DOM.removeChild(node.parentNode, node)
 
         # clears out all nodes with no children.
@@ -320,31 +294,24 @@ class SelectionTest:
                 node = it.next()
             except StopIteration:
                 break
-            print "walk", node, node.nodeType
             if not csm.identify(node):
                 continue
-            print "identified"
-            print_tree(node)
             if node.firstChild is None:
                 continue
             if not csm.identify(node.firstChild):
                 continue
             if node.firstChild.nextSibling:
-                print "fc has nextSibling", node.firstChild.nextSibling
                 continue
             # remove the *outer* one because the range was added to
             # the inner, and the inner one overrides anyway
-            print "remove overlapping styles", node
 
             remove_node(rng.m_document, node)
 
         doc = self.m_rte.getDocument()
-        print "doc pre", doc, doc.body.innerHTML
 
         self.m_rte.getSelection()
         Selection.setRange(rng)
         self.refresh()
-        print "doc", doc, doc.body.innerHTML
 
     def font1(self):
         self._surround(FontFamilyManager, "Times New Roman")
@@ -361,15 +328,11 @@ class SelectionTest:
     def findNodeByNumber(self, num):
 
         doc = self.m_rte.getDocument()
-        print "findNodeByNumber:doc", doc
         res = getAdjacentTextElement(doc, True)
-        print "findNodeByNumber:startat", res
         while (res is not None)  and  (num > 0):
-            print "findNodeByNumber?", res, num
             num -= 1
             res = getAdjacentTextElement(res, True)
 
-        print "findNodeByNumber=", res
         return res
 
     def selectNodes(self, fullSel):
@@ -377,8 +340,6 @@ class SelectionTest:
         startOffset = int(self.m_startOffset.getText())
 
         startText = self.findNodeByNumber(startNode)
-        print "startNode", startNode, startOffset
-        print "startText", startText
         if fullSel:
             endNode = int(self.m_endNode.getText())
             endOffset = int(self.m_endOffset.getText())

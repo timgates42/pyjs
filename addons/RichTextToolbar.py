@@ -32,6 +32,43 @@ from pyjamas.ui.ToggleButton import ToggleButton
 from pyjamas.ui.VerticalPanel import VerticalPanel
 from pyjamas.ui.Widget import Widget
 
+from pyjamas.selection.RangeEndPoint import RangeEndPoint
+from pyjamas.selection.Range import Range
+from pyjamas.selection.RangeUtil import getAdjacentTextElement
+from pyjamas.selection import Selection
+
+import string
+
+def print_tree(parent):
+    child = parent.firstChild
+    while child:
+        child = child.nextSibling
+
+def remove_node(doc, element):
+    """ removes a specific node, adding its children in its place
+    """
+    fragment = doc.createDocumentFragment()
+    while element.firstChild:
+        fragment.appendChild(element.firstChild)
+
+    parent = element.parentNode
+    parent.insertBefore(fragment, element)
+    parent.removeChild(element)
+
+def remove_editor_styles(doc, csm, tree):
+    """ removes all other <span> nodes with an editor style
+    """
+
+    element = tree.lastChild
+    while element:
+        if not csm.identify(element):
+            element = element.previousSibling
+            continue
+        prev_el = element
+        remove_editor_styles(doc, csm, prev_el)
+        element = element.previousSibling
+        remove_node(doc, prev_el)
+
 class Images(object):
     bold = "bold.gif"
     italic = "italic.gif"
@@ -52,14 +89,51 @@ class Images(object):
     removeLink = "removeLink.gif"
     removeFormat = "removeFormat.gif"
 
+class FontFamilyManager:
+
+    def __init__(self, doc, fontname):
+        self.fontname = fontname
+        self.doc = doc
+
+    def create(self):
+        element = self.doc.createElement("span")
+        DOM.setStyleAttribute(element, "font-family", self.fontname)
+        return element
+
+    def identify(self, element):
+        if element.nodeType != 1:
+            return False
+        if str(string.lower(element.tagName)) != 'span':
+            return False
+        style = DOM.getStyleAttribute(element, "font-family")
+        return style is not None
+
+class CustomStyleManager:
+
+    def __init__(self, doc, stylename):
+        self.stylename = stylename
+        self.doc = doc
+
+    def create(self):
+        element = self.doc.createElement("span")
+        DOM.setAttribute(element, "className", self.stylename)
+        return element
+
+    def identify(self, element):
+        if element.nodeType != 1:
+            return False
+        if str(string.lower(element.tagName)) != 'span':
+            return False
+        style = DOM.getAttribute(element, "className")
+        return style and style.startswith("editor-")
+
+
 """*
 * A sample toolbar for use with {@link RichTextArea}. It provides a simple UI
 * for all rich text formatting, dynamically displayed only for the available
 * functionality.
 """
 class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
-
-
 
     fontSizesConstants = [
         RichTextArea.XX_SMALL, RichTextArea.X_SMALL,
@@ -74,6 +148,15 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
     * @param richText the rich text area to be controlled
     """
     def __init__(self, richText, **kwargs):
+
+        self.isInText = False
+        self.lastText = ""
+        self.trigger = False
+        self.lastRange = None
+
+        # Timer for trying real time selection change stuff
+        self.timerRange = None
+        self.selTimer = Timer(self)
 
         self.outer = VerticalPanel()
         self.topPanel = HorizontalPanel(BorderWidth=1)
@@ -155,7 +238,6 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
             self.topPanel.add(self.removeLink)
             self.topPanel.add(self.removeFormat)
 
-
         if self.basic is not None:
             self.backColors = self.createColorList("Background")
             self.foreColors = self.createColorList("Foreground")
@@ -172,8 +254,6 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
             self.richText.addKeyboardListener(self)
             self.richText.addClickListener(self)
 
-
-
     def createColorList(self, caption):
         lb = ListBox()
         lb.addChangeListener(self)
@@ -187,7 +267,6 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
         lb.addItem("Yellow", "yellow")
         lb.addItem("Blue", "blue")
         return lb
-
 
     def createFontList(self):
         lb = ListBox()
@@ -204,7 +283,6 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
         lb.addItem("Verdana", "Verdana")
         return lb
 
-
     def createFontSizes(self):
         lb = ListBox()
         lb.addChangeListener(self)
@@ -220,13 +298,11 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
         lb.addItem("XXlarge")
         return lb
 
-
     def createPushButton(self, img, tip):
         img = Image(img)
         pb = PushButton(img, img, self)
         pb.setTitle(tip)
         return pb
-
 
     def createToggleButton(self, img, tip):
         img = Image(img)
@@ -309,12 +385,16 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
             self.extended.insertUnorderedList()
         elif sender == self.removeFormat:
             self.extended.removeFormat()
+        elif sender == self.newLinkW:
+            EventLinkPopup.open(self)
         elif sender == self.richText:
             # We use the RichTextArea's onKeyUp event to update the
             # toolbar status.  This will catch any cases where the
             # user moves the cursor using the keyboard, or uses one of
             # the browser's built-in keyboard shortcuts.
             self.updateStatus()
+
+        self.checkForChange()
 
     def onKeyDown(self, sender, keyCode, modifiers):
         pass
@@ -329,5 +409,276 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
             # moves the cursor using the keyboard, or uses one of
             # the browser's built-in keyboard shortcuts.
             self.updateStatus()
+            self.checkForChange()
 
+    def onMouseLeave(self, event):
+        pass
+
+    def onMouseEnter(self, event):
+        pass
+
+    def onMouseUp(self, event, x, y):
+        pass
+
+    def onMouseMove(self, event, x, y):
+        pass
+
+    def onMouseDown(self, event, x, y):
+        self.trigger = True
+
+    def onLostFocus(self, event):
+        self.checkForChange()
+
+    def onMouseOut(self, event):
+        if self.isInText  and  self.isOnTextBorder(event):
+            self.isInText = False
+            self.captureSelection()
+            self.endSelTimer()
+
+    def onMouseOver(self, event):
+        if not self.isInText:
+            self.isInText = True
+            self.richText.setFocus(True)
+            self.lastRange = None
+            self.startSelTimer()
+
+
+    def setFocus(self, wid):
+        self._wid = wid # hack
+        DeferredCommand.add(getattr(self, "execute_set_focus"))
+
+    def execute_set_focus(self):
+        self._wid.setFocus(True)
+
+    def findNodeByNumber(self, num):
+
+        doc = self.richText.getDocument()
+        res = getAdjacentTextElement(doc, True)
+        while (res is not None)  and  (num > 0):
+            num -= 1
+            res = getAdjacentTextElement(res, True)
+
+        return res
+
+    def selectNodes(self, fullSel):
+        startNode = int(self.startNode.getText())
+        startOffset = int(self.startOffset.getText())
+
+        startText = self.findNodeByNumber(startNode)
+        if fullSel:
+            endNode = int(self.endNode.getText())
+            endOffset = int(self.endOffset.getText())
+            endText = self.findNodeByNumber(endNode)
+        else:
+            endText = startText
+            endOffset = startOffset
+
+        rng = Range(RangeEndPoint(startText, startOffset),
+                    RangeEndPoint(endText, endOffset))
+
+        self.richText.getSelection()
+        Selection.setRange(rng)
+
+        self.refresh()
+
+    def font1(self):
+        self._surround(FontFamilyManager, "Times New Roman")
+
+    def font2(self):
+        self._surround(FontFamilyManager, "Arial")
+
+    def surround1(self):
+        self._surround(CustomStyleManager, "editor-cls1")
+
+    def surround2(self):
+        self._surround(CustomStyleManager, "editor-cls2")
+
+    def _surround(self, kls, cls):
+        """ this is possibly one of the most truly dreadful bits of code
+            for manipulating DOM ever written.  its purpose is to add only
+            the editor class required, and no more.  unfortunately, DOM gets
+            chopped up by the range thing, and a bit more besides.  so we
+            have to:
+
+            * extract the range contents
+            * clean up removing any blank text nodes that got created above
+            * slap a span round it
+            * clean up removing any blank text nodes that got created above
+            * remove any prior editor styles on the range contents
+            * go hunting through the entire document for stacked editor styles
+
+            this latter is funfunfun because only "spans with editor styles
+            which themselves have no child elements but a single span with
+            an editor style" must be removed.  e.g. if an outer editor span
+            has another editor span and also some text, the outer span must
+            be left alone.
+        """
+        rng = self.richText.getRange()
+        if (rng is None)  or rng.isCursor():
+            return
+
+        csm = kls(rng.document, cls)
+
+        rng.ensureRange()
+        dfrag = rng.range.extractContents()
+        remove_editor_styles(rng.document, csm, dfrag)
+        element = csm.create()
+        DOM.appendChild(element, dfrag)
+        rng.range.insertNode(element)
+
+        it = DOM.IterWalkChildren(element, True)
+        while True:
+            try:
+                node = it.next()
+            except StopIteration:
+                break
+            if node.nodeType == 3 and unicode(node.data) == u'':
+                DOM.removeChild(node.parentNode, node)
+
+        rng.setRange(element)
+
+        it = DOM.IterWalkChildren(rng.document, True)
+        while True:
+            try:
+                node = it.next()
+            except StopIteration:
+                break
+            if node.nodeType == 3 and unicode(node.data) == u'':
+                DOM.removeChild(node.parentNode, node)
+
+        # clears out all nodes with no children.
+        it = DOM.IterWalkChildren(rng.document)
+        while True:
+            try:
+                node = it.next()
+            except StopIteration:
+                break
+            if node.firstChild or not csm.identify(node):
+                continue
+            DOM.removeChild(node.parentNode, node)
+
+        it = DOM.IterWalkChildren(rng.document, True)
+        while True:
+            try:
+                node = it.next()
+            except StopIteration:
+                break
+            if not csm.identify(node):
+                continue
+            if node.firstChild is None:
+                continue
+            if not csm.identify(node.firstChild):
+                continue
+            if node.firstChild.nextSibling:
+                continue
+            # remove the *outer* one because the range was added to
+            # the inner, and the inner one overrides anyway
+
+            remove_node(rng.document, node)
+
+        doc = self.richText.getDocument()
+
+        self.richText.getSelection()
+        Selection.setRange(rng)
+        self.refresh()
+
+    def refresh(self, rng=None):
+        if rng is None:
+            rng = self.richText.getRange()
+        self.html.setText(self.richText.getHtml())
+        if rng is not None:
+            if rng.isCursor():
+                rep = rng.getCursor()
+                self.sel.setText(str(rep))
+
+            else:
+                self.sel.setText(rng.getHtmlText())
+
+        else:
+            self.sel.setText("")
+
+    def delete(self):
+        rng = self.richText.getRange()
+        if (rng is not None)  and  not rng.isCursor():
+            rng.deleteContents()
+            refresh()
+
+    def toHtml(self):
+        self.richText.setHtml(self.html.getText())
+
+    def run(self):
+        try:
+            self.getSelection()
+            rng = Selection.getRange()
+            if (self.timerRange is None)  or  (not self.timerRange.equals(rng)):
+                self.onSelectionChange(rng)
+                self.timerRange = rng
+
+        except:
+            GWT.log("Error in timer selection", ex)
+
+    def getSelection(self):
+        res = None
+        try:
+            window = self.getWindow()
+            Selection.getSelection(window)
+
+        except:
+            print "Error getting the selection"
+            traceback.print_exc()
+
+    def getWindow(self, iFrame=None):
+        if iFrame is None:
+            iFrame = self.m_textW.getElement()
+        iFrameWin = iFrame.contentWindow or iFrame.contentDocument
+
+        if not iFrameWin.document:
+            iFrameWin = iFrameWin.parentNode # FBJS version of parentNode
+
+        #print "getWindow", iFrameWin, dir(iFrameWin)
+
+        return iFrameWin
+
+    def captureSelection(self):
+        """ This captures the selection when the mouse leaves the RTE,
+            because in IE the selection indicating the cursor position
+            is lost once another widget gains focus.
+            Could be implemented for IE only.
+        """
+        try:
+            self.getSelection()
+            self.lastRange = Selection.getRange()
+
+        except:
+            GWT.log("Error capturing selection for IE", ex)
+
+    # Gets run every time the selection is changed
+    def onSelectionChange(self, sel):
+        pass
+
+    def isOnTextBorder(self, event):
+        sender = event.getSource()
+        twX = self.richText.getAbsoluteLeft()
+        twY = self.richText.getAbsoluteTop()
+        x = event.getClientX() - twX
+        y = event.getClientY() - twY
+        width = self.richText.getOffsetWidth()
+        height = self.richText.getOffsetHeight()
+        return ((sender == self.richText)  and
+        ((x <= 0)  or  (x >= width)  or
+        (y <= 0)  or  (y >= height)))
+
+    def startSelTimer(self):
+        self.selTimer.scheduleRepeating(250)
+
+    def endSelTimer(self):
+        self.selTimer.cancel()
+
+    def getRange(self):
+        if self.lastRange is None:
+            self.getSelection()
+            return Selection.getRange()
+
+        else:
+            return self.lastRange
 
