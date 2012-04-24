@@ -9,12 +9,68 @@ from pyjamas.ui.TextBox import TextBox
 from pyjamas.ui.TextArea import TextArea
 from pyjamas.ui import RootPanel
 
+from pyjamas import DOM
+
 from RichTextEditor import RichTextEditor
 
 from pyjamas.selection.RangeEndPoint import RangeEndPoint
 from pyjamas.selection.Range import Range
 from pyjamas.selection.RangeUtil import getAdjacentTextElement
 from pyjamas.selection import Selection
+
+import string
+
+def print_tree(parent):
+    if parent.nodeType == 1:
+        print "parent", parent, parent.tagName, parent.innerHTML
+    else:
+        print "parent", parent, parent.nodeName
+    child = parent.firstChild
+    while child:
+        print "child", child,
+        if child.nodeType == 1:
+            print child.tagName, repr(child.innerHTML)
+        else:
+            print repr(child.data)
+        child = child.nextSibling
+
+def remove_node(doc, element):
+    """ removes a specific node, adding its children in its place
+    """
+    fragment = doc.createDocumentFragment()
+    while element.firstChild:
+        fragment.appendChild(element.firstChild)
+
+    parent = element.parentNode
+    parent.insertBefore(fragment, element)
+    parent.removeChild(element)
+
+    print_tree(parent)
+    #print "element", element, element.tagName, element.innerHTML
+
+def remove_editor_styles(doc, tree):
+    """ removes all other <span> nodes with an editor style
+    """
+
+    element = tree.lastChild
+    while element:
+        if element.nodeType != 1:
+            element = element.previousSibling
+            continue
+        if string.lower(element.tagName) != 'span':
+            element = element.previousSibling
+            continue
+        style = DOM.getAttribute(element, "className")
+        print "span", style, element, element.innerHTML
+        if not style or not style.startswith("editor-"):
+            element = element.previousSibling
+            continue
+        prev_el = element
+        remove_editor_styles(doc, prev_el)
+        element = element.previousSibling
+        remove_node(doc, prev_el)
+        print "post-remove"
+        print_tree(tree)
 
 """*
 * Entry point classes define <code>onModuleLoad()</code>.
@@ -40,7 +96,8 @@ class SelectionTest:
         self.m_toSCursor.setTitle("Set the selection to be a cursor at the beginning of the current selection")
         self.m_toECursor = Button("To Cursor >", self)
         self.m_toECursor.setTitle("Set the selection to be a cursor at the end of the current selection")
-        self.m_surround = Button("Surround", self)
+        self.m_surround1 = Button("Surround1", self)
+        self.m_surround2 = Button("Surround2", self)
 
         grid = Grid(2, 2)
         self.m_startNode = self.createTextBox(1)
@@ -63,7 +120,8 @@ class SelectionTest:
         buts.add(self.m_setHtml)
         buts.add(self.m_toSCursor)
         buts.add(self.m_toECursor)
-        buts.add(self.m_surround)
+        buts.add(self.m_surround1)
+        buts.add(self.m_surround2)
         buts.add(grid)
         buts.add(self.m_select)
         buts.add(self.m_cursor)
@@ -146,13 +204,130 @@ class SelectionTest:
             Selection.setRange(rng)
             self.refresh()
 
-    def surround(self):
+    def _surround(self, cls):
+        """ this is possibly one of the most truly dreadful bits of code
+            for manipulating DOM ever written.  its purpose is to add only
+            the editor class required, and no more.  unfortunately, DOM gets
+            chopped up by the range thing, and a bit more besides.  so we
+            have to:
+
+            * extract the range contents
+            * clean up removing any blank text nodes that got created above
+            * slap a span round it
+            * clean up removing any blank text nodes that got created above
+            * remove any prior editor styles on the range contents
+            * go hunting through the entire document for stacked editor styles
+
+            this latter is funfunfun because only "spans with editor styles
+            which themselves have no child elements but a single span with
+            an editor style" must be removed.  e.g. if an outer editor span
+            has another editor span and also some text, the outer span must
+            be left alone.
+        """
         rng = self.m_rte.getRange()
-        if (rng is not None)  and  not rng.isCursor():
-            rng.surroundContents()
-            self.m_rte.getSelection()
-            Selection.setRange(rng)
-            self.refresh()
+        if (rng is None)  or rng.isCursor():
+            return
+
+        rng.ensureRange()
+        dfrag = rng.m_range.extractContents()
+        print "doc pre remove"
+        print_tree(rng.m_document)
+        remove_editor_styles(rng.m_document, dfrag)
+        print "dfrag post remove styles"
+        print_tree(dfrag)
+        print "doc after dfrag remove"
+        print_tree(rng.m_document)
+        print "extract", dfrag, dir(dfrag)
+        element = rng.m_document.createElement("span")
+        DOM.setAttribute(element, "className", cls)
+        DOM.appendChild(element, dfrag)
+        rng.m_range.insertNode(element)
+
+        it = DOM.IterWalkChildren(element, True)
+        while True:
+            try:
+                node = it.next()
+            except StopIteration:
+                break
+            print node, node.nodeType
+            if node.nodeType == 3 and unicode(node.data) == u'':
+                print "removing blank text"
+                DOM.removeChild(node.parentNode, node)
+
+        rng.setRange(element)
+
+        it = DOM.IterWalkChildren(rng.m_document, True)
+        while True:
+            try:
+                node = it.next()
+            except StopIteration:
+                break
+            print node, node.nodeType
+            if node.nodeType == 3 and unicode(node.data) == u'':
+                print "removing blank text"
+                DOM.removeChild(node.parentNode, node)
+
+        it = DOM.IterWalkChildren(rng.m_document)
+        while True:
+            try:
+                node = it.next()
+            except StopIteration:
+                break
+            style = DOM.getAttribute(node, "className")
+            print "node", node.firstChild, node.tagName, style
+            if node.firstChild:
+                continue
+            if str(string.lower(node.tagName)) != 'span':
+                continue
+            print "node", node.firstChild, node.tagName, style
+            if not style or not style.startswith("editor-"):
+                continue
+            it.remove()
+
+        it = DOM.IterWalkChildren(rng.m_document, True)
+        while True:
+            try:
+                node = it.next()
+            except StopIteration:
+                break
+            if node.nodeType != 1:
+                continue
+            if node.firstChild is None:
+                continue
+            style = DOM.getAttribute(node, "className")
+            print "double-node", node.tagName, style, node.firstChild.nextSibling
+            print_tree(node)
+            if node.firstChild.nextSibling:
+                continue
+            if node.firstChild.nodeType != 1:
+                continue
+            if str(string.lower(node.tagName)) != 'span':
+                continue
+            if str(string.lower(node.firstChild.tagName)) != 'span':
+                continue
+            if not style or not style.startswith("editor-"):
+                continue
+            style = DOM.getAttribute(node.firstChild, "className")
+            if not style or not style.startswith("editor-"):
+                continue
+            # remove the *outer* one because the range was added to
+            # the inner, and the inner one overrides anyway
+            print "remove overlapping styles", node
+            remove_node(rng.m_document, node)
+
+        doc = self.m_rte.getDocument()
+        print "doc pre", doc, doc.body.innerHTML
+
+        self.m_rte.getSelection()
+        Selection.setRange(rng)
+        self.refresh()
+        print "doc", doc, doc.body.innerHTML
+
+    def surround1(self):
+        self._surround("editor-cls1")
+
+    def surround2(self):
+        self._surround("editor-cls2")
 
     def findNodeByNumber(self, num):
 
@@ -208,8 +383,11 @@ class SelectionTest:
         elif wid == self.m_toSCursor:
             self.toCursor(True)
 
-        elif wid == self.m_surround:
-            self.surround()
+        elif wid == self.m_surround1:
+            self.surround1()
+
+        elif wid == self.m_surround2:
+            self.surround2()
 
         elif wid == self.m_setHtml:
             self.toHtml()

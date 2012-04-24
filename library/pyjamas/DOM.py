@@ -712,9 +712,13 @@ def iterChildren(elem):
 
 class IterWalkChildren:
 
-    def __init__(self, elem):
+    def __init__(self, elem, all_nodes=False):
         self.parent = elem
-        self.child = getFirstChild(elem)
+        self.all_nodes = all_nodes
+        if all_nodes:
+            self.child = elem.firstChild
+        else:
+            self.child = getFirstChild(elem)
         self.lastChild = None
         self.stack = []
 
@@ -722,8 +726,12 @@ class IterWalkChildren:
         if not self.child:
             raise StopIteration
         self.lastChild = self.child
-        firstChild = getFirstChild(self.child)
-        nextSibling = getNextSibling(self.child)
+        if self.all_nodes:
+            firstChild = self.child.firstChild
+            nextSibling = self.child.nextSibling
+        else:
+            firstChild = getFirstChild(self.child)
+            nextSibling = getNextSibling(self.child)
         if firstChild is not None:
             if nextSibling is not None:
                 self.stack.append((nextSibling, self.parent))

@@ -166,10 +166,10 @@ def fillRangePoints(fillRange):
 
     startNode = jsRange.startContainer
     startOffset = jsRange.startOffset
-    print "jsRange", jsRange
-    print "startNode", startNode
-    print "startOffset", startOffset
-    print dir(jsRange)
+    #print "jsRange", jsRange
+    #print "startNode", startNode
+    #print "startOffset", startOffset
+    #print dir(jsRange)
     startPoint = findTextPoint(startNode, startOffset)
 
     endNode = jsRange.endContainer
@@ -278,7 +278,7 @@ class Range:
 
         res = []
 
-        print "getSelectedTextElements", startNode, endNode
+        #print "getSelectedTextElements", startNode, endNode
 
         current = startNode
         while (current is not None) and (not DOM.compare(current, endNode)):
@@ -321,8 +321,8 @@ class Range:
     * @param rangeObj
     """
     def __init__(self, arg1, arg2=None):
-        print "range", arg1, arg2
-        print dir(arg1)
+        #print "range", arg1, arg2
+        #print dir(arg1)
         self.m_startPoint = None
         self.m_endPoint = None
         self.m_range = None
@@ -661,6 +661,7 @@ class Range:
     *                 them in the DOM after this operation
     """
     def surroundContents(self, copyInto=None):
+        
         if copyInto is None:
             copyInto = self.m_document.createElement("span")
         self.ensureRange()
@@ -704,7 +705,7 @@ class Range:
     def setupLastEndpoints(self):
         self.m_lastStartPoint = RangeEndPoint(self.m_startPoint)
         self.m_lastEndPoint = RangeEndPoint(self.m_endPoint)
-        print "setupLastEndpoints:", self.m_lastStartPoint, self.m_lastEndPoint
+        #print "setupLastEndpoints:", self.m_lastStartPoint, self.m_lastEndPoint
 
 
     """*

@@ -86,9 +86,9 @@ def clear():
 """
 def getDocument(window=None):
     if window:
-        print "getDocument", window, window.document
+        #print "getDocument", window, window.document
         return window.document
-    print "getDocument", m_document
+    #print "getDocument", m_document
     return m_document
 
 """*

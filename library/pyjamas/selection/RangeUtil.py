@@ -40,7 +40,7 @@ def getAdjacentTextElement(current, topMostNode, forward=None, traversingUp=Fals
 
     res = None
 
-    print "getAdjacentTextElement", current, topMostNode, forward, traversingUp
+    #print "getAdjacentTextElement", current, topMostNode, forward, traversingUp
 
     # If traversingUp, then the children have already been processed
     if not traversingUp:
@@ -68,7 +68,7 @@ def getAdjacentTextElement(current, topMostNode, forward=None, traversingUp=Fals
             if DOM.getNodeType(node) == DOM.TEXT_NODE:
                 res = node
             else:
-                print node, DOM.getNodeType(node), node.innerHTML
+                #print node, DOM.getNodeType(node), node.innerHTML
                 # Depth first traversal, the recursive call deals with
                 # siblings
                 res = getAdjacentTextElement(node, topMostNode,

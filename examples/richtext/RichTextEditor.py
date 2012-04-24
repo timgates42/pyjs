@@ -298,7 +298,7 @@ class RichTextEditor(Composite):
         if not iFrameWin.document:
             iFrameWin = iFrameWin.parentNode # FBJS version of parentNode
 
-        print "getWindow", iFrameWin, dir(iFrameWin)
+        #print "getWindow", iFrameWin, dir(iFrameWin)
 
         return iFrameWin
 
