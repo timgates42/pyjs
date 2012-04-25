@@ -10,8 +10,9 @@ from pyjamas.ui.TextArea import TextArea
 from pyjamas.ui import RootPanel
 from pyjamas.ui.RichTextArea import RichTextArea
 
-from RichTextToolbar import RichTextToolbar, FontFamilyManager
-from RichTextToolbar import CustomStyleManager
+from pyjamas.ui.RichTextToolbar import RichTextToolbar
+from pyjamas.ui.RichTextToolbar import FontFamilyManager
+from pyjamas.ui.RichTextToolbar import CustomStyleManager
 
 """*
 * Entry point classes define <code>onModuleLoad()</code>.
