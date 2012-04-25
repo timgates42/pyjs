@@ -134,6 +134,22 @@ class CustomStyleManager:
         style = DOM.getAttribute(element, "className")
         return style and style.startswith("editor-")
 
+class HeadingStyleManager:
+
+    def __init__(self, doc, heading):
+        self.heading = heading
+        self.doc = doc
+
+    def create(self):
+        element = self.doc.createElement(self.heading)
+        return element
+
+    def identify(self, element):
+        if element.nodeType != 1:
+            return False
+        tag = str(string.lower(element.tagName))
+        return len(tag) == 2 and tag[0] == "h"
+
 
 """*
 * A sample toolbar for use with {@link RichTextArea}. It provides a simple UI
@@ -247,10 +263,12 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
             self.topPanel.add(self.removeFormat)
 
         if self.basic is not None:
+            self.hstyles = self.createHeadingStyleList("Headings")
             self.backColors = self.createColorList("Background")
             self.foreColors = self.createColorList("Foreground")
             self.fonts = self.createFontList()
             self.fontSizes = self.createFontSizes()
+            self.bottomPanel.add(self.hstyles)
             self.bottomPanel.add(self.backColors)
             self.bottomPanel.add(self.foreColors)
             self.bottomPanel.add(self.fonts)
@@ -261,6 +279,20 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
             # unless at least self.basic editing is supported.
             self.richText.addKeyboardListener(self)
             self.richText.addClickListener(self)
+
+    def createHeadingStyleList(self, caption):
+        lb = ListBox()
+        lb.addChangeListener(self)
+        lb.setVisibleItemCount(1)
+
+        lb.addItem(caption)
+        lb.addItem("Heading1", "h1")
+        lb.addItem("Heading2", "h2")
+        lb.addItem("Heading3", "h3")
+        lb.addItem("Heading4", "h4")
+        lb.addItem("Heading5", "h5")
+
+        return lb
 
     def createColorList(self, caption):
         lb = ListBox()
@@ -332,6 +364,10 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
             self.strikethrough.setDown(self.extended.isStrikethrough())
 
     def onChange(self, sender):
+        if sender == self.hstyles:
+            bc = self.hstyles.getValue(self.hstyles.getSelectedIndex())
+            self._surround(HeadingStyleManager, bc)
+            self.backColors.setSelectedIndex(0)
         if sender == self.backColors:
             bc = self.backColors.getValue(self.backColors.getSelectedIndex())
             self.basic.setBackColor(bc)
