@@ -32,6 +32,14 @@ enhancements include:
 * Addition of Video and Audio Widgets that use HTML5 or Windows Media
   as appropriate (also operating correctly under pyjd including MSHTML).
 
+* Finally a port of RichTextArea (HTML WYSIWYG editor) and the addition
+  of a demo (but fully functional) RichTextToolBar.
+
+* A port of gwt-selection which allows nodes to be properly identified,
+  modified etc.  This is essential to augment the RichTextToolBar in order
+  to add styles beyond those supported natively by the Browser Engine
+  itself (HTML "edit mode").
+
 Also, several JSONRPC server helper routines have been contributed and
 added, including for cherrypy, cgi-bin and mongrel2.  A full JSONRPC
 service with each of these types of web service systems can be added
