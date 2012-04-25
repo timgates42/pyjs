@@ -317,8 +317,12 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
         lb.addItem("Normal", "")
         lb.addItem("Times New Roman", "Times New Roman")
         lb.addItem("Arial", "Arial")
+        lb.addItem("Aramanth", "Aramanth")
+        lb.addItem("Calibri", "Calibri")
         lb.addItem("Courier New", "Courier New")
         lb.addItem("Georgia", "Georgia")
+        lb.addItem("Helvetica", "Helvetica")
+        lb.addItem("Symbol", "Symbol")
         lb.addItem("Trebuchet", "Trebuchet")
         lb.addItem("Verdana", "Verdana")
         return lb
