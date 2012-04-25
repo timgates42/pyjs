@@ -32,7 +32,6 @@ from pyjamas.ui.ChangeListener import ChangeHandler
 from pyjamas.ui.ClickListener import ClickHandler
 from pyjamas.ui.Composite import Composite
 from pyjamas.ui.HorizontalPanel import HorizontalPanel
-from pyjamas.ui.KeyboardListener import KeyboardHandler
 from pyjamas.ui.ListBox import ListBox
 from pyjamas.ui.PushButton import PushButton
 from pyjamas.ui import RichTextAreaConsts
@@ -161,7 +160,7 @@ class HeadingStyleManager:
 * for all rich text formatting, dynamically displayed only for the available
 * functionality.
 """
-class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
+class RichTextToolbar(Composite, ClickHandler, ChangeHandler):
 
     fontSizesConstants = [
         RichTextAreaConsts.XX_SMALL, RichTextAreaConsts.X_SMALL,
@@ -206,7 +205,6 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
         Composite.__init__(self, self.outer, **kwargs)
         ClickHandler.__init__(self)
         ChangeHandler.__init__(self)
-        KeyboardHandler.__init__(self)
 
         if self.basic is not None:
             self.bold = self.createToggleButton(Images.bold,
@@ -279,11 +277,10 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
             self.bottomPanel.add(self.fonts)
             self.bottomPanel.add(self.fontSizes)
 
-            # We only use these listeners for updating status,
-            # so don't hook them up
-            # unless at least self.basic editing is supported.
-            self.richText.addKeyboardListener(self)
-            self.richText.addClickListener(self)
+        self.richText.addKeyboardListener(self)
+        self.richText.addClickListener(self)
+        self.richText.addFocusListener(self)
+        self.richText.addMouseListener(self)
 
     def createHeadingStyleList(self, caption):
         lb = ListBox()
@@ -475,16 +472,23 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
     def onMouseDown(self, event, x, y):
         self.trigger = True
 
+    def onFocus(self, event):
+        print "focus"
+        pass
+
     def onLostFocus(self, event):
+        "lost focus"
         self.checkForChange()
 
-    def onMouseOut(self, event):
-        if self.isInText  and  self.isOnTextBorder(event):
+    def onMouseOut(self, sender):
+        print "mouse out"
+        if self.isInText  and  self.isOnTextBorder(sender):
             self.isInText = False
             self.captureSelection()
             self.endSelTimer()
 
-    def onMouseOver(self, event):
+    def onMouseOver(self, sender):
+        print "mouse over"
         if not self.isInText:
             self.isInText = True
             self.richText.setFocus(True)
@@ -696,8 +700,7 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
     def onSelectionChange(self, sel):
         pass
 
-    def isOnTextBorder(self, event):
-        sender = event.getSource()
+    def isOnTextBorder(self, sender):
         twX = self.richText.getAbsoluteLeft()
         twY = self.richText.getAbsoluteTop()
         x = event.getClientX() - twX
@@ -705,8 +708,8 @@ class RichTextToolbar(Composite, ClickHandler, ChangeHandler, KeyboardHandler):
         width = self.richText.getOffsetWidth()
         height = self.richText.getOffsetHeight()
         return ((sender == self.richText)  and
-        ((x <= 0)  or  (x >= width)  or
-        (y <= 0)  or  (y >= height)))
+                    ((x <= 0)  or  (x >= width)  or
+                    (y <= 0)  or  (y >= height)))
 
     def startSelTimer(self):
         self.selTimer.scheduleRepeating(250)
@@ -760,7 +763,7 @@ def EventLinkPopup_open(editor):
 class EventLinkPopup(PopupPanel):
 
     def __init__(self, editor):
-        PopupPanel.__init__(self, False, True)
+        PopupPanel.__init__(self)
 
         self.m_origAnchorStart = None
         self.m_origAnchorEnd = None

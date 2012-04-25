@@ -73,6 +73,7 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
         return DOM.getInnerText(self.beforeInitPlaceholder)
 
     def onTimer(self, tid):
+        print "initialise timer done", tid
         self.elem.contentWindow.document.designMode = 'On'
 
         # Send notification that the iframe has reached design mode.
@@ -259,7 +260,7 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
 
         listener = DOM.get_listener(self.elem)
         if listener is not None:
-            listener.onBrowserEvent(evt);
+            DOM.dispatchEvent(evt, self.elem, listener)
 
     def __gwt_focus_handler(self, view, evt, from_window):
 
@@ -278,22 +279,24 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
         self.__gwt_handler(view, evt, from_window)
 
     def hookEvents(self):
+        print self, "hook events weirdly"
+
         elem = self.elem;
         win = elem.contentWindow;
 
         mf = get_main_frame()
-        mf._addWindowEventListener('keydown', self.__gwt_handler)#, win)
-        mf._addWindowEventListener('keyup', self.__gwt_handler)#, win)
-        mf._addWindowEventListener('keypress', self.__gwt_handler)#, win)
-        mf._addWindowEventListener('mousedown', self.__gwt_handler)#, win)
-        mf._addWindowEventListener('mouseup', self.__gwt_handler)#, win)
-        mf._addWindowEventListener('mousemove', self.__gwt_handler)#, win)
-        mf._addWindowEventListener('mouseover', self.__gwt_handler)#, win)
-        mf._addWindowEventListener('mouseout', self.__gwt_handler)#, win)
-        mf._addWindowEventListener('click', self.__gwt_handler)#, win)
+        mf._addWindowEventListener('keydown', self.__gwt_handler, win)
+        mf._addWindowEventListener('keyup', self.__gwt_handler, win)
+        mf._addWindowEventListener('keypress', self.__gwt_handler, win)
+        mf._addWindowEventListener('mousedown', self.__gwt_handler, win)
+        mf._addWindowEventListener('mouseup', self.__gwt_handler, win)
+        mf._addWindowEventListener('mousemove', self.__gwt_handler, win)
+        mf._addWindowEventListener('mouseover', self.__gwt_handler, win)
+        mf._addWindowEventListener('mouseout', self.__gwt_handler, win)
+        mf._addWindowEventListener('click', self.__gwt_handler, win)
 
-        mf._addWindowEventListener('focus', self.__gwt_focus_handler)#, win)
-        mf._addWindowEventListener('blur', self.__gwt_blur_handler)#, win)
+        mf._addWindowEventListener('focus', self.__gwt_focus_handler, win)
+        mf._addWindowEventListener('blur', self.__gwt_blur_handler, win)
 
 
     def onElementInitialized(self):

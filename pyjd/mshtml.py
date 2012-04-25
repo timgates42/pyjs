@@ -349,7 +349,7 @@ class Browser(EventSink):
     def mash_attrib(self, attrib_name):
         return attrib_name
 
-    def _addWindowEventListener(self, event_name, event_fn):
+    def _addWindowEventListener(self, event_name, event_fn, wnd=None):
         
         #print "_addWindowEventListener", event_name, event_fn
         #rcvr = mshtmlevents.GetDispEventReceiver(MSHTML.HTMLWindowEvents,
@@ -364,7 +364,8 @@ class Browser(EventSink):
         #setattr(self.getDomWindow(), "on%s" % event_name, v)
         #return ifc
 
-        wnd = self.pBrowser.Document.parentWindow
+        if wnd is None:
+            wnd = self.pBrowser.Document.parentWindow
         if self.window_handler is None:
             self.window_handler = EventHandler(self)
             self.window_conn = mshtmlevents.GetEvents(wnd,

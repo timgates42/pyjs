@@ -187,9 +187,11 @@ class Browser:
     def getXmlHttpRequest(self):
         return self._browser.GetXMLHttpRequest()
 
-    def _addWindowEventListener(self, event_name, cb):
+    def _addWindowEventListener(self, event_name, cb, wnd=None):
+        if wnd is None:
+            wnd = self._browser.GetDomWindow()
         cb = Callback(self, cb, True)
-        setattr(self._browser.GetDomWindow(), "on%s" % event_name, cb._callback)
+        setattr(wnd, "on%s" % event_name, cb._callback)
 
     def _addXMLHttpRequestEventListener(self, element, event_name, cb):
         #print "add XMLHttpRequest", element, event_name, cb
