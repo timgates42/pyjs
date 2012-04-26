@@ -17,7 +17,7 @@
 
 
 from pyjamas.ui.PopupPanel import PopupPanel
-from pyjamas.ui.FlowPanel import FlowPanel
+from pyjamas.ui.VerticalPanel import VerticalPanel
 from pyjamas.ui.Label import Label
 from pyjamas.ui.CheckBox import CheckBox
 from pyjamas.ui.Button import Button
@@ -763,21 +763,19 @@ def EventLinkPopup_open(editor):
 class EventLinkPopup(PopupPanel):
 
     def __init__(self, editor):
-        PopupPanel.__init__(self)
+        PopupPanel.__init__(self, glass=True)
 
         self.m_origAnchorStart = None
         self.m_origAnchorEnd = None
         self.m_origTargetText = ""
         self.m_editor = editor
 
-        self.setGlassEnabled(True)
-
-        vpanel = FlowPanel()
-        vpanel.setWidth("300px")
+        vpanel = VerticalPanel()
+        vpanel.setWidth("350px")
 
         self.m_webPageText = TextBox()
         self.m_webPageText.setText("http:#")
-        self.m_webPageText.setWidth("100%")
+        self.m_webPageText.setWidth("320px")
 
         vpanel.add(self.m_webPageText)
 
@@ -788,11 +786,7 @@ class EventLinkPopup(PopupPanel):
 
         lpanel = HorizontalPanel()
         lpanel.add(lbl)
-        #lpanel.setWidgetLeftWidth(lbl, 0, Unit.PX, LABEL_WIDTH, Unit.PX)
         lpanel.add(self.m_targetText)
-        #lpanel.setWidgetLeftRight(self.m_targetText, LABEL_WIDTH, Unit.PX,
-        #0, Unit.PX)
-        #lpanel.setPixelSize(300, ROW_HEIGHT)
 
         vpanel.add(lpanel)
 
@@ -807,13 +801,14 @@ class EventLinkPopup(PopupPanel):
         self.m_cancelBut = Button("Cancel", self)
         self.m_cancelBut.addStyleName("float-left")
 
-        hpanel = FlowPanel()
+        hpanel = HorizontalPanel()
         hpanel.add(self.m_okBut)
         hpanel.add(self.m_cancelBut)
 
         vpanel.add(hpanel)
 
         self.add(vpanel)
+        self.setStyleName("gwt-DialogBox")
 
     def refresh(self):
         try:
