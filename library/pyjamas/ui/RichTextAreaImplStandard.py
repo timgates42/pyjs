@@ -53,20 +53,16 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
     def createLink(self, url):
         self.execCommand("CreateLink", url)
 
-
     def getBackColor(self):
         return self.queryCommandValue("BackColor")
 
-
     def getForeColor(self):
         return self.queryCommandValue("ForeColor")
-
 
     def getHTML(self):
         if self.beforeInitPlaceholder is None:
             return self.getHTMLImpl()
         return DOM.getInnerHTML(self.beforeInitPlaceholder)
-
 
     def getText(self):
         if self.beforeInitPlaceholder is None:
@@ -79,7 +75,7 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
 
         # Send notification that the iframe has reached design mode.
         self.onElementInitialized()
-        
+
     def initElement(self):
         # Most browsers don't like setting designMode until slightly _after_
         # the iframe becomes attached to the DOM. Any non-zero timeout will do
@@ -91,74 +87,56 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
     def insertHorizontalRule(self):
         self.execCommand("InsertHorizontalRule", '')
 
-
     def insertImage(self, url):
         self.execCommand("InsertImage", url)
-
 
     def insertOrderedList(self):
         self.execCommand("InsertOrderedList", '')
 
-
     def insertUnorderedList(self):
         self.execCommand("InsertUnorderedList", '')
-
 
     def isBasicEditingSupported(self):
         return True
 
-
     def isBold(self):
         return self.queryCommandState("Bold")
-
 
     def isExtendedEditingSupported(self):
         return True
 
-
     def isItalic(self):
         return self.queryCommandState("Italic")
-
 
     def isStrikethrough(self):
         return self.queryCommandState("Strikethrough")
 
-
     def isSubscript(self):
         return self.queryCommandState("Subscript")
-
 
     def isSuperscript(self):
         return self.queryCommandState("Superscript")
 
-
     def isUnderlined(self):
         return self.queryCommandState("Underline")
-
 
     def leftIndent(self):
         self.execCommand("Outdent", '')
 
-
     def removeFormat(self):
         self.execCommand("RemoveFormat", '')
-
 
     def removeLink(self):
         self.execCommand("Unlink", "False")
 
-
     def rightIndent(self):
         self.execCommand("Indent", '')
-
 
     def selectAll(self):
         self.execCommand("SelectAll", '')
 
-
     def setBackColor(self, color):
         self.execCommand("BackColor", color)
-
 
     def setFocus(self, focused):
         if focused:
@@ -166,26 +144,20 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
         else:
             self.elem.contentWindow.blur()
 
-
     def setFontName(self, name):
         self.execCommand("FontName", name)
-
 
     def setFontSize(self, fontSize):
         self.execCommand("FontSize", str(fontSize))
 
-
     def setForeColor(self, color):
         self.execCommand("ForeColor", color)
-
 
     def setHTML(self, html):
         if self.beforeInitPlaceholder is None:
             self.setHTMLImpl(html)
         else:
             DOM.setInnerHTML(self.beforeInitPlaceholder, html)
-
-
 
     def setJustification(self, justification):
         if justification == RichTextAreaConsts.CENTER:
@@ -195,39 +167,29 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
         elif justification == RichTextAreaConsts.RIGHT:
             self.execCommand("JustifyRight", '')
 
-
-
     def setText(self, text):
         if self.beforeInitPlaceholder is None:
             self.setTextImpl(text)
         else:
             DOM.setInnerText(self.beforeInitPlaceholder, text)
 
-
-
     def toggleBold(self):
         self.execCommand("Bold", "False")
-
 
     def toggleItalic(self):
         self.execCommand("Italic", "False")
 
-
     def toggleStrikethrough(self):
         self.execCommand("Strikethrough", "False")
-
 
     def toggleSubscript(self):
         self.execCommand("Subscript", "False")
 
-
     def toggleSuperscript(self):
         self.execCommand("Superscript", "False")
 
-
     def toggleUnderline(self):
         self.execCommand("Underline", "False")
-
 
     def uninitElement(self):
         # Issue 1897: initElement uses a timeout, so its possible to call this
@@ -236,7 +198,6 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
         if self.initializing:
             self.initializing = False
             return
-
 
         # Unhook all custom event handlers when the element is detached.
         self.unhookEvents()
@@ -249,10 +210,8 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
         DOM.setInnerHTML(self.beforeInitPlaceholder, html)
         self.elem.contentWindow.document.designMode = 'Off'
 
-
     def getHTMLImpl(self):
         return self.elem.contentWindow.document.body.innerHTML
-
 
     def getTextImpl(self):
         return self.elem.contentWindow.document.body.textContent
@@ -299,7 +258,6 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
         mf._addWindowEventListener('focus', self.__gwt_focus_handler, win)
         mf._addWindowEventListener('blur', self.__gwt_blur_handler, win)
 
-
     def onElementInitialized(self):
         # Issue 1897: This method is called after a timeout, during which time the
         # element might by detached.
@@ -327,15 +285,11 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
             self.setHTMLImpl(DOM.getInnerHTML(self.beforeInitPlaceholder))
             self.beforeInitPlaceholder = None
 
-
-
     def setHTMLImpl(self, html):
         self.elem.contentWindow.document.body.innerHTML = html;
 
-
     def setTextImpl(self, text):
         self.elem.contentWindow.document.body.textContent = text;
-
 
     def unhookEvents(self):
         print """ TODO: RichTextEditor.unhookEvents:
@@ -360,7 +314,6 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
         elem.__gwt_blurHandler = null;
         """
 
-
     def execCommand(self, cmd, param):
         if self.isRichEditingActive(self.elem):
             # When executing a command, focus the iframe first, since some commands
@@ -368,15 +321,11 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
             self.setFocus(True)
             self.execCommandAssumingFocus(cmd, param)
 
-
-
     def execCommandAssumingFocus(self, cmd, param):
         self.elem.contentWindow.document.execCommand(cmd, False, param)
 
-
     def isRichEditingActive(self, e):
         return str(e.contentWindow.document.designMode).upper() == 'ON'
-
 
     def queryCommandState(self, cmd):
         if self.isRichEditingActive(self.elem):
@@ -387,11 +336,8 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
         else:
             return False
 
-
-
     def queryCommandStateAssumingFocus(self, cmd):
         return self.elem.contentWindow.document.queryCommandState(cmd)
-
 
     def queryCommandValue(self, cmd):
         # When executing a command, focus the iframe first, since some commands
@@ -399,10 +345,8 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
         self.setFocus(True)
         return self.queryCommandValueAssumingFocus(cmd)
 
-
     def queryCommandValueAssumingFocus(self, cmd):
         return self.elem.contentWindow.document.queryCommandValue(cmd)
-
 
     def setCssStyling(self):
         self.css_styling = True
