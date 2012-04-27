@@ -53,6 +53,12 @@ class RichTextArea (FocusWidget) :
         FocusWidget.__init__(self, self.impl.getElement(), **kwargs)
 
 
+    def setCssStyling(self, style):
+        """ sets whether cloning is to be done of the main document's
+            CSS Style elements into the iframe of the editor
+        """
+        if style:
+            self.impl.setCssStyling()
 
     """*
     * Gets the basic rich text formatting interface.

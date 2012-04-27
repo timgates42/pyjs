@@ -45,6 +45,7 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
         * False.  See issue 1897 for details.
         """
         self.initializing = False
+        self.css_styling = False
 
     def createElement(self):
         return DOM.createElement('iframe')
@@ -310,6 +311,17 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
 
         RichTextAreaImpl.onElementInitialized(self)
 
+        # clone styles from main document
+        if self.css_styling:
+            elem = self.elem;
+            _doc = elem.contentWindow.document
+            fragment = _doc.createDocumentFragment()
+            nl = doc().getElementsByTagName("style")
+            for i in range(nl.length):
+                n = nl.item(i)
+                fragment.appendChild(n.cloneNode(True))
+            _doc.getElementsByTagName("head").item(0).appendChild(fragment)
+
         # When the iframe is ready, ensure cached content is set.
         if self.beforeInitPlaceholder is not None:
             self.setHTMLImpl(DOM.getInnerHTML(self.beforeInitPlaceholder))
@@ -392,4 +404,6 @@ class RichTextAreaImplStandard (RichTextAreaImpl):
         return self.elem.contentWindow.document.queryCommandValue(cmd)
 
 
+    def setCssStyling(self):
+        self.css_styling = True
 

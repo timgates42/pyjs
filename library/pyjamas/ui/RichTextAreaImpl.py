@@ -91,5 +91,6 @@ class RichTextAreaImpl:
         print "onElementInitialized"
         self.hookEvents()
     
-
+    def setCssStyling(self):
+        pass
 
