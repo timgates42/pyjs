@@ -42,7 +42,5 @@ def getImageBaseURL(images=False):
             return getModuleBaseURL() + images + '/'
         else:
             return getModuleBaseURL() + "images/"
-    elif pyjd.is_desktop:
-        return pyjd.pyjdinitpth + "/library/pyjamas/ui/public/"
     else:
         return getModuleBaseURL()
