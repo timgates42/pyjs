@@ -10,7 +10,7 @@ __author__ = 'Peter Bittner <peter.bittner@gmx.net>'
 from pyjamas.logging.handlers import \
     AlertHandler, AppendHandler, ConsoleHandler, NullHandler
 # blatantly copy everything from CPython's logging
-from logging import *
+from logging import getLogger, Formatter, StreamHandler, DEBUG, BASIC_FORMAT
 
 # a handy replacement for BASIC_FORMAT printing nothing but the plain text
 PLAIN_FORMAT = '%(message)s'
