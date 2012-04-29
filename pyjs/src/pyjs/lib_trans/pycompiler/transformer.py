@@ -119,7 +119,7 @@ class Transformer:
                                token.STRING: self.atom_string,
                                token.NAME: self.atom_name,
                                }
-        self.encoding = None
+        self.encoding = 'utf-8'
 
     def transform(self, tree):
         """Transform an AST into a modified parse tree."""
