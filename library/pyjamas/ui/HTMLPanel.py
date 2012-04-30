@@ -20,22 +20,26 @@ from pyjamas.ui.ComplexPanel import ComplexPanel
 
 HTMLPanel_sUid = 0
 
-def getElementsByTagName(element, tagname):
+def _check_tagname(element, tagname):
     try:
         element_tagname = element.nodeName
         element_tagname = str(element_tagname).lower()
     except:
         element_tagname = None
     if element_tagname is not None and element_tagname == tagname:
-        return [element]
+        return element
+    return None
 
+def getElementsByTagName(element, tagname):
     res = []
-    child = DOM.getFirstChild(element)
-    while child is not None:
-        for el in getElementsByTagName(child, tagname):
+    el = _check_tagname(element, tagname)
+    if el:
+        res.append(el)
+        
+    for child in DOM.walkChildren(element):
+        el = _check_tagname(child, tagname)
+        if el:
             res.append(el)
-        child = DOM.getNextSibling(child)
-
     return res
 
 def getElementById(element, id):
