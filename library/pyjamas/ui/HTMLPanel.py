@@ -36,7 +36,12 @@ def getElementsByTagName(element, tagname):
     if el:
         res.append(el)
         
-    for child in DOM.walkChildren(element):
+    it = DOM.walkChildren(element)
+    while True:
+        try:
+            child = it.next()
+        except StopIteration:
+            break
         el = _check_tagname(child, tagname)
         if el:
             res.append(el)
