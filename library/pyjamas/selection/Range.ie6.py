@@ -67,14 +67,13 @@ def createRange(doc, startPoint, startOffset, endPoint, endOffset):
     * IE code to make this work - create a range on the start and the end
     * point, then move the end point to include the second
     """
-    JSRange res = createRangeOnText(startPoint, startOffset)
+    res = createRangeOnText(startPoint, startOffset)
     if startPoint == endPoint:
         # Shortcut if the start and end texts are the same
         moveEndCharacter(res, endOffset - startOffset)
      else:
         endRange = createRangeOnText(endPoint, endOffset)
-        moveRangePoint(res, endRange, BOUNDARY_STRINGS[Range.END_TO_END])
-
+        moveRangePoint(res, endRange, BOUNDARY_STRINGS[END_TO_END])
 
     return res
 
