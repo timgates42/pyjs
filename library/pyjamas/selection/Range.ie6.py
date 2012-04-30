@@ -1,37 +1,27 @@
-"""
-* Copyright 2010 John Kozura
-*
-* Licensed under the Apache License, Version 2.0 (the "License"); you may not
-* use this file except in compliance with the License. You may obtain a copy of
-* the License at
-*
-* http:#www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-* WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-* License for the specific language governing permissions and limitations under
-* the License.
-"""
+#
+# Copyright 2010 John Kozura
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not
+# use this file except in compliance with the License. You may obtain a copy of
+# the License at
+#
+# http:#www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under
+# the License.
 
 
 
-
-
-
-
-"""*
-* IE implementation of range, which emulates the methods of the W3C standard.
-* IE's range object doesn't have any methods for directly getting/setting
-* the end points to structural elements of the DOM, so we have to incrementally
-* search/modify ranges to intiut self.
-*
-* @author John Kozura
-"""
-BOUNDARY_STRINGS = [ "StartToStart", "StartToEnd", "EndToEnd", "EndToStart"]
-
-# Used for deleting/replacing values of a range
-REPLACING_STRING = "DeL3EteTh1s"
+#
+# IE implementation of range, which emulates the methods of the W3C standard.
+# IE's range object doesn't have any methods for directly getting/setting
+# the end points to structural elements of the DOM, so we have to incrementally
+# search/modify ranges to intiut self.
+#
+# @author John Kozura
 
 def cloneRange(rng):
     JS("""
@@ -47,12 +37,12 @@ def compareBoundaryPoint(rng, compare, how):
     """)
 
 
-"""*
-* For IE, do this by copying the HTML string
-*
-* @see com.bfr.client.selection.impl.RangeImpl#copyContents(com.bfr.client.selection.impl.RangeImpl.JSRange, com.google.gwt.dom.client.Element)
-"""
 def copyContents(rng, copyInto):
+    """*
+    * For IE, do this by copying the HTML string
+    *
+    * @see RangeImpl#copyContents
+    """
     copyInto.setInnerHTML(getHtmlText(rng))
 
 
@@ -71,24 +61,23 @@ def createRange(doc, startPoint, startOffset, endPoint, endOffset):
     if startPoint == endPoint:
         # Shortcut if the start and end texts are the same
         moveEndCharacter(res, endOffset - startOffset)
-     else:
+    else:
         endRange = createRangeOnText(endPoint, endOffset)
         moveRangePoint(res, endRange, BOUNDARY_STRINGS[END_TO_END])
 
     return res
 
 
-"""*
-* IE has no function for doing this with a range vs with a selection, so
-* instead use pasteHTML, then remove the resulting element.
-*
-* @see com.bfr.client.selection.impl.RangeImpl#deleteContents(com.bfr.client.selection.impl.RangeImpl.JSRange)
-"""
 def deleteContents(rng):
-    Text txt = placeholdRange(rng)
+    """*
+    * IE has no function for doing this with a range vs with a selection, so
+    * instead use pasteHTML, then remove the resulting element.
+    *
+    * @see RangeImpl#deleteContents
+    """
+    txt = placeholdRange(rng)
     if txt is not None:
         txt.removeFromParent()
-
 
 
 def extractContents(rng, copyInto):
@@ -97,27 +86,27 @@ def extractContents(rng, copyInto):
 
 
 def fillRangePoints(rng):
-    JSRange selRange = rng._getJSRange()
+    selRange = rng._getJSRange()
     if selRange is None:
         return
 
-    RangeEndPoint start = getRangeEndPoint(rng, selRange, True)
-    RangeEndPoint end = getRangeEndPoint(rng, selRange, False)
+    start = getRangeEndPoint(rng, selRange, True)
+    end = getRangeEndPoint(rng, selRange, False)
 
     canonicalize(start, end)
 
     rng._setRange(start, end)
 
 
-"""*
-* Place to put any checks and corrections to result in a consistent
-* cursor.  Either of the range points passed may be modified by this
-* function.
-*
-* @param start Start range point to check
-* @param end End range point to check
-"""
 def canonicalize(start, end):
+    """*
+    * Place to put any checks and corrections to result in a consistent
+    * cursor.  Either of the range points passed may be modified by this
+    * function.
+    *
+    * @param start Start range point to check
+    * @param end End range point to check
+    """
     if start is not None:
         # This checks if the cursor is at the end of one text range, and
         # the beginning of the next, as IE will do this for adjacent nodes..
@@ -144,18 +133,17 @@ def getText(rng):
     """)
 
 
-"""*
-* For IE, do this by copying the contents, then creating a dummy element
-* and replacing it with this element.
-*
-* @see com.bfr.client.selection.impl.RangeImpl#surroundContents(com.bfr.client.selection.impl.RangeImpl.JSRange, com.google.gwt.dom.client.Element)
-"""
 def surroundContents(rng, copyInto):
+    """*
+    * For IE, do this by copying the contents, then creating a dummy element
+    * and replacing it with this element.
+    *
+    * @see com.bfr.client.selection.impl.RangeImpl#surroundContents(com.bfr.client.selection.impl.RangeImpl.JSRange, com.google.gwt.dom.client.Element)
+    """
     copyContents(rng, copyInto)
-    Text txt = placeholdRange(rng)
+    txt = placeholdRange(rng)
     if txt is not None:
         txt.getParentElement().replaceChild(copyInto, txt)
-
 
 
 def collapseRange(rng, start):
@@ -164,13 +152,13 @@ def collapseRange(rng, start):
     """)
 
 
-"""*
-* Create a 0-width js range on the first text element of this parent.
-*
-* @param parent
-* @return
-"""
 def createRangeOnFirst(parent):
+    """*
+    * Create a 0-width js range on the first text element of this parent.
+    *
+    * @param parent
+    * @return
+    """
     JS("""
     var res = parent.ownerDocument.body.createTextRange();
     res.moveToElementText(parent);
@@ -179,19 +167,19 @@ def createRangeOnFirst(parent):
     """)
 
 
-"""*
-* Create a range with a range that has its start and end point within
-* the given text and at the given offset.  This emulates capabilities of
-* the W3C standard..
-*
-* @param setText
-* @param offset
-* @return
-"""
 def createRangeOnText(setText, offset):
-    Element parent = setText.getParentElement()
-    JSRange res = createRangeOnFirst(parent)
-    Element testElement = getTestElement(parent.getOwnerDocument())
+    """*
+    * Create a range with a range that has its start and end point within
+    * the given text and at the given offset.  This emulates capabilities of
+    * the W3C standard..
+    *
+    * @param setText
+    * @param offset
+    * @return
+    """
+    parent = setText.getParentElement()
+    res = createRangeOnFirst(parent)
+    testElement = getTestElement(parent.getOwnerDocument())
 
     # Can't directly select the text, but we can select a fake element
     # before it, then move the selection...
@@ -209,16 +197,16 @@ def createRangeOnText(setText, offset):
     return res
 
 
-"""*
-* Get the IE start or end point of the given range, have to search for it
-* to find it properly.
-*
-* @param range used to get the document
-* @param selRange the selection we are getting the point of
-* @param start whether to get the start or end point
-* @return RangeEndPoint representing this, or None on error
-"""
 def getRangeEndPoint(rng, selRange, start):
+    """*
+    * Get the IE start or end point of the given range, have to search for it
+    * to find it properly.
+    *
+    * @param range used to get the document
+    * @param selRange the selection we are getting the point of
+    * @param start whether to get the start or end point
+    * @return RangeEndPoint representing this, or None on error
+    """
     res = None
 
     # Create a cursor at either the beginning or end of the range, to
@@ -227,8 +215,7 @@ def getRangeEndPoint(rng, selRange, start):
     collapseRange(checkRange, start)
     parent = getCommonAncestor(checkRange)
 
-    String compareFcn =
-    BOUNDARY_STRINGS[start ? Range.START_TO_START : Range.END_TO_END]
+    compareFcn = BOUNDARY_STRINGS[start and START_TO_START or END_TO_END]
 
     # Test element we move around the document to check relative selection
     testElement = getTestElement(rng.getDocument())
@@ -244,11 +231,9 @@ def getRangeEndPoint(rng, selRange, start):
                 break
             compNode = testElement.getPreviousSibling()
 
-
         if compNode is None:
             # Sometimes selection at beginning of a span causes a fail
             compNode = testElement.getNextSibling()
-
 
         if compNode is None:
             pass
@@ -263,7 +248,10 @@ def getRangeEndPoint(rng, selRange, start):
             testElement.removeFromParent()
             moveToElementText(checkRange, compNode)
             comp = compareBoundaryPoint(checkRange, selRange, compareFcn)
-            dirn = (comp == 0) ? !start : (comp < 0)
+            if comp == 0:
+                dirn = not start
+            else:
+                dirn = (comp < 0)
             closest = Range.getAdjacentTextElement(compNode, parent,
                                 dirn, True)
             if closest is None:
@@ -271,21 +259,17 @@ def getRangeEndPoint(rng, selRange, start):
                 closest = Range.getAdjacentTextElement(compNode, parent,
                                 dirn, True)
 
-
             if closest is not None:
                 # Found a text node in one direction or the other
                 res = RangeEndPoint(closest,
                         dirn and 0 or closest.getLength())
 
-         else:
+        else:
             # Get the proper offset, move the end of the check range to the
             # boundary of the actual range and get its length
             moveRangePoint(checkRange, selRange,
-            BOUNDARY_STRINGS[start ? Range.END_TO_START
-            : Range.END_TO_END])
-            res = RangeEndPoint((Text)compNode,
-            getText(checkRange).length())
-
+                        BOUNDARY_STRINGS[start and END_TO_START or END_TO_END])
+            res = RangeEndPoint(compNode, getText(checkRange).length())
 
     except:
         logging.log("Failed to find IE selection")
@@ -308,19 +292,19 @@ def getTestElement(document):
     return m_testElement
 
 
-"""*
-* Move both the start and end point of this range
-"""
 def moveCharacter(rng, chars):
+    """*
+    * Move both the start and end point of this range
+    """
     JS("""
     return rng.move("character", chars);
     """)
 
 
-"""*
-* Move just the end point of this range
-"""
 def moveEndCharacter(rng, chars):
+    """*
+    * Move just the end point of this range
+    """
     JS("""
     return rng.moveEnd("character", chars);
     """)
@@ -344,25 +328,24 @@ def placeholdPaste(rng, str):
     """)
 
 
-"""*
-* Since there's no good delete for an arbitrary range, simply replace it
-* with this text that nobody would use, then go find it so we can
-* delete or replace it in other functions.  This depends on IE creating a
-* single text element that includes exactly this string (and no user also
-* has this exact text on their page..)
-*
-* An alternative but far more complicated method would be to try to do
-* this via setting the selection, doing the delete/replace, and then
-* restoring the selection.
-*
-* @param range The range to replace with a text node
-* @return the text node that replaced the contents of range
-"""
 def placeholdRange(rng):
+    """*
+    * Since there's no good delete for an arbitrary range, simply replace it
+    * with this text that nobody would use, then go find it so we can
+    * delete or replace it in other functions.  This depends on IE creating a
+    * single text element that includes exactly this string (and no user also
+    * has this exact text on their page..)
+    *
+    * An alternative but far more complicated method would be to try to do
+    * this via setting the selection, doing the delete/replace, and then
+    * restoring the selection.
+    *
+    * @param range The range to replace with a text node
+    * @return the text node that replaced the contents of range
+    """
     # Paranoid, include a random number to reduce chance this string
     # would occur in the text..
-    replaceString = REPLACING_STRING +
-    (int)(Integer.MAX_VALUE * Math.random())
+    replaceString = "%s%d" % (REPLACING_STRING, random.randint(0, 100000000))
 
     parent = getCommonAncestor(rng)
     placeholdPaste(rng, replaceString)
@@ -374,6 +357,4 @@ def placeholdRange(rng):
         res = Range.getAdjacentTextElement(res, True)
 
     return res
-
-
 

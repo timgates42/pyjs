@@ -20,11 +20,17 @@ from pyjamas import DOM
 from RangeEndPoint import RangeEndPoint
 import RangeUtil
 
+import random
+
 # For use in compareBoundaryPoint, which end points to compare
 START_TO_START	= 0
 START_TO_END	= 1
 END_TO_END	= 2
 END_TO_START	= 3
+
+BOUNDARY_STRINGS = [ "StartToStart", "StartToEnd", "EndToEnd", "EndToStart"]
+# Used for deleting/replacing values of a range
+REPLACING_STRING = "DeL3EteTh1s"
 
 
 m_lastDocument = None # used in ie6
@@ -720,4 +726,39 @@ class Range:
 
 
 
+def canonicalize(start, end):
+    pass
+
+def collapseRange(rng, start):
+    pass
+
+def createRangeOnFirst(parent):
+    pass
+
+def createRangeOnText(setText, offset):
+    pass
+
+def getRangeEndPoint(rng, selRange, start):
+    pass
+
+def getTestElement(document):
+    pass
+
+def moveCharacter(rng, chars):
+    pass
+
+def moveEndCharacter(rng, chars):
+    pass
+
+def moveRangePoint(rng, moveTo, how):
+    pass
+
+def moveToElementText(rng, element):
+    pass
+
+def placeholdPaste(rng, str):
+    pass
+
+def placeholdRange(rng):
+    pass
 
