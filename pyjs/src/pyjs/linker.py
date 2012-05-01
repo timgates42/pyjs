@@ -372,7 +372,7 @@ class BaseLinker(object):
                 deps = []
                 self.dependencies[out_file] = deps
             else:
-                logging.info('MYTranslating module:%s platform:%s out:%r' % (
+                logging.info('Translating module:%s platform:%s out:%r' % (
                     module_name, platform or '-', out_file))
                 deps, js_libs = self.translator_func(platform,
                                                      [file_path] +  overrides,
