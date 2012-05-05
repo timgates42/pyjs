@@ -1896,6 +1896,84 @@ Number.prototype.__pow__ = function (y, z) {
 };
 """)
 
+float_js = float
+
+class float:
+    def __init__(self, num):
+        self._v = float_js(num)
+
+    def __str__(self):
+        return self._v.__str__()
+
+    def __repr__(self):
+        return self._v.__repr__()
+
+    def __nonzero__(self):
+        return self._v.__nonzero__()
+
+    def __cmp__(self, other):
+        return self._v.__cmp__(other)
+
+    def __hash__(self):
+        return self._v.__hash__()
+
+    def __oct__(self):
+        return self._v.__oct__()
+
+    def __hex__(self):
+        return self._v.__hex__()
+
+    def __pos__(self):
+        return self.__class__(self._v.__pos__())
+
+    def __neg__(self):
+        return self.__class__(self._v.__neg__())
+
+    def __abs__(self):
+        return self.__class__(self._v.__abs__())
+
+    def __add__(self, other):
+        return self.__class__(self._v.__add__(other))
+
+    def __radd__(self, other):
+        return self.__class__(self._v.__radd__(other))
+
+    def __sub__(self, other):
+        return self.__class__(self._v.__sub__(other))
+
+    def __rsub__(self, other):
+        return self.__class__(self._v.__rsub__(other))
+
+    def __floordiv__(self, other):
+        return self.__class__(self._v.__floordiv__(other))
+
+    def __rfloordiv__(self, other):
+        return self.__class__(self._v.__rfloordiv__(other))
+
+    def __div__(self, other):
+        return self.__class__(self._v.__div__(other))
+
+    def __rdiv__(self, other):
+        return self.__class__(self._v.__rdiv__(other))
+
+    def __mul__(self, other):
+        return self.__class__(self._v.__mul__(other))
+
+    def __rmul__(self, other):
+        return self.__class__(self._v.__rmul__(other))
+
+    def __mod__(self, other):
+        return self.__class__(self._v.__mod__(other))
+
+    def __rmod__(self, other):
+        return self.__class__(self._v.__rmod__(other))
+
+    def __pow__(self, y, z):
+        return self.__class__(self._v.__pow__(y, z))
+
+float_py = float
+float = float_js
+
 def float_int(value, radix=None):
     JS("""
     var v;
