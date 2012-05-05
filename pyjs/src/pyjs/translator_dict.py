@@ -15,10 +15,6 @@ def sym_type(name):
 def new_node(name):
     return Node(sym_type(name), [])
 
-# use this now!
-import pycompiler as compiler
-from pycompiler.visitor import ASTVisitor
-
 import __Pyjamas__
 from __Future__ import __Future__
 
