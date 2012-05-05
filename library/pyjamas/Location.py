@@ -1,4 +1,4 @@
-from __pyjamas__ import JS, unescape
+from __pyjamas__ import JS
 
 def makeUrlDict(urlstring):
     dict = {}
