@@ -1,13 +1,13 @@
-Pyjamas
+Pyjs
 =======
 
-Pyjamas is a port of Google Web Toolkit to Python, and thus enables
+Pyjs is a port of Google Web Toolkit to Python, and thus enables
 the development of Rich Media AJAX applications in Python, with no
-need for special browser plugins.  Pyjamas contains a stand-alone
+need for special browser plugins.  Pyjs contains a stand-alone
 python-to-javascript compiler, and also a Widget Set API that looks
 very similar to Desktop Widget Set APIs (such as PyQT4 or PyGTK2).
 
-Pyjamas also contains a Desktop Widget Set version, running as pure
+Pyjs also contains a Desktop Widget Set version, running as pure
 python, with four useable Desktop ports available.  Using web browser
 technology startlingly provides an alternative to traditional
 Widget sets, such as PyQT4 and PyGTK2, with the advantage of having
@@ -34,18 +34,18 @@ IRC:
 :Server: irc.freenode.net
 :Channel: #pyjs
 
-Pyjamas-Desktop
+Pyjs-Desktop
 ===============
 
-Pyjamas runs your python application in a Web Browser (as javascript).
-Pyjamas-Desktop runs exactly the same python application on the
+Pyjs runs your python application in a Web Browser (as javascript).
+Pyjs-Desktop runs exactly the same python application on the
 Desktop (as pure python).
 
-Release 0.6 of Pyjamas incorporated Pyjamas-Desktop directly into
-the Pyjamas Distribution.  To use Pyjamas-Desktop there are three choices,
+Release 0.6 of Pyjs incorporated Pyjs-Desktop directly into
+the Pyjs Distribution.  To use Pyjs-Desktop there are three choices,
 with more planned [MacOSX PyObjC; KDE's PyKHTML].
 
-All ports of Pyjamas-Desktop will require a JSON library to be
+All ports of Pyjs-Desktop will require a JSON library to be
 installed: as there are plenty already, it is counter-productive
 to write yet another one.  simplejson is recommended if the version of
 python is 2.5 or less.  Python 2.6 and above come with a json library
@@ -66,7 +66,7 @@ installed by default.
    used: versions 1.9.0 or 1.9.1 are known to be suitable, as is version
    9.0.  Versions 10 and above are known to segfault.  The Mozilla
    Foundation is NOT paying attention to the stability of xulrunner for
-   embedded purposes: many applications (not just pyjamas-desktop) are
+   embedded purposes: many applications (not just pyjs-desktop) are
    now being left without working, stable code.
 
 2. PyWebKitGtk
@@ -78,7 +78,7 @@ installed by default.
 
    The version of pywebkitgtk at http://www.gnu.org/software/pythonwebkit
    provides full and direct python-equivalent interoperability for all functions
-   for which access through javascript has been provided: thus, Pyjamas
+   for which access through javascript has been provided: thus, Pyjs
    Desktop will function correctly.
 
    PyWebkitGtk must be explicitly enabled.  create a $HOME/.pyjd/pyjdrc file
