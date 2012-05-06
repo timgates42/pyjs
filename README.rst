@@ -16,13 +16,23 @@ already built-in.  For the windows port, this can save users and
 developers around 30mb of downloads, as MSHTML is preinstalled on
 the Windows Operating System, as part of IE.
 
-For more information, see:
+For more information and documentation, see:
 
 * http://pyjs.org
-* http://pyjs.org/FAQ.html
-* http://pyjs.org/features.html
+* https://github.com/pyjs/pyjs/wiki
 
-Known bugs: https://github.com/pyjs/pyjs/issues
+For issue tracking:
+
+* https://github.com/pyjs/pyjs/issues
+
+Mailing list:
+
+* https://groups.google.com/group/pyjs-users
+
+IRC:
+
+:Server: irc.freenode.net
+:Channel: #pyjs
 
 Pyjamas-Desktop
 ===============
@@ -30,8 +40,6 @@ Pyjamas-Desktop
 Pyjamas runs your python application in a Web Browser (as javascript).
 Pyjamas-Desktop runs exactly the same python application on the
 Desktop (as pure python).
-
-    http://pyjd.org
 
 Release 0.6 of Pyjamas incorporated Pyjamas-Desktop directly into
 the Pyjamas Distribution.  To use Pyjamas-Desktop there are three choices,
