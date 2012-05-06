@@ -1,5 +1,5 @@
 Pyjamas
--------
+=======
 
 Pyjamas is a port of Google Web Toolkit to Python, and thus enables
 the development of Rich Media AJAX applications in Python, with no
@@ -18,14 +18,14 @@ the Windows Operating System, as part of IE.
 
 For more information, see:
 
-    http://pyjs.org
-    http://pyjs.org/FAQ.html
-    http://pyjs.org/features.html
+* http://pyjs.org
+* http://pyjs.org/FAQ.html
+* http://pyjs.org/features.html
 
-Known bugs: http://code.google.com/p/pyjamas/issues
+Known bugs: https://github.com/pyjs/pyjs/issues
 
 Pyjamas-Desktop
----------------
+===============
 
 Pyjamas runs your python application in a Web Browser (as javascript).
 Pyjamas-Desktop runs exactly the same python application on the
@@ -43,110 +43,109 @@ to write yet another one.  simplejson is recommended if the version of
 python is 2.5 or less.  Python 2.6 and above come with a json library
 installed by default.
 
-1) - XULRunner
+1. XULRunner
 
-install hulahop and python-xpcom.  hulahop, from OLPC SugarLabs,
-is distributed with both Debian and Ubuntu; python-xpcom is part
-of XULRunner and is also distributed with both Debian and Ubuntu.
-Other users should investigate the installation instructions for
-python-xpcom and hulahop for the operating system of their choice
-on the appropriate web sites.
+    install hulahop and python-xpcom.  hulahop, from OLPC SugarLabs,
+    is distributed with both Debian and Ubuntu; python-xpcom is part
+    of XULRunner and is also distributed with both Debian and Ubuntu.
+    Other users should investigate the installation instructions for
+    python-xpcom and hulahop for the operating system of their choice
+    on the appropriate web sites.
 
-Sadly, modifications made by the Mozilla team to the xulrunner API
-have not propagated through to python-xpcom due to lack of attention
-and support by the Mozilla team.  Older versions of XULRunner must be
-used: versions 1.9.0 or 1.9.1 are known to be suitable, as is version
-9.0.  Versions 10 and above are known to segfault.  The Mozilla
-Foundation is NOT paying attention to the stability of xulrunner for
-embedded purposes: many applications (not just pyjamas-desktop) are
-now being left without working, stable code.
+    Sadly, modifications made by the Mozilla team to the xulrunner API
+    have not propagated through to python-xpcom due to lack of attention
+    and support by the Mozilla team.  Older versions of XULRunner must be
+    used: versions 1.9.0 or 1.9.1 are known to be suitable, as is version
+    9.0.  Versions 10 and above are known to segfault.  The Mozilla
+    Foundation is NOT paying attention to the stability of xulrunner for
+    embedded purposes: many applications (not just pyjamas-desktop) are
+    now being left without working, stable code.
 
-2) - PyWebKitGtk
+2. PyWebKitGtk
 
-There are two versions of PyWebKitGTK: please do not use the older
-version which has been "taken over" by the Webkit team: the Webkit
-team have decided that full support of and direct-equivalent
-interoperability with the full W3C HTML specifications is not important.
+    There are two versions of PyWebKitGTK: please do not use the older
+    version which has been "taken over" by the Webkit team: the Webkit
+    team have decided that full support of and direct-equivalent
+    interoperability with the full W3C HTML specifications is not important.
 
-The version of pywebkitgtk at http://www.gnu.org/software/pythonwebkit
-provides full and direct python-equivalent interoperability for all functions
-for which access through javascript has been provided: thus, Pyjamas
-Desktop will function correctly.
+    The version of pywebkitgtk at http://www.gnu.org/software/pythonwebkit
+    provides full and direct python-equivalent interoperability for all functions
+    for which access through javascript has been provided: thus, Pyjamas
+    Desktop will function correctly.
 
-PyWebkitGtk must be explicitly enabled.  create a $HOME/.pyjd/pyjdrc file
-containing the following two lines:
+    PyWebkitGtk must be explicitly enabled.  create a $HOME/.pyjd/pyjdrc file
+    containing the following two lines:
 
-[gui]
-engine=pywebkitgtk
+    [gui]
+    engine=pywebkitgtk
 
-3) - PyWebkitDFB
+3. PyWebkitDFB
 
-This is an experimental but minimally functional engine that is extremely
-quick to start up.  The build dependencies are also drastically smaller than
-any of the other web browser engines (which indirectly contributes to the
-fast startup time).
+    This is an experimental but minimally functional engine that is extremely
+    quick to start up.  The build dependencies are also drastically smaller than
+    any of the other web browser engines (which indirectly contributes to the
+    fast startup time).
 
-HTML5 is fully supported, with the exception of Video and Canvas; also
-missing at present is support for Frames.  Despite the present limitations,
-PyWebkitDFB is highly suited to embedded systems, as well as being useable
-as an excellent and ultra-quick general-purpose web browser engine.
+    HTML5 is fully supported, with the exception of Video and Canvas; also
+    missing at present is support for Frames.  Despite the present limitations,
+    PyWebkitDFB is highly suited to embedded systems, as well as being useable
+    as an excellent and ultra-quick general-purpose web browser engine.
 
-PyWebkitDFB must be explicitly enabled.  create a $HOME/.pyjd/pyjdrc file
-containing the following two lines:
+    PyWebkitDFB must be explicitly enabled.  create a $HOME/.pyjd/pyjdrc file
+    containing the following two lines:
 
-[gui]
-engine=pywebkitdfb
+    [gui]
+    engine=pywebkitdfb
 
-4) - MSHTML
+4. MSHTML
 
-For Windows users, all that's required, other than installing python
-and Internet Explorer, is one further tiny package: Win32 "comtypes".
+    For Windows users, all that's required, other than installing python
+    and Internet Explorer, is one further tiny package: Win32 "comtypes".
 
-Win32 "comtypes" can be downloaded here:
-* http://sourceforge.net/projects/comtypes/
+    Win32 "comtypes" can be downloaded here:
+    * http://sourceforge.net/projects/comtypes/
 
-Unlike the other ports, which can comprise a whopping great bundle
-of anything up to 30mb in size, the MSHTML port literally requires
-nothing more than comtypes, thanks to the far-sighted design of the
-MSHTML Trident Engine and its extensive COM interface.
+    Unlike the other ports, which can comprise a whopping great bundle
+    of anything up to 30mb in size, the MSHTML port literally requires
+    nothing more than comtypes, thanks to the far-sighted design of the
+    MSHTML Trident Engine and its extensive COM interface.
 
-5) - PyQt4
+5. PyQt4
 
-Kindly contributed by Thomas Henning, the PyQT4 port requires a current
-PyQt-snapshot with Qt 4.6 (which includes QWebElement, a DOM-like API for
-WebKit).
+    Kindly contributed by Thomas Henning, the PyQT4 port requires a current
+    PyQt-snapshot with Qt 4.6 (which includes QWebElement, a DOM-like API for
+    WebKit).
 
-The PyQt4 engine is highly experimental, and requires a configuration file
-to explicitly enable it.  create a $HOME/.pyjd/pyjdrc file containing the
-following two lines:
+    The PyQt4 engine is highly experimental, and requires a configuration file
+    to explicitly enable it.  create a $HOME/.pyjd/pyjdrc file containing the
+    following two lines:
 
-[gui]
-engine=pyqt4
+    [gui]
+    engine=pyqt4
 
-Sadly, the PyQT4 port serves more as a demonstration of how never to access
-web browser DOM functionality from python (ever).  The reason is simple:
-to access all but about 1% of the available DOM functionality, javascript
-code snippets must be created on-the-fly and executed, and all incoming and
-outgoing data must be dynamically translated between python and javascript
-(as Qt4 objects).
+    Sadly, the PyQT4 port serves more as a demonstration of how never to access
+    web browser DOM functionality from python (ever).  The reason is simple:
+    to access all but about 1% of the available DOM functionality, javascript
+    code snippets must be created on-the-fly and executed, and all incoming and
+    outgoing data must be dynamically translated between python and javascript
+    (as Qt4 objects).
 
-Aside from providing truly dreadful performance, this technical approach
-should have you either in hysterics, throwing up or requiring counselling,
-depending on your resilience and constitution.  All is not lost: if funding
-is made available, the PythonWebkit project can, with very little actual
-coding required, be ported to Qt4, as the GNU PythonWebkit Project has been
-designed to provide python access to DOM functionality, independent of the
-actual GUI display engine being used.
+    Aside from providing truly dreadful performance, this technical approach
+    should have you either in hysterics, throwing up or requiring counselling,
+    depending on your resilience and constitution.  All is not lost: if funding
+    is made available, the PythonWebkit project can, with very little actual
+    coding required, be ported to Qt4, as the GNU PythonWebkit Project has been
+    designed to provide python access to DOM functionality, independent of the
+    actual GUI display engine being used.
 
-6) - PyKDE
+6. PyKDE
 
-The PyKDE engine has been done as a "thank you" to the KDE Team, without
-whom Webkit would not exist.  Sadly, though, for technical reasons, the PyKDE
-engine requires that the entire KHTML Part be compiled with c++ "rtti" enabled,
-and the majority of GNU/Linux Distributions explicitly disable RTTI due to
-it having an impact on performance.
+    The PyKDE engine has been done as a "thank you" to the KDE Team, without
+    whom Webkit would not exist.  Sadly, though, for technical reasons, the PyKDE
+    engine requires that the entire KHTML Part be compiled with c++ "rtti" enabled,
+    and the majority of GNU/Linux Distributions explicitly disable RTTI due to
+    it having an impact on performance.
 
-If this is ever fixed, then out of sheer nostalgia and bloody-mindedness, the
-PyKDE engine will have continued support, even though the KHTML engine is only
-DOM TR2 compliant (at present).
-
+    If this is ever fixed, then out of sheer nostalgia and bloody-mindedness, the
+    PyKDE engine will have continued support, even though the KHTML engine is only
+    DOM TR2 compliant (at present).
