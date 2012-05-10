@@ -270,7 +270,7 @@ class UIObject(Applier):
             DOM.setStyleAttribute(element, 'display', "none")
 
     def unsinkEvents(self, eventBitsToRemove):
-        """Reverse the operation of sinkEvents.  See L{UIObject.sinkevents}.
+        """Reverse the operation of sinkEvents.  See L{UIObject.sinkEvents}.
         """
         DOM.sinkEvents(self.getElement(),
                       ~eventBitsToRemove & DOM.getEventsSunk(self.getElement()))
