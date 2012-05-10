@@ -14,19 +14,16 @@
 * the License.
 """
 
-
-
-
-
 @TagName(VideoElement.TAG)
-class VideoElement extends MediaElement:
-    String TAG = "video"
+class VideoElement(MediaElement):
+    TAG = "video"
     
     def create(self):
         return Document.get().createElement(TAG).cast()
     
     
     def __init__(self):
+        pass
     
     
     def getWidth(self):
@@ -75,6 +72,3 @@ class VideoElement extends MediaElement:
         JS("""
         this.poster = url;
         """)
-    
-
-

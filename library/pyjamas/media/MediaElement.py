@@ -17,9 +17,10 @@
 
 
 
-class MediaElement extends Element:
+class MediaElement(Element):
     
     def __init__(self):
+        pass
     
     
     def getNetworkState(self):

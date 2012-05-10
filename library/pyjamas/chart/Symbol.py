@@ -40,7 +40,6 @@ from pyjamas.chart import GChartUtil
 ** @see SymbolType SymbolType
 **
 *"""
-
 class Symbol(object):
     
     def __init__(self, parent):
@@ -112,44 +111,44 @@ class Symbol(object):
         self.yScaleFactor = 1.0
     
     
-    """* Returns the CSS background color of all the rectangular
-    ** elements used in rendering the symbol.
-    **
-    ** @return the CSS background color used to fill in the
-    **  central (non-border) part of each rectangular element
-    **  used to render a curve's symbol.
-    **
-    ** @see #setBackgroundColor(String) setBackgroundColor
-    *"""
     def getBackgroundColor(self):
+        """* Returns the CSS background color of all the rectangular
+        ** elements used in rendering the symbol.
+        **
+        ** @return the CSS background color used to fill in the
+        **  central (non-border) part of each rectangular element
+        **  used to render a curve's symbol.
+        **
+        ** @see #setBackgroundColor(String) setBackgroundColor
+        *"""
         return self.backgroundColor
     
     def getBackgroundColorCSS(self):
         return self.backgroundColorCSS
     
-    """* Returns the baseline value for this symbol,
-    ** previously specified via <tt>setBaseline</tt>
-    **
-    **
-    ** @return the previously specified baseline value for
-    **   this symbol.
-    **
-    ** @see #setBaseline setBaseline
-    *"""
     def getBaseline(self):
+        """* Returns the baseline value for this symbol,
+        ** previously specified via <tt>setBaseline</tt>
+        **
+        **
+        ** @return the previously specified baseline value for
+        **   this symbol.
+        **
+        ** @see #setBaseline setBaseline
+        *"""
         return self.baseline
     
-    """* Returns the CSS border color of all the rectangular
-    ** elements used in rendering the symbol.
-    **
-    ** <p>
-    ** @return the color of the border of the rectangular elements
-    **   used to render the symbol, in standard CSS format
-    **
-    ** @see #setBorderColor setBorderColor
-    **
-    *"""
     def getBorderColor(self):
+        """* Returns the CSS border color of all the rectangular
+        ** elements used in rendering the symbol.
+        **
+        ** <p>
+        ** @return the color of the border of the rectangular elements
+        **   used to render the symbol, in standard CSS format
+        **
+        ** @see #setBorderColor setBorderColor
+        **
+        *"""
         return self.borderColor
     
     def getBorderColorCSS(self):

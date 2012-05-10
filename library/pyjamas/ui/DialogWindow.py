@@ -30,7 +30,7 @@ from pyjamas.ui import HasAlignment
 import pyjamas.Window
 
 # Depends on CSS
-#.gwt-DialogBox .Minimize {
+# .gwt-DialogBox .Minimize {
 #     width: 18px;
 #     height: 22px;
 #     margin: 0;
@@ -38,7 +38,7 @@ import pyjamas.Window
 #     border: 0;
 #     background: transparent url(window_minimize.gif) no-repeat center top;
 #     text-indent: -1000em;
-#}
+# }
 # And the same for .Maximize and .Close
 
 

@@ -1,17 +1,17 @@
 """
-* Copyright 2010 John Kozura
-*
-* Licensed under the Apache License, Version 2.0 (the "License"); you may not
-* use this file except in compliance with the License. You may obtain a copy of
-* the License at
-*
-* http:#www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-* WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-* License for the specific language governing permissions and limitations under
-* the License.
+Copyright 2010 John Kozura
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+
+http:#www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations under
+the License.
 """
 
 from pyjamas import DOM
@@ -40,46 +40,42 @@ class FindLocRes:
         return (self.ep is not None)  and  (self.distance == 0)
 
 
-'''
-import re
+#import re
 
 # All unicode whitespace characters
-DEFAULT_WS_REXP = \
-"[\t-\r \u0085\u00A0\u1680\u180E\u2000-\u200B\u2028\u2029\u202F\u205F\u3000\uFEFF]+"
+#DEFAULT_WS_REXP = \
+#"[\t-\r \u0085\u00A0\u1680\u180E\u2000-\u200B\u2028\u2029\u202F\u205F\u3000\uFEFF]+"
 
-"""*
-* Set the regular expression used for detecting consecutive whitespace in a
-* string.  It must be of the form "[ \t\n]+", with all desired whitespace
-* characters between the braces.  This is used for word detection for
-* the move method.
-*
-* @param regExp String of the regular expression
+"""
+Set the regular expression used for detecting consecutive whitespace in a
+string.  It must be of the form "[ \t\n]+", with all desired whitespace
+characters between the braces.  This is used for word detection for
+the move method.
+
+@param regExp String of the regular expression
 """
 def setWhitespaceRexp(self, regExp):
     c_wsRexp = re.compile(regExp, "gm")
 
-'''
+"""
+An end point of a range, represented as a text node and offset in to it.
+Does not support potential other types of selection end points.
 
-"""*
-* An end point of a range, represented as a text node and offset in to it.
-* Does not support potential other types of selection end points.
-*
-* @author John Kozura
+@author John Kozura
 """
 class RangeEndPoint:
     MOVE_CHARACTER 	= 1
     MOVE_WORDSTART	= 2
     MOVE_WORDEND	= 3
 
-
-    """*
-    * Create a range end point at the start or end of an element.  The actual
-    * selection will occur at the first/last text node within this element.
-    *
-    * @param element element to create this end point in
-    * @param start whether to make the end point at the start or the end
-    """
     def __init__(self, arg1, arg2=None):
+        """
+        Create a range end point at the start or end of an element.  The actual
+        selection will occur at the first/last text node within this element.
+        
+        @param element: element to create this end point in
+        @param start: whether to make the end point at the start or the end
+        """
         if isinstance(arg1, RangeEndPoint):
             arg2 = arg1.getOffset()
             arg1 = arg1.getTextNode()
@@ -111,26 +107,26 @@ class RangeEndPoint:
 
         return res
 
-    """*
-    * Get the offset into the text node
-    *
-    * @return offset in characters
-    """
     def getOffset(self):
+        """
+        Get the offset into the text node
+        
+        @return offset in characters
+        """
         return self.m_offset
 
-    """*
-    * Get the string of the text node of this end point, either up to or
-    * starting from the offset:
-    *
-    * "som|e text"
-    *   True  : "e text"
-    *   False : "som"
-    *
-    * @param asStart whether to get the text as if this is a start point
-    * @return the text before or after the offset, or None if this is not set
-    """
     def getString(self, asStart):
+        """
+        Get the string of the text node of this end point, either up to or
+        starting from the offset:
+        
+        "som|e text"
+          True  : "e text"
+          False : "som"
+        
+        @param asStart whether to get the text as if this is a start point
+        @return the text before or after the offset, or None if this is not set
+        """
         if not self.isTextNode():
             return None
 
@@ -139,29 +135,29 @@ class RangeEndPoint:
             return res[self.m_offset:]
         return res[:self.m_offset]
 
-    """*
-    * Get this as a node (be it text or element)
-    """
     def getNode(self):
+        """
+        Get this as a node (be it text or element)
+        """
         return self.m_node
 
-    """*
-    * Get the text node of this end point, note this can be None if there are
-    * no text anchors available or if this is just an element.
-    *
-    * @return the text node
-    """
     def getTextNode(self):
+        """
+        Get the text node of this end point, note this can be None if there are
+        no text anchors available or if this is just an element.
+        
+        @return the text node
+        """
         if isTextNode(self.m_node):
             return self.m_node
         return None
 
-    """*
-    * Get the Element of this end point, if this is not a textual end point.
-    *
-    * @return the text node
-    """
     def getElement(self):
+        """
+        Get the Element of this end point, if this is not a textual end point.
+        
+        @return the text node
+        """
         if self.isTextNode():
             return None
         return self.m_node
@@ -169,16 +165,16 @@ class RangeEndPoint:
     def isTextNode(self):
         return isTextNode(self.m_node)
 
-    """*
-    * If the offset occurs at the beginning/end of the text node, potentially
-    * move to the end/beginning of the next/previous text node, to remove
-    * text nodes where 0 characters are actually used.  If asStart is True then
-    * move a cursor at the end of a text node to the beginning of the next
-    * vice versa for False.
-    *
-    * @param asStart Whether to do this as a start or end range point
-    """
     def minimizeBoundaryTextNodes(self, asStart):
+        """
+        If the offset occurs at the beginning/end of the text node, potentially
+        move to the end/beginning of the next/previous text node, to remove
+        text nodes where 0 characters are actually used.  If asStart is True then
+        move a cursor at the end of a text node to the beginning of the next
+        vice versa for False.
+        
+        @param asStart Whether to do this as a start or end range point
+        """
         text = self.getTextNode()
         if (text is not None)  and  (self.m_offset == (asStart and text.getLength() or 0)):
             nxt = RangeUtil.getAdjacentTextElement(text, asStart)
@@ -189,19 +185,19 @@ class RangeEndPoint:
                 else:
                     self.m_offset = nxt.getLength()
 
-    """*
-    * TODO IMPLEMENTED ONLY FOR CHARACTER
-    * Move the end point forwards or backwards by one unit of type, such as
-    * by a word.
-    *
-    * @param forward True if moving forward
-    * @param topMostNode top node to not move past, or None
-    * @param limit an endpoint not to move past, or None
-    * @param type what unit to move by, ie MOVE_CHARACTER or MOVE_WORD
-    * @param count how many of these to move by
-    * @return how far this actually moved
-    """
     def move(self, forward, topMostNode, limit, type, count):
+        """
+        TODO IMPLEMENTED ONLY FOR CHARACTER
+        Move the end point forwards or backwards by one unit of type, such as
+        by a word.
+        
+        @param forward True if moving forward
+        @param topMostNode top node to not move past, or None
+        @param limit an endpoint not to move past, or None
+        @param type what unit to move by, ie MOVE_CHARACTER or MOVE_WORD
+        @param count how many of these to move by
+        @return how far this actually moved
+        """
         res = 0
 
         limitText = limit and limit.getTextNode()
@@ -250,27 +246,25 @@ class RangeEndPoint:
                             offset = curr.getLength()
 
 
-                """
-                case MOVE_WORDSTART:
-                case MOVE_WORDEND:
-                if c_wsRexp is None:
-                    setWhitespaceRexp(DEFAULT_WS_REXP)
-
-
-                while curr is not None:
-
-                    do {
-                        # Next node, skipping any 0-length texts
-                        curr = RangeUtil.getAdjacentTextElement(curr, topMostNode,
-                        forward, False)
-                     while  ((curr is not None)  and  (curr.getLength() == 0))
-
-                    if curr is not None:
-                        offset = forward ? 0 : curr.getLength()
-
-
-                break
-                """
+#                case MOVE_WORDSTART:
+#                case MOVE_WORDEND:
+#                if c_wsRexp is None:
+#                    setWhitespaceRexp(DEFAULT_WS_REXP)
+#
+#
+#                while curr is not None:
+#
+#                    do {
+#                        # Next node, skipping any 0-length texts
+#                        curr = RangeUtil.getAdjacentTextElement(curr, topMostNode,
+#                        forward, False)
+#                     while  ((curr is not None)  and  (curr.getLength() == 0))
+#
+#                    if curr is not None:
+#                        offset = forward ? 0 : curr.getLength()
+#
+#
+#                break
             else:
                 assert(False)
 
@@ -279,20 +273,20 @@ class RangeEndPoint:
 
         return res
 
-    """*
-    * Given an absolute x/y coordinate and an element where that coordinate
-    * falls (generally obtained from an event), creates a RangeEndPoint
-    * containing or closest to the coordinate.  If the point falls within a
-    * non-textual element, a non-text endpoint is returned.  If the point falls
-    * within a text-containing element but not within any of the actual child
-    * text, tries to find the closest text point.
-    *
-    * @param element An element this point falls within
-    * @param absX Absolute X coordinate, ie from  Event.getClientX
-    * @param absY Absolute Y coordinate, ie from  Event.getClientY
-    * @return A rangeendpoint where the click occured, or None if not found
-    """
     def findLocation(self, element, absX, absY):
+        """
+        Given an absolute x/y coordinate and an element where that coordinate
+        falls (generally obtained from an event), creates a RangeEndPoint
+        containing or closest to the coordinate.  If the point falls within a
+        non-textual element, a non-text endpoint is returned.  If the point falls
+        within a text-containing element but not within any of the actual child
+        text, tries to find the closest text point.
+        
+        @param element An element this point falls within
+        @param absX Absolute X coordinate, ie from  Event.getClientX
+        @param absY Absolute Y coordinate, ie from  Event.getClientY
+        @return A rangeendpoint where the click occured, or None if not found
+        """
         # Convert to document-relative coordinates
         doc = element.getOwnerDocument()
         relX = absX - doc.getBodyOffsetLeft()
@@ -320,18 +314,15 @@ class RangeEndPoint:
             res = wind.pageYOffset
         return res
 
+#        if wind.mozInnerScreenX:
+#            res = res + wind.mozInnerScreenX
+#
+#        elif wind.screenTop:
+#            res = res + wind.screenTop
+#
+#        else:
+#            # webkit?
 
-    """
-    if wind.mozInnerScreenX:
-        res = res + wind.mozInnerScreenX
-
-    elif wind.screenTop:
-        res = res + wind.screenTop
-
-    else:
-        # webkit?
-
-    """
 
     def findLocation(self, doc, ele, relX, relY):
         res = None
@@ -520,36 +511,34 @@ class RangeEndPoint:
         """)
 
 
-    """
-    # Or get the computed style using IE's silly proprietary way
-    # I think IE supports getComputedStyle now
-    var style = obj.currentStyle
-    if style:
-        if style['display'] == 'none':
-            return False
+#        # Or get the computed style using IE's silly proprietary way
+#        # I think IE supports getComputedStyle now
+#        var style = obj.currentStyle
+#        if style:
+#            if style['display'] == 'none':
+#                return False
+#
+#            if style['visibility'] == 'hidden':
+#                return False
 
-        if style['visibility'] == 'hidden':
-            return False
 
 
-    """
-
-    """*
-    * Set the offset into the text node
-    *
-    * @param offset offset in characters
-    """
     def setOffset(self, offset):
+        """
+        Set the offset into the text node
+        
+        @param offset offset in characters
+        """
         self.m_offset = offset
 
 
-    """*
-    * Set this range end point at the start or end of a text node
-    *
-    * @param text text node this end point starts/end in
-    * @param start whether to make the end point at the start or the end
-    """
     def setTextNode(self, textNode, start=None):
+        """
+        Set this range end point at the start or end of a text node
+        
+        @param text text node this end point starts/end in
+        @param start whether to make the end point at the start or the end
+        """
         self.m_node = textNode
         if (start  or  (textNode is None)):
             offs = 0
@@ -557,25 +546,25 @@ class RangeEndPoint:
             offs = textNode.length
         self.setOffset(offs)
 
-    """*
-    * Set the range end point at the start or end of an element.  The actual
-    * selection will occur at the first/last text node within this element.
-    *
-    * @param element element to set this end point in
-    * @param start whether to make the end point at the start or the end
-    """
     def setElement(self, element, start=None):
+        """
+        Set the range end point at the start or end of an element.  The actual
+        selection will occur at the first/last text node within this element.
+        
+        @param element element to set this end point in
+        @param start whether to make the end point at the start or the end
+        """
         if start is None:
             self.m_node = element
         else:
             text = RangeUtil.getAdjacentTextElement(element, element, start, False)
             self.setTextNode(text, start)
 
-    """*
-    * Get the text of this with a "|" at the offset
-    *
-    * @return a string representation of this endpoint
-    """
     def __str__(self):
+        """
+        Get the text of this with a "|" at the offset
+        
+        @return a string representation of this endpoint
+        """
         return self.getString(False) + "|" + self.getString(True)
 
