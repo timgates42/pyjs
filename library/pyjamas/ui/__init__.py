@@ -60,15 +60,21 @@ class Applier(object):
     _elem_props = []
 
     def __init__(self, **kwargs):
-        """ use this to apply properties as a dictionary, e.g.
+        """ use this to apply properties as a dictionary, e.g.::
+
                 x = klass(..., StyleName='class-name')
-            will do:
+
+            will do::
+
                 x = klass(...)
                 x.setStyleName('class-name')
 
-            and:
+            and::
+
                 x = klass(..., Size=("100%", "20px"), Visible=False)
-            will do:
+
+            will do::
+
                 x = klass(...)
                 x.setSize("100%", "20px")
                 x.setVisible(False)

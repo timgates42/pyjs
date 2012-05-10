@@ -89,7 +89,7 @@ class FlashPanel(Panel):
     
     def setObjectWidth(self, width):
         """
-        @param object_class: The width parameter of the object-tag
+        @param width: The width parameter of the object-tag
         """
         self.object_width = str(width)
     
@@ -101,7 +101,7 @@ class FlashPanel(Panel):
     
     def setObjectHeight(self, height):
         """
-        @param object_class: The height parameter of the object-tag
+        @param height: The height parameter of the object-tag
         """
         self.object_height = str(height)
         

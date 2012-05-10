@@ -1,20 +1,20 @@
-""" Anchor Widget, use this to create the equivalent of the <a></a> tag.
+"""
+Anchor Widget, use this to create the equivalent of the <a></a> tag.
 
 Copyright(C) 2010, Martin Hellwig
 Copyright(C) 2010, Luke Leighton <lkcl@lkcl.net>
 
 License: Apache Software Foundation v2
 
-Here is an example for using it with an image:
----------------------------------------------------------
-if __name__ == '__main__':
-    from pyjamas.ui.RootPanel import RootPanel
-    from pyjamas.ui.Image import Image
-    root = RootPanel()
-    image = Image('http://pyjs.org/img/pyjamas.128x128.png')
-    anchor = Anchor(Widget=image, Href='http://pyjs.org')
-    root.add(anchor)
----------------------------------------------------------
+Here is an example for using it with an image::
+
+    if __name__ == '__main__':
+        from pyjamas.ui.RootPanel import RootPanel
+        from pyjamas.ui.Image import Image
+        root = RootPanel()
+        image = Image('http://pyjs.org/img/pyjamas.128x128.png')
+        anchor = Anchor(Widget=image, Href='http://pyjs.org')
+        root.add(anchor)
 """
 
 from pyjamas import DOM

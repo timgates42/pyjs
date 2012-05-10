@@ -1,6 +1,8 @@
-"""Logging module for Pyjamas, mimicking CPython's logging module.
+"""
+Logging module for Pyjamas, mimicking CPython's logging module.
 
-Usage example:
+Usage example::
+
     from pyjamas import logging
     log = logging.getConsoleLogger()
     log.debug('This is a debug message')

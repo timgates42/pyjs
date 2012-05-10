@@ -51,9 +51,12 @@ class JSONService(object):
         receive POST data with the JSON request. See the JSON-RPC spec for 
         more information.
 
-        The handler object should implement 
+        The handler object should implement::
+
             onRemoteResponse(value, requestInfo)
-        to accept the return value of the remote method, and
+
+        to accept the return value of the remote method, and::
+
             onRemoteError(code, error_dict, requestInfo)
                  code = http-code or 0
                  error_dict is an jsonrpc 2.0 error dict:
@@ -62,6 +65,7 @@ class JSONService(object):
                        'message': jsonrpc-error-message (string) ,
                        'data' : extra-error-data
                      }
+
         to handle errors.
         """
         self.url = url

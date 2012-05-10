@@ -61,7 +61,7 @@ class DecoratorPanel(SimplePanel):
             (Left, Center, and Right). The Center cell in the
             containerIndex row will contain the {@link Widget}.
             
-            @param rowStyles an array of style names to apply to each row
+            @param rowStyles: an array of style names to apply to each row
             @param containerIndex the index of the container row
         """
       
@@ -102,7 +102,7 @@ class DecoratorPanel(SimplePanel):
             This method allows Widgets to reuse the code on a DOM
             level, without creating a DecoratorPanel Widget.
          
-            @param styleName the style name
+            @param styleName: the style name
             @return the new row {@link Element}
         """
         trElem = DOM.createTR()
@@ -112,10 +112,10 @@ class DecoratorPanel(SimplePanel):
         DOM.appendChild(trElem, self.createTD(styleName + "Right"))
         return trElem
 
-    def createTD(self, styleName) :
+    def createTD(self, styleName):
         """ Create a new table cell with a specific style name.
          
-            @param styleName the style name
+            @param styleName: the style name
             @return the new cell {@link Element}
         """
         tdElem = DOM.createTD()
@@ -125,12 +125,12 @@ class DecoratorPanel(SimplePanel):
         self.setStyleName(inner, styleName + "Inner")
         return tdElem
 
-    def getCellElement(self, row, cell) :
-      """   Get a specific Element from the panel.
+    def getCellElement(self, row, cell):
+      """ Get a specific Element from the panel.
        
-        @param row the row index
-        @param cell the cell index
-        @return the Element at the given row and cell
+          @param row: the row index
+          @param cell: the cell index
+          @return the Element at the given row and cell
       """
       tr = DOM.getChild(self.tbody, row)
       td = DOM.getChild(tr, cell)

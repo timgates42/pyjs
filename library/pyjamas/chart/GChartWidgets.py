@@ -960,24 +960,22 @@ class GraphicsRenderingPanel (AbsolutePanel):
 
 
     def renderBorderedImage(self, backgroundColor, borderColor, borderStyle, borderWidth, width, height, x, y, url):
-        """
-        if None != canvas  and  url == getBlankImageURL()  and  (borderStyle == USE_CSS  or  borderStyle.equals("solid")):
-            # 
-            # Use canvas to emulate a transparent, bordered image
-            # (GChart can only render solid borders and blank image URLS
-            # with canvas at this point)
-            #
-            #
-            drawBorderedImage(backgroundColor,
-                                borderColor,
-                                borderStyle,
-                                borderWidth,
-                                width,
-                                height,
-                                x, y)
-
-        else { # use an actual image HTML element
-        """
+#        if None != canvas  and  url == getBlankImageURL()  and  (borderStyle == USE_CSS  or  borderStyle.equals("solid")):
+#            # 
+#            # Use canvas to emulate a transparent, bordered image
+#            # (GChart can only render solid borders and blank image URLS
+#            # with canvas at this point)
+#            #
+#            #
+#            drawBorderedImage(backgroundColor,
+#                                borderColor,
+#                                borderStyle,
+#                                borderWidth,
+#                                width,
+#                                height,
+#                                x, y)
+#
+#        else { # use an actual image HTML element
         self.addOrRevealImage(backgroundColor,
                             borderColor,
                             borderStyle,

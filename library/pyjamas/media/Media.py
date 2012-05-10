@@ -471,101 +471,99 @@ class Media(Widget):
         
     
     def nativeSinkMediaEvents(self, elem, bits):
-        """
-        chMask = (elem.__mediaEventBits or 0) ^ bits
-        elem.__mediaEventBits = bits;
-        if not chMask:
-             return
-        
-        if (chMask & 0x00001) and (bits & 0x00001):
-            elem.addEventListener('abort', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('abort', mediaDispatchEvent, false)
-        if (chMask & 0x00002) and (bits & 0x00002):
-            elem.addEventListener('canplay', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('canplay', mediaDispatchEvent, false)
-        if (chMask & 0x00004) and (bits & 0x00004):
-            elem.addEventListener('canplaythrough', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('canplaythrough', mediaDispatchEvent, false)
-        if (chMask & 0x00008) and (bits & 0x00008):
-            elem.addEventListener('durationchange', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('durationchange', mediaDispatchEvent, false)
-        if (chMask & 0x00010) and (bits & 0x00010):
-            elem.addEventListener('emptied', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('emptied', mediaDispatchEvent, false)
-        if (chMask & 0x00020) and (bits & 0x00020):
-            elem.addEventListener('ended', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('ended', mediaDispatchEvent, false)
-        if (chMask & 0x00040) and (bits & 0x00040):
-            elem.addEventListener('error', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('error', mediaDispatchEvent, false)
-        if (chMask & 0x00080) and (bits & 0x00080):
-            elem.addEventListener('loadstart', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('loadstart', mediaDispatchEvent, false)
-        if (chMask & 0x00100) and (bits & 0x00100):
-            elem.addEventListener('loadeddata', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('loadeddata', mediaDispatchEvent, false)
-        if (chMask & 0x00200) and (bits & 0x00200):
-            elem.addEventListener('loadedmetadata', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('loadedmetadata', mediaDispatchEvent, false)
-        if (chMask & 0x00400) and (bits & 0x00400):
-            elem.addEventListener('pause', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('pause', mediaDispatchEvent, false)
-        if (chMask & 0x00800) and (bits & 0x00800):
-            elem.addEventListener('play', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('play', mediaDispatchEvent, false)
-        if (chMask & 0x01000) and (bits & 0x01000):
-            elem.addEventListener('playing', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('playing', mediaDispatchEvent, false)
-        if (chMask & 0x02000) and (bits & 0x02000):
-            elem.addEventListener('progress', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('progress', mediaDispatchEvent, false)
-        if (chMask & 0x04000) and (bits & 0x04000):
-            elem.addEventListener('ratechange', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('ratechange', mediaDispatchEvent, false)
-        if (chMask & 0x08000) and (bits & 0x08000):
-            elem.addEventListener('seeked', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('seeked', mediaDispatchEvent, false)
-        if (chMask & 0x10000) and (bits & 0x10000):
-            elem.addEventListener('seeking', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('seeking', mediaDispatchEvent, false)
-        if (chMask & 0x20000) and (bits & 0x20000):
-            elem.addEventListener('stalled', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('stalled', mediaDispatchEvent, false)
-        if (chMask & 0x40000) and (bits & 0x40000):
-            elem.addEventListener('suspend', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('suspend', mediaDispatchEvent, false)
-        if (chMask & 0x80000) and (bits & 0x80000):
-            elem.addEventListener('timeupdate', mediaDispatchEvent, false)
-        else:
-            elem.removeEventListener('timeupdate', mediaDispatchEvent, false)
-        if (chMask & 0x100000) and (bits & 0x100000):
-            elem.addEventListener('volumechange', mediaDispatchEvent, false)
-        else:
-             elem.removeEventListener('volumechange', mediaDispatchEvent, false)
-        if (chMask & 0x200000) and (bits & 0x200000):
-            elem.addEventListener('waiting', mediaDispatchEvent, false)
-        else:
-             elem.removeEventListener('waiting', mediaDispatchEvent, false)
-        """
+#        chMask = (elem.__mediaEventBits or 0) ^ bits
+#        elem.__mediaEventBits = bits;
+#        if not chMask:
+#             return
+#        
+#        if (chMask & 0x00001) and (bits & 0x00001):
+#            elem.addEventListener('abort', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('abort', mediaDispatchEvent, false)
+#        if (chMask & 0x00002) and (bits & 0x00002):
+#            elem.addEventListener('canplay', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('canplay', mediaDispatchEvent, false)
+#        if (chMask & 0x00004) and (bits & 0x00004):
+#            elem.addEventListener('canplaythrough', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('canplaythrough', mediaDispatchEvent, false)
+#        if (chMask & 0x00008) and (bits & 0x00008):
+#            elem.addEventListener('durationchange', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('durationchange', mediaDispatchEvent, false)
+#        if (chMask & 0x00010) and (bits & 0x00010):
+#            elem.addEventListener('emptied', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('emptied', mediaDispatchEvent, false)
+#        if (chMask & 0x00020) and (bits & 0x00020):
+#            elem.addEventListener('ended', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('ended', mediaDispatchEvent, false)
+#        if (chMask & 0x00040) and (bits & 0x00040):
+#            elem.addEventListener('error', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('error', mediaDispatchEvent, false)
+#        if (chMask & 0x00080) and (bits & 0x00080):
+#            elem.addEventListener('loadstart', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('loadstart', mediaDispatchEvent, false)
+#        if (chMask & 0x00100) and (bits & 0x00100):
+#            elem.addEventListener('loadeddata', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('loadeddata', mediaDispatchEvent, false)
+#        if (chMask & 0x00200) and (bits & 0x00200):
+#            elem.addEventListener('loadedmetadata', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('loadedmetadata', mediaDispatchEvent, false)
+#        if (chMask & 0x00400) and (bits & 0x00400):
+#            elem.addEventListener('pause', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('pause', mediaDispatchEvent, false)
+#        if (chMask & 0x00800) and (bits & 0x00800):
+#            elem.addEventListener('play', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('play', mediaDispatchEvent, false)
+#        if (chMask & 0x01000) and (bits & 0x01000):
+#            elem.addEventListener('playing', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('playing', mediaDispatchEvent, false)
+#        if (chMask & 0x02000) and (bits & 0x02000):
+#            elem.addEventListener('progress', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('progress', mediaDispatchEvent, false)
+#        if (chMask & 0x04000) and (bits & 0x04000):
+#            elem.addEventListener('ratechange', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('ratechange', mediaDispatchEvent, false)
+#        if (chMask & 0x08000) and (bits & 0x08000):
+#            elem.addEventListener('seeked', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('seeked', mediaDispatchEvent, false)
+#        if (chMask & 0x10000) and (bits & 0x10000):
+#            elem.addEventListener('seeking', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('seeking', mediaDispatchEvent, false)
+#        if (chMask & 0x20000) and (bits & 0x20000):
+#            elem.addEventListener('stalled', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('stalled', mediaDispatchEvent, false)
+#        if (chMask & 0x40000) and (bits & 0x40000):
+#            elem.addEventListener('suspend', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('suspend', mediaDispatchEvent, false)
+#        if (chMask & 0x80000) and (bits & 0x80000):
+#            elem.addEventListener('timeupdate', mediaDispatchEvent, false)
+#        else:
+#            elem.removeEventListener('timeupdate', mediaDispatchEvent, false)
+#        if (chMask & 0x100000) and (bits & 0x100000):
+#            elem.addEventListener('volumechange', mediaDispatchEvent, false)
+#        else:
+#             elem.removeEventListener('volumechange', mediaDispatchEvent, false)
+#        if (chMask & 0x200000) and (bits & 0x200000):
+#            elem.addEventListener('waiting', mediaDispatchEvent, false)
+#        else:
+#             elem.removeEventListener('waiting', mediaDispatchEvent, false)
         return
     
     def addMouseDownHandler(self, handler):

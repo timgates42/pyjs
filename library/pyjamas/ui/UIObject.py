@@ -110,8 +110,7 @@ class UIObject(Applier):
     def getStyleAttribute(self, attribute):
         """ can be called with two forms:
             getStyleAttribute(self, attr) - returns value
-            getStyleAttribute(self, (attr1,attr2,...)) - returns dictionary
-                                                         of attr:value pairs
+            getStyleAttribute(self, (attr1,attr2,...)) - returns dictionary of attr:value pairs
         """
         if isinstance(attribute, basestring):
             return DOM.getStyleAttribute(self.getElement(), attribute)
