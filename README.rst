@@ -8,13 +8,9 @@ python-to-javascript compiler, and also a Widget Set API that looks
 very similar to Desktop Widget Set APIs (such as PyQT4 or PyGTK2).
 
 Pyjs also contains a Desktop Widget Set version, running as pure
-python, with four useable Desktop ports available.  Using web browser
-technology startlingly provides an alternative to traditional
-Widget sets, such as PyQT4 and PyGTK2, with the advantage of having
-full support for HTML, CSS, Plugins and other web-related features
-already built-in.  For the windows port, this can save users and
-developers around 30mb of downloads, as MSHTML is preinstalled on
-the Windows Operating System, as part of IE.
+python, with three useable Desktop ports available.  With web-engine
+technology at it's core, HTML, CSS, plugins and other related features
+work out-of-the-box.
 
 For more information and documentation, see:
 
@@ -39,42 +35,27 @@ Pyjs-Desktop
 
 Pyjs runs your python application in a Web Browser (as javascript).
 Pyjs-Desktop runs exactly the same python application on the
-Desktop (as pure python).
+Desktop (as pure python).  There are currently three engine
+choices, with alternatives in development.
 
-Release 0.6 of Pyjs incorporated Pyjs-Desktop directly into
-the Pyjs Distribution.  To use Pyjs-Desktop there are three choices,
-with more planned [MacOSX PyObjC; KDE's PyKHTML].
-
-All ports of Pyjs-Desktop will require a JSON library to be
-installed: as there are plenty already, it is counter-productive
-to write yet another one.  simplejson is recommended if the version of
-python is 2.5 or less.  Python 2.6 and above come with a json library
-installed by default.
+All ports of Pyjs-Desktop require a JSON library: simplejson is
+recommended if the version of python is 2.5 or less.  Python 2.6
+and above come with a json library installed by default.
 
 1. XULRunner
 
-   install hulahop and python-xpcom.  hulahop, from OLPC SugarLabs,
+   Install hulahop and python-xpcom.  Hulahop, from OLPC SugarLabs,
    is distributed with both Debian and Ubuntu; python-xpcom is part
    of XULRunner and is also distributed with both Debian and Ubuntu.
    Other users should investigate the installation instructions for
    python-xpcom and hulahop for the operating system of their choice
    on the appropriate web sites.
 
-   Sadly, modifications made by the Mozilla team to the xulrunner API
-   have not propagated through to python-xpcom due to lack of attention
-   and support by the Mozilla team.  Older versions of XULRunner must be
-   used: versions 1.9.0 or 1.9.1 are known to be suitable, as is version
-   9.0.  Versions 10 and above are known to segfault.  The Mozilla
-   Foundation is NOT paying attention to the stability of xulrunner for
-   embedded purposes: many applications (not just pyjs-desktop) are
-   now being left without working, stable code.
+   Older versions of XULRunner must be used: versions 1.9.0 or 1.9.1 are
+   known to be suitable, as is version 9.0.  Versions 10 and above are
+   known to segfault.
 
 2. PyWebKitGtk
-
-   There are two versions of PyWebKitGTK: please do not use the older
-   version which has been "taken over" by the Webkit team: the Webkit
-   team have decided that full support of and direct-equivalent
-   interoperability with the full W3C HTML specifications is not important.
 
    The version of pywebkitgtk at http://www.gnu.org/software/pythonwebkit
    provides full and direct python-equivalent interoperability for all functions
@@ -117,43 +98,3 @@ installed by default.
    of anything up to 30mb in size, the MSHTML port literally requires
    nothing more than comtypes, thanks to the far-sighted design of the
    MSHTML Trident Engine and its extensive COM interface.
-
-5. PyQt4
-
-   Kindly contributed by Thomas Henning, the PyQT4 port requires a current
-   PyQt-snapshot with Qt 4.6 (which includes QWebElement, a DOM-like API for
-   WebKit).
-
-   The PyQt4 engine is highly experimental, and requires a configuration file
-   to explicitly enable it.  create a $HOME/.pyjd/pyjdrc file containing the
-   following two lines:
-
-   [gui]
-   engine=pyqt4
-
-   Sadly, the PyQT4 port serves more as a demonstration of how never to access
-   web browser DOM functionality from python (ever).  The reason is simple:
-   to access all but about 1% of the available DOM functionality, javascript
-   code snippets must be created on-the-fly and executed, and all incoming and
-   outgoing data must be dynamically translated between python and javascript
-   (as Qt4 objects).
-
-   Aside from providing truly dreadful performance, this technical approach
-   should have you either in hysterics, throwing up or requiring counselling,
-   depending on your resilience and constitution.  All is not lost: if funding
-   is made available, the PythonWebkit project can, with very little actual
-   coding required, be ported to Qt4, as the GNU PythonWebkit Project has been
-   designed to provide python access to DOM functionality, independent of the
-   actual GUI display engine being used.
-
-6. PyKDE
-
-   The PyKDE engine has been done as a "thank you" to the KDE Team, without
-   whom Webkit would not exist.  Sadly, though, for technical reasons, the PyKDE
-   engine requires that the entire KHTML Part be compiled with c++ "rtti" enabled,
-   and the majority of GNU/Linux Distributions explicitly disable RTTI due to
-   it having an impact on performance.
-
-   If this is ever fixed, then out of sheer nostalgia and bloody-mindedness, the
-   PyKDE engine will have continued support, even though the KHTML engine is only
-   DOM TR2 compliant (at present).
