@@ -177,10 +177,10 @@ def _process_pyjamas(root):
     # Bootstrap on test failure; attempts to fix a couple issues at once
     null = open(os.devnull, 'wb')
     try:
-        if subprocess.call(['python', pyjsbuild], stdout=null, stderr=subprocess.STDOUT) > 0:
+        if subprocess.call(['python', pyjsbuild], cwd=root, stdout=null, stderr=subprocess.STDOUT) > 0:
             raise OSError
     except OSError:
-        subprocess.call(['python', boot], stdout=null, stderr=subprocess.STDOUT)
+        subprocess.call(['python', boot], cwd=root, stdout=null, stderr=subprocess.STDOUT)
     return {
         'DIR_PYJAMAS': root,
         'BASE_EXAMPLES': os.path.join(root, 'examples'),
