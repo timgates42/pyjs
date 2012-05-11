@@ -148,7 +148,7 @@ def _find_python():
 
 
 def _list_examples():
-    examples = [ 
+    examples = [
         example
         for example in os.listdir(ENV['DIR_EXAMPLES'])
         if os.path.isfile(os.path.join(ENV['DIR_EXAMPLES'], example, '__main__.py'))
@@ -295,7 +295,7 @@ def translate():
         else:
             opts = []
         cmd = [ENV['BIN_PYTHON'], ENV['BIN_PYJSBUILD']] + ENV['ARG_PYJSBUILD'] + opts + args
-        
+
         if not [ENV['ARG_PYJSBUILD']] + opts + args:
             raise RuntimeError(cmd)
         path = _process_path(TARGETS, target)
@@ -310,8 +310,8 @@ def install(package=None, **packages):
         demos = ''.join([
             str(INDEX['demo']).format(name=name, target=target[:-3])
             for target in TARGETS
-        ])  
-        example = { 
+        ])
+        example = {
             'name': name,
             'title': PACKAGE['title'],
             'desc': PACKAGE['desc'],
