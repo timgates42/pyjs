@@ -187,7 +187,7 @@ def PumpEvents(timeout):
     # If the calling thread resides in a multithread apartment (MTA),
     # CoWaitForMultipleHandles calls the Win32 function
     # MsgWaitForMultipleObjects.
-    
+
     hevt = ctypes.windll.kernel32.CreateEventA(None, True, False, None)
     handles = (ctypes.c_void_p * 1)(hevt)
     RPC_S_CALLPENDING = -2147417835
@@ -232,7 +232,7 @@ class _DispEventReceiver(comtypes.COMObject):
         if mth is None:
             return S_OK
         dp = pDispParams[0]
-        #print "num args", dp.cArgs 
+        #print "num args", dp.cArgs
         # DISPPARAMS contains the arguments in reverse order
         args = [dp.rgvarg[i].value for i in range(dp.cArgs)]
         #print "Event", self, memid, mth, args
@@ -276,7 +276,7 @@ def _get_dispmap(interface):
 ##        for info in interface._methods_:
 ##            mth = getattr(interface, info.name)
 ##            memid = mth.im_func.memid
-    
+
         # See also MSDN docs for the 'defaultvtable' idl flag, or
         # IMPLTYPEFLAG_DEFAULTVTABLE.  This is not a flag of the
         # interface, but of the coclass!

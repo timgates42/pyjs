@@ -37,11 +37,11 @@ def compress_css(css_file):
     css_output_file = 'temp/%s.ccss' % os.path.basename(css_file)
     f = open(css_file)
     css = f.read()
-    
+
     css = re.sub(r"\s+([!{};:>+\(\)\],])", r"\1", css)
     css = re.sub(r"([!{}:;>+\(\[,])\s+", r"\1", css)
     css = re.sub(r"\s+", " ", css)
-        
+
     f = open(css_output_file, 'w')
     f.write(css)
     f.close()
@@ -53,9 +53,9 @@ def compress_js(js_file):
     sys.stdout.write('Compressing %-40s' % js_file)
     sys.stdout.flush()
     js_output_file = 'temp/%s.cjs' % os.path.basename(js_file)
-    
+
     compile(js_file, js_output_file)
-    
+
     print '%4.1f%%' % getcompression(getsize(js_file), getsize(js_output_file))
     os.rename(js_output_file, js_file)
     os.system('rm -f temp/*')
@@ -66,14 +66,14 @@ def compress_html(html_file):
     js_file = 'temp/pyjs%d.js'
     js_output_file = 'temp/pyjs%d.cjs'
     html_output_file = 'temp/compiled.html'
-    
+
     f = open(html_file)
     html = f.read()
     f.close()
-    
+
     # remove comments betn <script> and merge all <script>
     html = MERGE_SCRIPTS.sub('', html)
-    
+
     # now extract the merged scripts
     template = '<!--compiled-js-%d-->'
     scripts = []
@@ -82,21 +82,21 @@ def compress_html(html_file):
         return '<script type="text/javascript">%s</script>' % template % \
                              (len(scripts)-1)
     html = SCRIPT.sub(script_repl, html)
-    
+
     # save js files in temp dir and compile them with simple optimizations
     for i, script in enumerate(scripts):
         f = open(js_file % i, 'w')
         f.write(script)
         f.close()
         compile(js_file % i, js_output_file % i, html_file)
-    
+
     # now write all compiled js back to html file
     for i in xrange(len(scripts)):
         f = open(js_output_file % i)
         script = f.read()
         f.close()
         html = html.replace(template % i, script)
-    
+
     f = open(html_output_file, 'w')
     f.write(html)
     f.close()
@@ -129,13 +129,13 @@ def compress_all(path):
         sys.exit('environment variable COMPILER is not defined.\n'
                  'In bash, export '
                  'COMPILER=/home/me/google/compiler/compiler.jar')
-    
+
     if not os.path.exists('temp'):
         os.makedirs('temp')
-    
+
     print '%17s %45s' % ('Files', 'Compression')
     p_size = getsize(path)
-    
+
     if os.path.isfile(path):
         compress(path)
     else:
@@ -145,10 +145,10 @@ def compress_all(path):
             for file in files:
                 compress(os.path.join(root, file))
         n_size = getsize(path)
-    
+
     n_size = getsize(path)
     compression = getcompression(p_size, n_size)
-    
+
     os.system('rm -rf temp')
     sizes = "Initial size: %.1fKB  Final size: %.1fKB" % \
             (p_size/1024., n_size/1024.)

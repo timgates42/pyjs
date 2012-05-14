@@ -47,7 +47,7 @@ def init():
     return true;
     """)
 
-        
+
 def newItem(historyToken):
     JS("""
     // Safari gets into a weird state (issue 2905) when setting the hash

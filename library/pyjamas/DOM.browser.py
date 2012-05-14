@@ -69,18 +69,18 @@ def init():
     $wnd.addEventListener('keydown', dce, true);
     $wnd.addEventListener('keyup', dce, true);
     $wnd.addEventListener('keypress', dce, true);
-    
+
     $wnd.__dispatchEvent = function(evt) {
-    
+
         var listener, curElem = this;
-        
+
         while (curElem && !(listener = curElem.__listener)) {
             curElem = curElem.parentNode;
         }
         if (curElem && curElem.nodeType != 1) {
             curElem = null;
         }
-    
+
         if (listener) {
             @{{dispatchEvent}}(evt, curElem, listener);
         }
@@ -224,7 +224,7 @@ def getChildCount(elem):
 def getChildIndex(parent, toFind):
     """
     Return the index of the given child in the given parent.
-    
+
     This performs a linear search.
     """
     JS("""
@@ -373,7 +373,7 @@ def iterChildren(elem):
             child = @{{getNextSibling}}(child);
             return lastChild;
         },
-        'remove': function() {        
+        'remove': function() {
             parent.removeChild(lastChild);
         },
         __iter__: function() {
@@ -419,7 +419,7 @@ def walkChildren(elem):
             }
             return lastChild;
         },
-        'remove': function() {        
+        'remove': function() {
             parent.removeChild(lastChild);
         },
         __iter__: function() {
@@ -427,7 +427,7 @@ def walkChildren(elem):
         }
     };
     """)
-   
+
 def removeEventPreview(preview):
     sEventPreviewStack.remove(preview)
 
@@ -435,7 +435,7 @@ def scrollIntoView(elem):
     JS("""
     var left = @{{elem}}.offsetLeft, top = @{{elem}}.offsetTop;
     var width = @{{elem}}.offsetWidth, height = @{{elem}}.offsetHeight;
-    
+
     if (@{{elem}}.parentNode != @{{elem}}.offsetParent) {
         left -= @{{elem}}.parentNode.offsetLeft;
         top -= @{{elem}}.parentNode.offsetTop;
@@ -532,7 +532,7 @@ def sinkEvents(element, bits):
     """
     Set which events should be captured on a given element and passed to the
     registered listener.  To set the listener, use setEventListener().
-    
+
     @param bits: A combination of bits; see ui.Event for bit values
     """
     JS("@{{element}}.__eventBits = @{{bits}};")

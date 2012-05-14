@@ -208,7 +208,7 @@ class IdlParser:
                 self.parse_interface(l)
             elif l.startswith('coclass'):
                 self.parse_coclass(l)
-    
+
 if __name__ == '__main__':
     p = IdlParser(sys.argv[1])
 

@@ -18,7 +18,7 @@ class Tooltip(PopupPanel):
         PopupPanel.__init__(self, True, **kwargs)
         self.show_delay = show_delay
         self.hide_delay = hide_delay
-        
+
         if isinstance(contents, basestring):
             contents = HTML(contents)
         self.add(contents)
@@ -33,10 +33,10 @@ class Tooltip(PopupPanel):
             self.tooltip_show_timer = Timer(1, self)
         else:
             self.tooltip_show_timer = Timer(self.show_delay, self)
-        
+
     def show(self):
         global tooltip_hide_timer
-        
+
         # activate fast tooltips
         tooltip_hide_timer = Timer(self.hide_delay, self)
         PopupPanel.show(self)
@@ -66,7 +66,7 @@ class TooltipListener:
     def __init__(self, text, show_delay = 1000, hide_delay = 5000, styleName = ""):
         if not styleName:
             styleName = self.DEFAULT_TOOLTIP_STYLE
-        
+
         self.tooltip = None
         self.text = text
         self.styleName = styleName
@@ -84,10 +84,10 @@ class TooltipListener:
 
     def onMouseMove(self, sender, x, y):
         pass
-        
+
     def onMouseDown(self, sender, x, y):
         pass
-    
+
     def onMouseUp(self, sender, x, y):
         pass
 
@@ -112,6 +112,6 @@ class TooltipListener:
     def hide(self):
         if self.tooltip is not None:
             self.tooltip.hide()
-        
+
 Factory.registerClass('pyjamas.ui.Tooltip', 'Tooltip', Tooltip)
 

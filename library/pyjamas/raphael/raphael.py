@@ -52,10 +52,10 @@ class RaphaelEventHandler(object):
         onMouseEnter = getattr(self, "_onMouseEnter")
         onMouseLeave = getattr(self, "_onMouseLeave")
         onMouseOut   = getattr(self, "_onMouseOut")
-        onDblClick    = getattr(self, "_onDblClick")     
+        onDblClick    = getattr(self, "_onDblClick")
         onContextMenu =  getattr(self, "_onContextMenu")
         JS("""
-           this._event_element=@{{element}}; 
+           this._event_element=@{{element}};
            this._event_element.onclick      = @{{onClick}};
            this._event_element.onmousedown  = @{{onMouseDown}};
            this._event_element.onmouseup    = @{{onMouseUp}};
@@ -65,8 +65,8 @@ class RaphaelEventHandler(object):
            this._event_element.onmouseleave = @{{onMouseLeave}};
            this._event_element.ondblclick   = @{{onDblClick}};
            this._event_element.oncontextmenu= @{{onContextMenu}};
-        """)     
-        
+        """)
+
     def addListener(self, type, listener, sender=None):
         """ Add a listener function to this element.
 
@@ -102,8 +102,8 @@ class RaphaelEventHandler(object):
         i=self._listeners[type].index(listener)
 
         self._sender[type].delete(i)
-        self._listeners[type].remove(listener) 
-        
+        self._listeners[type].remove(listener)
+
     def _onClick(self, event):
         """ Respond to a mouse-click event.
         """
@@ -164,7 +164,7 @@ class RaphaelEventHandler(object):
         sender = self._sender['mouseout']
         for listener,send in zip(listeners,sender):
             listener(send or self, event)
-                    
+
     def _onDblClick(self, event):
         """ Respond to a Double Click event.
         """
@@ -172,7 +172,7 @@ class RaphaelEventHandler(object):
         sender = self._sender['mouseout']
         for listener,send in zip(listeners,sender):
             listener(send or self, event)
-             
+
     def _onContextMenu(self,event):
         """ Respond to a Context Menue event.
         """
@@ -181,7 +181,7 @@ class RaphaelEventHandler(object):
         for listener,send in zip(listeners,sender):
             listener(send or self, event)
 
-    
+
 class Raphael(Widget,RaphaelEventHandler):
     """ A Pyjamas wrapper around the Raphael canvas object.
     """
@@ -352,12 +352,12 @@ class Raphael(Widget,RaphaelEventHandler):
                     this._element.attr(@{{attr}}, @{{value}});
                 """)
         return RaphaelPathElement(self._element)
-    
+
     def connection(self,obj1,obj2=None,line=None,bg=None,cp1=None,cp2=None,p1=None,p2=None):
         line_path=self.path(None,{'stroke-width':5})
         bg_path=self.path(None,{'stroke-width':5})
         return RaphaelConnectionElement(line_path,bg_path,obj1,obj2,line,bg,cp1,cp2,p1,p2)
-    
+
 
 
 class RaphaelElement(object,RaphaelEventHandler):
@@ -638,7 +638,7 @@ class RaphaelElement(object,RaphaelEventHandler):
         JS("""
            this._element.insertAfter(@{{otherElement}});
         """)
-    
+
     def drag(self,move,start,up):
         onMove  = getattr(self, "_onMove")
         onStart = getattr(self, "_onStart")
@@ -667,13 +667,13 @@ class RaphaelSetElement(RaphaelElement):
     """
 
     def __init__(self, raphaelElement):
-        """ 
-        Needs a custom init, since the event handling does not work on set 
-        (since no element is created for Set) 
+        """
+        Needs a custom init, since the event handling does not work on set
+        (since no element is created for Set)
         """
         self._element   = raphaelElement
         self.raphael_elements=[]
-         
+
     def add(self, element):
         """ Add an element to this set.
         """
@@ -687,10 +687,10 @@ class RaphaelSetElement(RaphaelElement):
         for element in self.raphael_elements:
             element.addListener(type,listener,self)
 
-            
+
     def removeListener(self,type,listener):
         for element in self.raphael_elements:
-            element.removeListener(type,listener)        
+            element.removeListener(type,listener)
 
 #############################################################################
 
@@ -712,7 +712,7 @@ class RaphaelConnectionElement(RaphaelElement):
     '''
     The connection logic is taken from the Graffle Example at the Raphael Examples
     '''
-    
+
     def __init__(self,line_path, bg_path,obj1=None,obj2=None, line={},bg={}, cp1=None, cp2=None,p1=None,p2=None):
         self.obj1=obj1
         self.obj2=obj2
@@ -721,32 +721,32 @@ class RaphaelConnectionElement(RaphaelElement):
         self.cp1=cp1
         self.cp2=cp2
         self.p1=p1
-        self.p2=p2 
-        
+        self.p2=p2
+
         self.draw()
-        
+
         line=line or {}
         bg=bg or {}
         if line:
             self.setLineAttrs(line)
         if bg:
             self.setBackGroundAttrs(bg)
-       
-        
-    
+
+
+
     def _getPath(self):
         p=[]
         d={}
-        dis=[]        
+        dis=[]
         #cp_map={0:0,90:3,180:1,270:2}
-        #counter_map={0:1,1:0,2:3,3:2}           
+        #counter_map={0:1,1:0,2:3,3:2}
         if self.obj1 and self.obj2:
             bb1=self.obj1.getBBox()
             bb2=self.obj2.getBBox()
             p=[ {'x':bb1['x']+bb1['width']/2,'y':bb1['y']-1},               #0:  object 1, Top,Middle
                 {'x':bb1['x']+bb1['width']/2,'y':bb1['y']+bb1['height']+1}, #1:  object 1, Bottom,Middle
                 {'x':bb1['x']-1,             'y':bb1['y']+bb1['height']/2}, #2:  object 1, Left, Middle
-                {'x':bb1['x']+bb1['width']+1,'y':bb1['y']+bb1['height']/2}, #3:  object 1, Right, Middle            
+                {'x':bb1['x']+bb1['width']+1,'y':bb1['y']+bb1['height']/2}, #3:  object 1, Right, Middle
                 {'x':bb2['x']+bb2['width']/2,'y':bb2['y']-1},               #4/0:object 2, Top, Middle
                 {'x':bb2['x']+bb2['width']/2,'y':bb2['y']+bb2['height']+1}, #5/1:object 2, Bottom, Middle
                 {'x':bb2['x']-1,             'y':bb2['y']+bb2['height']/2}, #6/2:object 2, Left, Middle
@@ -757,10 +757,10 @@ class RaphaelConnectionElement(RaphaelElement):
             p=[ {'x':bb1['x']+bb1['width']/2,'y':bb1['y']-1},               #0:  object 1, Top,Middle
                 {'x':bb1['x']+bb1['width']/2,'y':bb1['y']+bb1['height']+1}, #1:  object 1, Bottom,Middle
                 {'x':bb1['x']-1,             'y':bb1['y']+bb1['height']/2}, #2:  object 1, Left, Middle
-                {'x':bb1['x']+bb1['width']+1,'y':bb1['y']+bb1['height']/2}]#3:  object 1, Right, Middle            
+                {'x':bb1['x']+bb1['width']+1,'y':bb1['y']+bb1['height']/2}]#3:  object 1, Right, Middle
 
         if not self.obj1 and self.obj2:
-            bb2=self.obj2.getBBox()  
+            bb2=self.obj2.getBBox()
             p=[ {'x':bb2['x']+bb2['width']/2,'y':bb2['y']-1},               #4/0:object 2, Top, Middle
                 {'x':bb2['x']+bb2['width']/2,'y':bb2['y']+bb2['height']+1}, #5/1:object 2, Bottom, Middle
                 {'x':bb2['x']-1,             'y':bb2['y']+bb2['height']/2}, #6/2:object 2, Left, Middle
@@ -773,7 +773,7 @@ class RaphaelConnectionElement(RaphaelElement):
                     if ((i==j-4) or (((i<>3 and j<>6) or p[i]['x'] < p[j]['x']) and ((i<>2 and j<>7) or p[i]['x'] > p[j]['x']) and ((i<>0 and j<>5) or p[i]['y'] > p[j]['y']) and ((i<>1 and j<>4) or p[i]['y'] < p[j]['y'] ))):
                         dis.append(dy+dy)
                         d[dis[len(dis)-1]]=[i,j]
-    
+
             if len(dis)==0:
                 res=[0,4]
             else:
@@ -785,13 +785,13 @@ class RaphaelConnectionElement(RaphaelElement):
         else:
             if self.cp1:
                 x1,y1=p[self.cp1]['x'],p[self.cp1]['y']
-                res1=self.cp1                
+                res1=self.cp1
             else:
                 x1=self.p1[0]
                 y1=self.p1[1]
                 res1=None
             if self.cp2:
-                x4,y4=p[self.cp2+4]['x'],p[self.cp2+4]['y']  
+                x4,y4=p[self.cp2+4]['x'],p[self.cp2+4]['y']
                 res2=self.cp2+4
             else:
                 x4=self.p2[0]
@@ -803,12 +803,12 @@ class RaphaelConnectionElement(RaphaelElement):
             elif res1<>None and res2==None:
                 if res1<4:
                     res2=COUNTER_MAP[res1]+4
-                else: 
+                else:
                     res2=COUNTER_MAP[res1]-4
             elif res1==None and res2<>None:
                 if res2<4:
                     res1=COUNTER_MAP[res2]+4
-                else: 
+                else:
                     res1=COUNTER_MAP[res2]-4
             res=[res1,res2]
         dx=max(abs(x1-x4)/2,10)
@@ -816,45 +816,45 @@ class RaphaelConnectionElement(RaphaelElement):
         x2=[x1,x1,x1-dx,x1+dx][res[0]]
         y2=[y1-dy,y1+dy,y1,y1][res[0]]
         x3=[0,0,0,0,x4,x4,x4-dx,x4+dx][res[1]]
-        y3=[0,0,0,0,y1+dy,y1-dy,y4,y4][res[1]]  
+        y3=[0,0,0,0,y1+dy,y1-dy,y4,y4][res[1]]
         return ','.join(['M',str(x1),str(y1),'C',str(x2),str(y2),str(x3),str(y3),str(x4),str(y4)])
 
 
     def draw(self,p1=None,p2=None):
-        self.p1=p1 or self.p1 
-        self.p2=p2 or self.p2 
+        self.p1=p1 or self.p1
+        self.p2=p2 or self.p2
         path=self._getPath()
         self.line_path.setAttr('path',path)
-        self.bg_path.setAttr('path',path)        
+        self.bg_path.setAttr('path',path)
 
     def setLineAttrs(self,attrs):
-        self.line_path.setAttrs(attrs) 
-        
+        self.line_path.setAttrs(attrs)
+
     def setBackGroundAttrs(self,attrs):
-        self.bg_path.setAttrs(attrs) 
+        self.bg_path.setAttrs(attrs)
 
     def toFront(self):
         self.line_path.toFront()
         self.bg_path.toFront()
-    
+
     def toBack(self):
         self.line_path.toBack()
         self.bg_path.toBack()
-    
+
     def remove(self):
         self.line_path.remove()
         self.bg_path.remove()
-        
+
     def addListener(self,type,listener):
         self.line_path.addListener(type,listener,self)
-        self.bg_path.addListener(type,listener,self)        
+        self.bg_path.addListener(type,listener,self)
 
     def removeListener(self,type,listener):
         self.line_path.removeListener(type,listener)
         self.bg_path.removeListener(type,listener)
 
 ###########################################################################
-        
+
 class RaphaelPathElement(RaphaelElement):
     """ A RaphaelElement that represents a path.
 
@@ -971,4 +971,4 @@ class RaphaelPathElement(RaphaelElement):
 ##        return self
 
 
-                     
+

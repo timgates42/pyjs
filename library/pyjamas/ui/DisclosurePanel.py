@@ -17,7 +17,7 @@ from pyjamas.ui.Composite import Composite
 from pyjamas import Factory
 from pyjamas.ui.Widget import Widget
 from pyjamas.ui.SimplePanel import SimplePanel
-from pyjamas.ui.VerticalPanel import VerticalPanel 
+from pyjamas.ui.VerticalPanel import VerticalPanel
 from pyjamas.ui import Event
 from pyjamas import DOM
 import pygwt
@@ -85,7 +85,7 @@ class DefaultHeader(Widget):
         else:
             DOM.setAttribute(self.imgElem, "src",
                              self.imageBase + "disclosurePanelClosed.png")
-        
+
 
 # TODO: must be able to pass in DisclosurePanel argument by a means
 # *other* than an actual class instance.
@@ -120,7 +120,7 @@ class DisclosurePanel(Composite):
         headerWidget = kwargs.pop('header', headerWidget)
         # TODO: add ImageBundle
         # images = kwargs.pop('images', None)
-        
+
         # If both headerText and headerWidget are arguments, headerText will
         # be used to preserve API compatibility.
         headerContent = headerWidget

@@ -176,7 +176,7 @@ class UnitTest:
             return
         # do it again.
         Timer(100, self)
-    
+
     def setUp(self):
         pass
 

@@ -59,26 +59,26 @@ class JSONParser:
 
     def decodeAsObject(self, s, object_hook=None):
         return self.jsObjectToPyObject(self.parseJSON(s))
-    
+
     def encode(self, obj):
         return self.toJSONString(obj)
 
     def jsObjectToPy(self, obj):
         JS("""
         if (pyjslib.isArray(@{{obj}})) {
-            for (var i in @{{obj}}) 
+            for (var i in @{{obj}})
                 @{{obj}}[i] = this.jsObjectToPy(@{{obj}}[i]);
             return new pyjslib.list(@{{obj}});
             }
         else if (pyjslib.isObject(@{{obj}})) {
-            for (var i in @{{obj}}) 
+            for (var i in @{{obj}})
                 @{{obj}}[i]=this.jsObjectToPy(@{{obj}}[i]);
             return new pyjslib.dict(@{{obj}});
             }
-        
+
         return @{{obj}};
         """)
-    
+
     def jsObjectToPyObject(self, obj):
         JS("""
         if (pyjslib.isArray(@{{obj}})) {
@@ -91,22 +91,22 @@ class JSONParser:
                 var class_name = @{{obj}}["__jsonclass__"][0];
                 delete @{{obj}}["__jsonclass__"];
                 var _obj = this.jsObjectToPyObject(@{{obj}});
-                
+
                 return $pyjs_kwargs_call(
                     null, eval('$pyjs.loaded_modules.' + class_name),
                     null, _obj, [{}]
                 );
                 }
             else {
-                for (var i in @{{obj}}) 
+                for (var i in @{{obj}})
                     @{{obj}}[i]=this.jsObjectToPyObject(@{{obj}}[i]);
                 return new pyjslib.dict(@{{obj}});
-                }       
+                }
             }
-        
+
         return @{{obj}};
         """)
-    
+
     # modified to detect pyjslib.list & pyjslib.dict
     def toJSONString(self, obj):
         JS(r"""
@@ -219,8 +219,8 @@ class JSONParser:
             return false;
         }
         """)
-    
-        
+
+
 parser = JSONParser()
 dumps = getattr(parser, 'encode')
 loads = getattr(parser, 'decodeAsObject')

@@ -325,7 +325,7 @@ class BrowserLinker(linker.BaseLinker):
         html_output_filename = os.path.join(self.output,
                                             self.top_module + '.html')
         if self.apploader_file is None:
-            file_name = html_output_filename 
+            file_name = html_output_filename
         else:
             file_name = self.apploader_file
 
@@ -407,9 +407,9 @@ def build(top_module, pyjs, options, app_platforms,
           runtime_options, args):
     print "Building :", top_module
     print "PYJSPATH :", '\n    '.join(['['] + [p for p in pyjs.path]) + '\n]'
-    
+
     translator_arguments= translator.get_compile_options(options)
-    
+
     l = BrowserLinker(args,
                       output=options.output,
                       platforms=app_platforms,

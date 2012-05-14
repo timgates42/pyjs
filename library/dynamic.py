@@ -85,10 +85,10 @@ def inject(values, namespace = None, names=None):
 
 #
 #  activate_css(str)
-# 
+#
 #  looks for any < link > in the input and sets up a corresponding link node
 #  in the main document.
-# 
+#
 
 def activate_css(targetnode):
     scriptnodes = list(targetnode.getElementsByTagName('link'))
@@ -110,10 +110,10 @@ def activate_css(targetnode):
 
 #
 #  activate_javascript(str)
-# 
+#
 #  looks for any < script > in the input text and sets up a corresponding
 #  script node in the main document.
-# 
+#
 
 def activate_javascript(txt):
     fileref = DOM.createElement('script')
@@ -167,7 +167,7 @@ def ajax_import(url, namespace=None, names=None):
             names = []
         for name in names:
             name_getter.append("$pyjs$moduleObject['%s'] = %s;" % (name, name))
-        
+
         script = """(function ( ) {
 $pyjs$moduleObject={};
 %s;
@@ -185,13 +185,13 @@ return $pyjs$moduleObject;
 
 # From here, just converted from dynamicajax.js
 
-# 
+#
 #  pyjs_load_script
 #
 #  @param url      load script url
 #  @param module   module name
 #  @param onload   text of function to be eval/executed on successful load
-# 
+#
 
 def load_script(url, onload, async):
     wnd().status = ('Loading ' + url)
@@ -213,12 +213,12 @@ def load_script(url, onload, async):
 
 #
 #  ajax_dlink_refresh(oj,url)
-# 
+#
 #  @param id    id of element for insert
 #  @param url   load url
 #  @param timeout   refresh timeout period, ms
 #  @returns     readyState
-# 
+#
 
 # use these to overrun an existing timeout, so that
 # we don't end up with several of them!

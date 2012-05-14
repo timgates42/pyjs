@@ -1,6 +1,6 @@
 def getCookie(cookie_name):
 	JS("""
-	var results = document.cookie.match ( '(^|;) ?' + 
+	var results = document.cookie.match ( '(^|;) ?' +
                         @{{cookie_name}} + '=([^;]*)(;|$)' );
 
 	if ( results )
@@ -17,7 +17,7 @@ def setCookie(name, value, expires, domain=None, path=None, secure=False):
     if (@{{isUndefined}}(@{{domain}})) @{{domain}} = null;
     if (@{{isUndefined}}(@{{path}})) @{{path}} = null;
     if (@{{isUndefined}}(@{{secure}})) @{{secure}} = false;
-    
+
     var today = new Date();
     var expiration = new Date();
     if (!@{{expires}}) @{{expires}} = 0;

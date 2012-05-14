@@ -48,7 +48,7 @@ def translateGmapsObject(obj, fieldName, fields, pyToJs):
         if (@{{action}} == 'd')
         {
           //console.log("is dict")
-          // this newobj can be used in js and also in python, 
+          // this newobj can be used in js and also in python,
           // like this "newobj.field"
           var newobj = {}
           for (var i in @{{obj}})

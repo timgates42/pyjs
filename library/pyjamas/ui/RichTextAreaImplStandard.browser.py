@@ -1,5 +1,5 @@
 class RichTextAreaImplStandard (RichTextAreaImpl):
-        
+
     def hookEvents(self):
         elem = self.elem;
         wnd = elem.contentWindow;

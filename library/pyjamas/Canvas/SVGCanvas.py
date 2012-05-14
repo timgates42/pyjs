@@ -37,7 +37,7 @@ MITER = "miter"
 ROUND = "round"
 BEVEL = "bevel"
 
-    
+
 """
 SVGCanvas gradient implementation.
 """
@@ -68,17 +68,17 @@ class SVGCanvasGradient:
         newY = int((coordXY[1]/self.canvas_height) * 100.0)
         # return result
         return (newX, newY)
-    
+
     # add a color stop element as a child
     def addColorStop(self, offset, color):
         # create a color stop element
         stop = self._createElementSVG("stop")
-        stop.setAttributeNS(None, "stop-color", color); 
+        stop.setAttributeNS(None, "stop-color", color);
         # offset is specified as a float, but it should be percent
         offset = int(offset*100)
         # and it's a string
         offset = str(offset)+"%"
-        stop.setAttributeNS(None, "offset", offset); 
+        stop.setAttributeNS(None, "offset", offset);
         # now add the color stop as child
         DOM.appendChild(self.elem, stop)
 
@@ -132,7 +132,7 @@ class SVGCanvasRadialGradient(SVGCanvasGradient):
         P = (offset*(self.radii[1] - self.radii[0]) + self.radii[0]) / self.radii[1]
         # pass to base to be converted to percent and added in
         SVGCanvasGradient.addColorStop(self, P, color)
-        
+
 
 """
 SVG-based canvas to mimic the capabilities available in the 2D Canvas.
@@ -143,12 +143,12 @@ rendering with this widget class. It primarily exists to workaround
 canvas size limits of the 2D Canvas implementation of Windows Firefox
 """
 class SVGCanvas(FocusWidget):
-    
+
     def __init__(self, coordX=None, coordY=None, pixelX=None, pixelY=None,
                        **kwargs):
         """
         Creates an SVGCanvas element. Element type is 'svg'
-        
+
         @param coordX the size of the coordinate space in the x direction
         @param coordY the size of the coordinate space in the y direction
         @param pixelX the CSS width in pixels of the canvas element
@@ -222,7 +222,7 @@ class SVGCanvas(FocusWidget):
                     "transform_group":self.canvas,
                     # current transformation values
                     "matrix":[1,0,0,1,0,0]}
-    
+
     # just integerize a pair of coordinates
     def _integerize(self, x,y):
         # we use int coords only
@@ -240,7 +240,7 @@ class SVGCanvas(FocusWidget):
             self.first_point = self.last_point
         # return result
         return self.last_point
-    
+
     def getCanvasElement(self):
         return self.canvas
 
@@ -249,7 +249,7 @@ class SVGCanvas(FocusWidget):
     ## Canvas drawing methods
     ##
     ###################################
-    
+
     def beginPath(self):
         """
         Erases the current path and prepares it for a path.
@@ -262,7 +262,7 @@ class SVGCanvas(FocusWidget):
     def moveTo(self, x, y):
         """
         Makes the last point in the current path be <b>(x,y)</b>.
-        
+
         @param x x coord of point
         @param y y coord of point
         """
@@ -270,13 +270,13 @@ class SVGCanvas(FocusWidget):
         self._setPoint(x,y)
         # add move to current path
         self.path_string += "M "+str(self.last_point[0])+" "+str(self.last_point[1])+" "
-    
-    
+
+
     def lineTo(self, x, y):
         """*
         Adds a line from the last point in the current path to the point defined by
         x and y.
-        
+
         @param x x coord of point
         @param y y coord of point
         """
@@ -286,8 +286,8 @@ class SVGCanvas(FocusWidget):
         if self.first_point is None:
             self.first_point = self.last_point
         self.path_string += "L "+str(self.last_point[0])+" "+str(self.last_point[1])+" "
-    
-    
+
+
     def clear(self):
         """
         Clears the entire canvas.
@@ -305,18 +305,18 @@ class SVGCanvas(FocusWidget):
         # self._init_context()
         # also reset path
         self.beginPath()
-         
+
     def cubicCurveTo(self, cp1x, cp1y, cp2x, cp2y, x, y):
         """
         Does nothing if the context's path is empty. Otherwise, it connects the
         last point in the path to the given point <b>(x, y)</b> using a cubic
         Bezier curve with control points <b>(cp1x, cp1y)</b> and <b>(cp2x,
         cp2y)</b>. Then, it must add the point <b>(x, y)</b> to the path.
-        
+
         This function corresponds to the
         <code>bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)</code> method in canvas
         element Javascript API.
-        
+
         @param cp1x x coord of first Control Point
         @param cp1y y coord of first Control Point
         @param cp2x x coord of second Control Point
@@ -340,7 +340,7 @@ class SVGCanvas(FocusWidget):
         last point in the path to the given point <b>(x, y)</b> using a quadratic
         Bezier curve with control point <b>(cpx, cpy)</b>, and then adds the given
         point <b>(x, y)</b> to the path.
-        
+
         @param cpx x coord of the control point
         @param cpy y coord of the control point
         @param x x coord of the point
@@ -365,7 +365,7 @@ class SVGCanvas(FocusWidget):
         self.path_string += "Z "
         # and close the points
         self.last_point = self.first_point
-    
+
 
     def fill(self):
         """
@@ -407,7 +407,7 @@ class SVGCanvas(FocusWidget):
         # add the current stroke opacity attribute
         if self.ctx["alpha"] < 1.0:
             DOM.setElemAttribute(elem, "stroke-opacity", str(self.ctx["alpha"]))
-    
+
     def stroke(self):
         """
         Strokes the current path according to the current stroke style.
@@ -439,7 +439,7 @@ class SVGCanvas(FocusWidget):
     def arc(self, centerX, centerY, radius, startAngle, endAngle, antiClockwise):
         """
         Draws an arc (circle segment).
-        
+
         @param x center X coordinate
         @param y center Y coordinate
         @param radius radius of drawn arc
@@ -504,7 +504,7 @@ class SVGCanvas(FocusWidget):
         """
         Fills a rectangle of the specified dimensions, at the specified start
         coords, according to the current fillstyle.
-        
+
         @param startX x coord of the top left corner in the destination space
         @param startY y coord of the top left corner in the destination space
         @param width destination width of image
@@ -527,7 +527,7 @@ class SVGCanvas(FocusWidget):
     def strokeRect(self, startX, startY, width, height):
         """
         Strokes a rectangle defined by the supplied arguments.
-        
+
         @param startX x coord of the top left corner
         @param startY y coord of the top left corner
         @param width width of the rectangle
@@ -547,7 +547,7 @@ class SVGCanvas(FocusWidget):
     def rect(self, startX, startY, width, height):
         """*
         Adds an unfilled/stroked rectangle to the current path, and closes the path.
-        
+
         @param startX x coord of the top left corner of the rectangle
         @param startY y coord of the top left corner of the rectangle
         @param width the width of the rectangle
@@ -565,7 +565,7 @@ class SVGCanvas(FocusWidget):
         """
         Places text, at the specified start
         coords, according to the current fillstyle.
-        
+
         @param startX x coord of the top left corner in the destination space
         @param startY y coord of the top left corner in the destination space
         @param maxWidth maximum width of text
@@ -586,12 +586,12 @@ class SVGCanvas(FocusWidget):
         DOM.setInnerText(text_elem, text)
         # add the rect element to the canvas
         self._addElementSVG(text_elem)
-    
-    
+
+
     def createLinearGradient(self, x0, y0, x1, y1):
         """
         Creates a LinearGradient Object for use as a fill or stroke style.
-        
+
         @param x0 x coord of start point of gradient
         @param y0 y coord of start point of gradient
         @param x1 x coord of end point of gradient
@@ -602,12 +602,12 @@ class SVGCanvas(FocusWidget):
         return SVGCanvasLinearGradient(self.defs, self.pixelWidth, self.pixelHeight,
                                         int(x0),int(y0),
                                         int(x1),int(y1))
-    
-    
+
+
     def createRadialGradient(self, x0, y0, r0, x1, y1, r1):
         """
         Creates a RadialGradient Object for use as a fill or stroke style.
-        
+
         @param x0 x coord of origin of start circle
         @param y0 y coord of origin of start circle
         @param r0 radius of start circle
@@ -621,16 +621,16 @@ class SVGCanvas(FocusWidget):
                                         int(x0),int(y0),int(r0),
                                         int(x1),int(y1),int(r1))
 
-    
+
     def drawImage(self, img, *args):
         """
         Draws an input image at a given position on the canvas. Resizes image
         according to specified width and height and samples from the specified
         sourceY and sourceX.
-        
+
         We recommend that the pixel and coordinate spaces be the same to provide
         consistent positioning and scaling results
-        
+
         option 1:
         @param img the image to be drawn
         @param destX x coord of the top left corner in the destination space
@@ -642,7 +642,7 @@ class SVGCanvas(FocusWidget):
         @param destY y coord of the top left corner in the destination space
         @param destWidth the width of drawn image in the destination
         @param destHeight the height of the drawn image in the destination
-        
+
         option 3:
         @param img the image to be drawn
         @param sourceX the start X position in the source image
@@ -697,7 +697,7 @@ class SVGCanvas(FocusWidget):
 #        print 'Create: <image xlink:href="'+url+'" x="'+str(destXY[0])+'" y="'+str(destXY[1])+'" height="'+str(destWH[1])+'px" width="'+str(destWH[0])+'px"/>'
         image = self._createElementSVG("image")
         # set the URL
-        image.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", url); 
+        image.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", url);
         # set the pos/dimensions
         DOM.setElemAttribute(image, "x", str(int(destXY[0])))
         DOM.setElemAttribute(image, "y", str(int(destXY[1])))
@@ -706,7 +706,7 @@ class SVGCanvas(FocusWidget):
         # add the element to the canvas
         self._addElementSVG(image)
 
-    
+
     def saveContext(self):
         """
         Saves the current context to the context stack.
@@ -715,7 +715,7 @@ class SVGCanvas(FocusWidget):
         self.ctx_stack.append(dict(self.ctx))
 #        print "SAVED:",self.ctx
 
-        
+
     def restoreContext(self):
         """
         Restores the last saved context from the context stack.
@@ -728,17 +728,17 @@ class SVGCanvas(FocusWidget):
         self.ctx = self.ctx_stack.pop()
 #        print "RESTORED:",self.ctx
 
-    
+
     ###################################
     ##
     ## Canvas drawing styles
     ##
     ###################################
-    
+
     def getLineCap(self):
         """
         See self.setter method for a fully detailed description.
-        
+
         @return
         @see GWTCanvas#setLineCap(String)
         """
@@ -752,22 +752,22 @@ class SVGCanvas(FocusWidget):
         endpoints, or <code>GWTCanvas.SQUARE</code> for square endpoints. If you do
         not self.set this value explicitly, the canvas uses the
         <code>GWTCanvas.BUTT</code> line cap style.
-        
+
         @param lineCap
         """
         self.ctx["linecap"] = lineCap
 
-    
+
     def getLineJoin(self):
         """
         See self.setter method for a fully detailed description.
-        
+
         @return
         @see GWTCanvas#setLineJoin(String)
         """
         return self.ctx["linejoin"]
-    
-    
+
+
     def setLineJoin(self, lineJoin):
         """
         A string value that determines the join style between lines. Specify the
@@ -776,41 +776,41 @@ class SVGCanvas(FocusWidget):
         <code>GWTCanvas.MITER</code> for miter joins. If you do not self.set this value
         explicitly, the canvas uses the <code>GWTCanvas.MITER</code> line join
         style.
-        
+
         @param lineJoin
         """
         self.ctx["linejoin"] = lineJoin
-    
-    
+
+
     def getLineWidth(self):
         """
         See self.setter method for a fully detailed description.
-        
+
         @return
         @see GWTCanvas#setLineWidth(double)
         """
         return self.ctx["stroke-width"]
-    
-    
+
+
     def setLineWidth(self, width):
         """
         Sets the current context's linewidth. Line width is the thickness of a
         stroked line.
-        
+
         @param width the width of the canvas
         """
         self.ctx["stroke-width"] = int(width)
-    
-    
+
+
     def getMiterLimit(self):
         """
         See self.setter method for a fully detailed description.
-        
+
         @return
         @see GWTCanvas#setMiterLimit(double)
         """
         return self.ctx["miterlimit"]
-    
+
     def setMiterLimit(self, miterLimit):
         """
         A double value with the miter limit. You use this property to specify
@@ -820,16 +820,16 @@ class SVGCanvas(FocusWidget):
         of a miter. The canvas divides the length of the miter by the line width.
         If the result is greater than the miter limit, the style is converted to a
         bevel.
-        
+
         @param miterLimit
         """
         self.ctx["miterlimit"] = miterLimit
 
-    
+
     def setStrokeStyle(self, grad):
         """
         Set the current Stroke Style to the specified color gradient.
-        
+
         @param grad {@link CanvasGradient}
         """
         # if this is an actual Gradient
@@ -837,13 +837,13 @@ class SVGCanvas(FocusWidget):
             # get the ref sting to use for the fill attribute value
             grad = grad.getColor()
         # now save the value
-        self.ctx["stroke"] = grad    
-    
+        self.ctx["stroke"] = grad
+
 
     def setBackgroundColor(self, color):
         """
         Sets the background color of the canvas element.
-        
+
         @param color the background color.
         """
         # set style value
@@ -851,32 +851,32 @@ class SVGCanvas(FocusWidget):
         # set the canvas background color with the style attribute
         DOM.setElemAttribute(self.canvas, "style", style)
 
-    
+
     def getGlobalAlpha(self):
         """
         See self.setter method for a fully detailed description.
         """
-        return self.ctx["alpha"]    
-    
+        return self.ctx["alpha"]
+
     def setGlobalAlpha(self, alpha):
         """
         Set the global transparency to the specified alpha.
-        
+
         @param alpha alpha value
         """
         self.ctx["alpha"] = alpha
-    
-    
+
+
     def getGlobalCompositeOperation(self):
         """
         See self.setter method for a fully detailed description.
-        
+
         @return
         @see GWTCanvas#setGlobalCompositeOperation(String)
         """
         return self.ctx["composite"]
-    
-    
+
+
     def setGlobalCompositeOperation(self, globalCompositeOperation):
         """
         Determines how the canvas is displayed relative to any background content.
@@ -890,16 +890,16 @@ class SVGCanvas(FocusWidget):
         <li><code>GWTCanvas.DESTINATION_OVER</code>
         </ul>
         <p>
-        
+
         @param globalCompositeOperation is False for SOURCE_OVER (default) and True for SOURCE_UNDER
         """
         self.ctx["composite"] = globalCompositeOperation
-    
-    
+
+
     def setFillStyle(self, grad):
         """
         Set the current Fill Style to the specified color/gradient.
-        
+
         @param grad {@link CanvasGradient}
         """
         # if this is an actual Gradient
@@ -919,7 +919,7 @@ class SVGCanvas(FocusWidget):
     ## Canvas Coordinate space
     ##
     ###################################
-    
+
     def setWidth(self, width):
         self.setPixelWidth(width)
 
@@ -930,78 +930,78 @@ class SVGCanvas(FocusWidget):
         """
         Convenience function for resizing the canvas with consistent coordinate and
         screen pixel spaces. Equivalent to doing:
-        
+
         <pre><code>
         canvas.setCoordSize(width, height)
         canvas.setPixelHeight(height)
         canvas.setPixelWidth(width)
         </code></pre>
-        
+
         @param width
         @param height
         """
         self.setCoordSize(width, height)
         self.setPixelHeight(height)
         self.setPixelWidth(width)
-    
-    
+
+
     def setCoordSize(self, width, height):
         """
         Sets the coordinate space of the Canvas.
-        
+
         @param width the size of the x component of the coordinate space
         @param height the size of the y component of the coordinate space
         """
         self.setCoordWidth(width)
         self.setCoordHeight(height)
-    
-    
+
+
     def getCoordHeight(self):
         """
         Returns the height in pixels of the canvas.
-        
+
         @return returns the height in pixels of the canvas
         """
         return self.coordHeight
-    
-    
+
+
     def setCoordHeight(self, height):
         """
         Sets the coordinate height of the Canvas.
         <p>
         This will erase the canvas contents!
         </p>
-        
+
         @param height the size of the y component of the coordinate space
         """
         self.coordHeight = int(height)
         self._set_base_transform()
-    
+
     def getCoordWidth(self):
         """
         Returns the width in pixels of the canvas.
-        
+
         @return returns the width in pixels of the canvas
         """
         return self.coordWidth
-    
+
     def setCoordWidth(self, width):
         """
         Sets the coordinate width of the Canvas.
         <p>
         This will erase the canvas contents!
         </p>
-        
+
         @param width the size of the x component of the coordinate space
         """
         self.coordWidth = int(width)
         self._set_base_transform()
 
-    
+
     def setPixelHeight(self, height):
         """
         Sets the CSS height of the canvas in pixels.
-        
+
         @param height the height of the canvas in pixels
         """
         height = int(height)
@@ -1014,23 +1014,23 @@ class SVGCanvas(FocusWidget):
     def setPixelWidth(self, width):
         """
         Sets the CSS width in pixels for the canvas.
-        
+
         @param width width of the canvas in pixels
         """
         width = int(width)
         self.pixelWidth = width
         FocusWidget.setWidth(self, width)
-        DOM.setElemAttribute(self.canvas, "width", str(width))    
+        DOM.setElemAttribute(self.canvas, "width", str(width))
         self._set_base_transform()
-    
-    
+
+
     # internal routine to set the current scaling transform
     def _set_base_transform(self):
         # clear any content
         self.clear()
         # set viewBox
         DOM.setElemAttribute(self.canvas, "viewBox", "0 0 "+str(self.coordWidth)+" "+str(self.coordHeight))
-    
+
     ###################################
     ##
     ## Transformations
@@ -1084,18 +1084,18 @@ class SVGCanvas(FocusWidget):
         # we need to update the transform attribute of the current group
 #        print "Apply transform:",transform
         DOM.setElemAttribute(self.ctx["transform_group"], "transform", transform)
-        
+
 
     def transform(self, m11, m12, m21, m22, dx, dy):
         """
         <code>The transform(m11, m12, m21, m22, dx, dy)</code> method must multiply
         the current transformation matrix with the input matrix. Input described
         by:
-        
+
         m11   m21   dx
         m12   m22   dy
         0      0     1
-        
+
         @param m11 top left cell of 2x2 rotation matrix
         @param m12 top right cell of 2x2 rotation matrix
         @param m21 bottom left cell of 2x2 rotation matrix
@@ -1105,11 +1105,11 @@ class SVGCanvas(FocusWidget):
         """
         # TODO: multiply the transform with the current transform
         print "transform NOT IMPLEMENTED YET"
-    
+
     def rotate(self, angle):
         """
         Adds a rotation of the specified angle to the current transform.
-        
+
         @param angle the angle to rotate by, <b>in radians</b>
         """
         # first get current transform (leave off last row 0,0,1)
@@ -1123,11 +1123,11 @@ class SVGCanvas(FocusWidget):
         # apply the current transforms
         self._apply_current_transforms()
 
-    
+
     def scale(self, x, y):
         """
         Adds a scale transformation to the current transformation matrix.
-        
+
         @param x ratio that we must scale in the X direction
         @param y ratio that we must scale in the Y direction
         """
@@ -1138,13 +1138,13 @@ class SVGCanvas(FocusWidget):
         self.ctx["matrix"] = self._matrix_mult(t,m)
         # apply the current transforms
         self._apply_current_transforms()
-    
-    
+
+
     def translate(self, x, y):
         """
         Applies a translation (linear shift) by x in the horizontal and by y in the
         vertical.
-        
+
         @param x amount to shift in the x direction
         @param y amount to shift in the y direction
         """

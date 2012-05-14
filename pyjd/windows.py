@@ -130,7 +130,7 @@ class ACCEL(Structure):
     _fields_ = [("fVirt", BYTE),
                 ("key", WORD),
                 ("cmd", WORD)]
-    
+
 class CREATESTRUCT(Structure):
     _fields_ = [("lpCreateParams", LPVOID),
                 ("hInstance", HINSTANCE),
@@ -160,18 +160,18 @@ class PAINTSTRUCT(Structure):
                 ("fIncUpdate", BOOL),
                 ("rgbReserved", c_char * 32)]
 
-    
+
 class MENUITEMINFO(Structure):
     _fields_ = [("cbSize", UINT),
                 ("fMask", UINT),
                 ("fType", UINT),
-                ("fState", UINT),                
+                ("fState", UINT),
                 ("wID", UINT),
                 ("hSubMenu", HMENU),
                 ("hbmpChecked", HBITMAP),
                 ("hbmpUnchecked", HBITMAP),
                 ("dwItemData", ULONG_PTR),
-                ("dwTypeData", LPTSTR),                
+                ("dwTypeData", LPTSTR),
                 ("cch", UINT),
                 ("hbmpItem", HBITMAP)]
 
@@ -320,7 +320,7 @@ MF_BYPOSITION= 1024
 MF_UNCHECKED=  0
 MF_HILITE =    128
 MF_UNHILITE =  0
- 
+
 
 RB_SETBARINFO = WM_USER + 4
 RB_GETBANDCOUNT = WM_USER +  12
@@ -469,7 +469,7 @@ def GET_XY_LPARAM(lParam):
     if x > 32768:
         x = x - 65536
     y = HIWORD(lParam)
-    return x, y 
+    return x, y
 
 def GET_POINT_LPARAM(lParam):
     x, y = GET_XY_LPARAM(lParam)

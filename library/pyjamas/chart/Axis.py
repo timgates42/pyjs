@@ -30,7 +30,7 @@ from pyjamas.chart import Annotation
 
 from pyjamas.chart.GChartConsts import NAI
 from pyjamas.chart.GChartConsts import DEFAULT_TICK_COUNT
-from pyjamas.chart.GChartConsts import DEFAULT_WIDGET_WIDTH_UPPERBOUND 
+from pyjamas.chart.GChartConsts import DEFAULT_WIDGET_WIDTH_UPPERBOUND
 from pyjamas.chart.GChartConsts import DEFAULT_WIDGET_HEIGHT_UPPERBOUND
 from pyjamas.chart.GChartConsts import DEFAULT_TICK_LABEL_FONT_COLOR
 from pyjamas.chart.GChartConsts import DEFAULT_TICK_LABEL_FONTSIZE
@@ -48,8 +48,8 @@ from pyjamas.chart.GChartConsts import YAXIS_ID
 from pyjamas.chart.GChartConsts import XTICKS_ID
 from pyjamas.chart.GChartConsts import XGRIDLINES_ID
 from pyjamas.chart.GChartConsts import XAXIS_ID
-from pyjamas.chart.GChartConsts import TICK_CHARHEIGHT_TO_FONTSIZE_LOWERBOUND 
-from pyjamas.chart.GChartConsts import TICK_CHARWIDTH_TO_FONTSIZE_LOWERBOUND 
+from pyjamas.chart.GChartConsts import TICK_CHARHEIGHT_TO_FONTSIZE_LOWERBOUND
+from pyjamas.chart.GChartConsts import TICK_CHARWIDTH_TO_FONTSIZE_LOWERBOUND
 from pyjamas.chart.GChartConsts import Y_AXIS
 from pyjamas.chart.GChartConsts import Y2_AXIS
 
@@ -193,41 +193,41 @@ class Axis:
         Adds a tick at the specified position with the specified
         label on this axis, whose width and height are within
         the specified upper-bounds.
-        
+
         <p>
         Note that explicitly adding a single tick via this method
         will eliminate any auto-generated ticks associated with the
         <tt>setTickCount</tt> method.
-        
+
         <p>
         Use this method to specify unusually spaced
         tick marks with labels that do not directly
         reflect the position (for example, for a logarithmic axis,
         or for a bar chart with special keyword-type labels, or
         a time axis that places date and time on two separate lines).
-        
+
         @param tickPosition the position, in model units, along
           this axis at which the tick is displayed.
           For example, if the axis range goes from 0 to 1,
           a tick at position 0.5 would appear in the middle of
           the axis.
-        
+
          @param tickLabel the label for this tick.  HTML is
          supported in tick labels, but it must be prefixed by
          <tt>&lt;html&gt</tt>.  See the {@link
          Curve.Point#setAnnotationText(String,int,int)
          setAnnotationText} method for more information.
-        
+
          @param widthUpperBound an upper bound on the width of
          the text or HTML, in pixels. Use <tt>NAI</tt> to
          get GChart to estimate this width for you. See the
          <tt>setAnnotationText</tt> method for more information.
-        
+
          @param heightUpperBound an upper bound on the height of
          the text or HTML, in pixels. Use <tt>NAI</tt> to
          get GChart to estimate this height for you. See the
          <tt>setAnnotationText</tt> method for more information.
-        
+
         @see #clearTicks clearTicks
         @see #addTick(double) addTick(double)
         @see #addTick(double,String) addTick(double,String)
@@ -241,7 +241,7 @@ class Axis:
         @see Curve.Point#setAnnotationText(String,int,int)
              setAnnotationText
         @see Curve.Point#setAnnotationWidget setAnnotationWidget
-        
+
         """
         self.chartDecorationsChanged = True
         if NAI != self.tickCount:

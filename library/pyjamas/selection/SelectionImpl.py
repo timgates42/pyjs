@@ -27,7 +27,7 @@ from pyjamas import DOM
 *
 * @author John Kozura
 """
-    
+
 """*
 * Reads an object's property as a boolean value.
 *

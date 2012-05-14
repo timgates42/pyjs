@@ -22,7 +22,7 @@ import os
 import sys
 import hulahop
 # this is for storing the gecko stuff (cache, cookies, plugins etc.)
-gecko_path = os.environ.get('HOME', '.') 
+gecko_path = os.environ.get('HOME', '.')
 gecko_path = os.path.join(gecko_path, ".pyjd")
 hulahop.startup(gecko_path)
 
@@ -125,16 +125,16 @@ class Browser(WebView):
     def do_setup(self):
         WebView.do_setup(self)
         self.progress.setup(self)
-        
+
     def _addXMLHttpRequestEventListener(self, node, event_name, event_fn):
-        
+
         listener = xpcom.server.WrapObject(ContentInvoker(node, event_fn),
                                             interfaces.nsIDOMEventListener)
         node.addEventListener(event_name, listener, False)
         return listener
 
     def addEventListener(self, node, event_name, event_fn):
-        
+
         listener = xpcom.server.WrapObject(ContentInvoker(node, event_fn),
                                             interfaces.nsIDOMEventListener)
         node.addEventListener(event_name, listener, True)
@@ -144,7 +144,7 @@ class Browser(WebView):
         return attrib_name
 
     def _addWindowEventListener(self, event_name, event_fn, win=None):
-        
+
         if win is None:
             win = self.window_root
         listener = xpcom.server.WrapObject(ContentInvoker(win, event_fn),
@@ -156,12 +156,12 @@ class Browser(WebView):
         xml_svc_cls = components.classes[ \
             "@mozilla.org/xmlextras/domparser;1"]
         return xml_svc_cls.createInstance(interfaces.nsIDOMParser)
-        
+
     def getXmlHttpRequest(self):
         xml_svc_cls = components.classes[ \
             "@mozilla.org/xmlextras/xmlhttprequest;1"]
         return xml_svc_cls.createInstance(interfaces.nsIXMLHttpRequest)
-        
+
     def getUri(self):
         return self.application
 

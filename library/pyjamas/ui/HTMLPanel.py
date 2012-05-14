@@ -35,7 +35,7 @@ def getElementsByTagName(element, tagname):
     el = _check_tagname(element, tagname)
     if el:
         res.append(el)
-        
+
     it = DOM.walkChildren(element)
     while True:
         try:

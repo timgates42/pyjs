@@ -28,14 +28,14 @@ class Canvas(FocusWidget):
         kwargs['Height'] = Height
 
         self.context = None
-       
-        focusable = Focus.createFocusable() 
+
+        focusable = Focus.createFocusable()
         self.canvas = DOM.createElement("canvas")
         DOM.appendChild(focusable, self.canvas)
         FocusWidget.__init__(self, focusable, **kwargs)
-        
+
         self.init()
-        
+
         self.context.fillStyle = "black"
         self.context.strokeStyle = "black"
 
@@ -56,11 +56,11 @@ class Canvas(FocusWidget):
     def init(self):
         el = self.getElement().firstChild
         ctx = el.getContext("2d")
-        
+
         """
         ctx._createPattern = ctx.createPattern
         ctx.createPattern = function(img, rep) {
-            if (!(img instanceof Image)) img = img.getElement(); 
+            if (!(img instanceof Image)) img = img.getElement();
             return self._createPattern(img, rep)
             }
 
@@ -79,7 +79,7 @@ class CanvasImage(Image):
     def __init__(self, url="", load_listener = None):
         Image.__init__(self, url)
         if load_listener:
-            self.addLoadListener(load_listener)     
+            self.addLoadListener(load_listener)
         self.onAttach()
 
     def isLoaded(self):
@@ -90,14 +90,14 @@ class ImageLoadListener:
     def __init__(self, listener = None):
         self.wait_list = []
         self.loadListeners = []
-        
+
         if listener:
-            self.addLoadListener(listener)  
+            self.addLoadListener(listener)
 
     def add(self, sender):
         self.wait_list.append(sender)
         sender.addLoadListener(self)
-    
+
     def addLoadListener(self, listener):
         self.loadListeners.append(listener)
 
@@ -109,10 +109,10 @@ class ImageLoadListener:
     def onError(self, sender):
         for listener in self.loadListeners:
             listener.onError(sender)
-        
+
     def onLoad(self, sender):
         self.wait_list.remove(sender)
-        
+
         if self.isLoaded():
             for listener in self.loadListeners:
                 listener.onLoad(self)

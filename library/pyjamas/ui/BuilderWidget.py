@@ -58,7 +58,7 @@ from pyjamas.ui.Composite import Composite
 class BuilderWidget(Composite):
 
     def __init__(self, **kwargs):
-        
+
         self.b = None
         self.text = None
         self.instance_name = None

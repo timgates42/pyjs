@@ -4,7 +4,7 @@ class FormPanel:
         try {
             if (!@{{iframe}}.contentWindow.document)
                 return null;
-        
+
             return @{{iframe}}.contentWindow.document.body.innerText;
         } catch (e) {
             return null;
@@ -17,7 +17,7 @@ class FormPanel:
             @{{iframe}}.onreadystatechange = function() {
                 if (!@{{iframe}}.__formAction)
                     return;
-        
+
                 if (@{{iframe}}.readyState == 'complete') {
                     @{{listener}}.onFrameLoad();
                 }

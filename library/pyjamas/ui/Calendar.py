@@ -24,7 +24,7 @@ import time
 from datetime import datetime
 
 class Calendar(FocusPanel):
-    monthsOfYear = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+    monthsOfYear = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
     today = 'Today'
@@ -101,7 +101,7 @@ class Calendar(FocusPanel):
         self.setVisible(True)
 
     def drawCurrent(self):
-        yr, mth, day = self.currentYear, self.currentMonth, self.currentDay 
+        yr, mth, day = self.currentYear, self.currentMonth, self.currentDay
         self.draw(int(mth), int(yr))
 
 
@@ -300,7 +300,7 @@ class Calendar(FocusPanel):
         # well if anyone is listening to the listener, fire that event
         for listener in self.selectedDateListeners:
             if hasattr(listener, "onDateSelected"):
-                listener.onDateSelected(self.currentYear, self.currentMonth, 
+                listener.onDateSelected(self.currentYear, self.currentMonth,
                                         selectedDay)
             else:
                 listener(self.currentYear, self.currentMonth, selectedDay)

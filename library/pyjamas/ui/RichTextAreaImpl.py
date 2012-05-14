@@ -30,47 +30,47 @@ from pyjamas.ui import Focus
 * rich text editing.
 """
 class RichTextAreaImpl:
-    
+
     def __init__(self):
         self.elem = self.createElement()
-    
-    
+
+
     def getElement(self):
         return self.elem
-    
-    
+
+
     def getHTML(self):
         return DOM.getElementProperty(self.elem, "value")
-    
-    
+
+
     def getText(self):
         return DOM.getElementProperty(self.elem, "value")
-    
-    
+
+
     def initElement(self):
         self.onElementInitialized()
-    
-    
+
+
     def isBasicEditingSupported(self):
         return False
-    
-    
+
+
     def isExtendedEditingSupported(self):
         return False
-    
-    
+
+
     def setHTML(self, html):
         DOM.setElementProperty(self.elem, "value", html)
-    
-    
+
+
     def setText(self, text):
         DOM.setElementProperty(self.elem, "value", text)
-    
-    
+
+
     def uninitElement(self):
         pass
-    
-    
+
+
     def setFocus(self, focused):
         if (focused):
             Focus.focus(self.getElement())
@@ -79,18 +79,18 @@ class RichTextAreaImpl:
 
     def createElement(self):
         return DOM.createTextArea()
-    
-    
+
+
     def hookEvents(self):
         print self, "hook events"
         DOM.sinkEvents(self.elem, Event.MOUSEEVENTS | Event.KEYEVENTS |
                        Event.ONCHANGE | Event.ONCLICK | Event.FOCUSEVENTS)
-    
-    
+
+
     def onElementInitialized(self):
         print "onElementInitialized"
         self.hookEvents()
-    
+
     def setCssStyling(self):
         pass
 

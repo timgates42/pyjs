@@ -30,7 +30,7 @@ def getAbsoluteLeft(_elem):
         curr = curr.parentNode;
       }
     }
-    
+
     while (elem) {
       left += elem.offsetLeft;
 
@@ -65,7 +65,7 @@ def getAbsoluteTop(_elem):
         curr = curr.parentNode;
       }
     }
-    
+
     while (elem) {
       top += elem.offsetTop;
 

@@ -18,7 +18,7 @@ def createFocusHandler():
         $wnd.setTimeout(function() {
           div.focus();
         }, 0);
-      } 
+      }
     };
     """)
 

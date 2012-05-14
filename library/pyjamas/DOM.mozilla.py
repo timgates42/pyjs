@@ -70,7 +70,7 @@ def getAbsoluteLeft(elem):
     // Please note, their implementation has 1px offset.
     if (   typeof @{{elem}}.getBoundingClientRect == 'function'  ) {
         var left = Math.ceil(@{{elem}}.getBoundingClientRect().left);
-        
+
         return left  + $doc.body.scrollLeft + $doc.documentElement.scrollLeft;
     }
     // Older Firefox can use getBoxObjectFor
@@ -83,7 +83,7 @@ def getAbsoluteLeft(elem):
             }
             parent = parent.parentNode;
         }
-        
+
         return left + $doc.body.scrollLeft + $doc.documentElement.scrollLeft;
     }
     """)
@@ -127,7 +127,7 @@ def getAbsoluteTop(elem):
             }
             parent = parent.parentNode;
         }
-    
+
         return top + $doc.body.scrollTop + $doc.documentElement.scrollTop;
     }
     """)
@@ -183,7 +183,7 @@ def releaseCapture(elem):
     JS("""
     if ((@{{sCaptureElem}} != null) && @{{compare}}(@{{elem}}, @{{sCaptureElem}}))
         @{{sCaptureElem}} = null;
-    
+
 	if (!@{{elem}}.isSameNode) {
 		if (@{{elem}} == $wnd.__captureElem) {
 			$wnd.__captureElem = null;

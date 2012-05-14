@@ -38,7 +38,7 @@ def getJSRange(doc, selection):
     * @see SelectionImpl#getJSRange
     """
     res = selection.createRange()
-    
+
     parent = res.parentElement()
     if parent.ownerDocument == doc:
         return res.duplicate()

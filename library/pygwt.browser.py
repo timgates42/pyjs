@@ -19,17 +19,17 @@ def getModuleBaseURL():
     // this is intentionally not using $doc, because we want
     // the module's own url
     var s = document.location.href;
-    
+
     // Pull off any hash.
     var i = s.indexOf('#');
     if (i != -1)
         s = s.substring(0, i);
-    
+
     // Pull off any query string.
     i = s.indexOf('?');
     if (i != -1)
         s = s.substring(0, i);
-    
+
     // Rip off everything after the last slash.
     i = s.lastIndexOf('/');
     if (i != -1)

@@ -1,5 +1,5 @@
 class PopupPanel:
-    
+
     # PopupImpl.onShow
     def onShowImpl(self, popup):
         JS("""
@@ -8,7 +8,7 @@ class PopupPanel:
         frame.frameBorder = 0;
         frame.style.position = 'absolute';
         frame.src = "javascript:''";
-        
+
         @{{popup}}.__frame = frame;
         frame.__popup = @{{popup}};
         frame.style.setExpression('left', 'this.__popup.offsetLeft');

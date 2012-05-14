@@ -47,7 +47,7 @@ m_testElement = None # used in ie6
 def getIntProp(obj, propertyName):
     """
     Reads an object's property as an integer value.
-    
+
     @param object The object
     @param propertyName The name of the property being read
     @return The value
@@ -58,7 +58,7 @@ def getIntProp(obj, propertyName):
 def getProperty(obj, propertyName):
     """
     Reads an object given a property and returns it as a JavaScriptObject
-    
+
     @param object
     @param propertyName
     @return the object
@@ -70,7 +70,7 @@ def cloneRange(rng):
     """
     Make a copy of the given js range; the JS range is decoupled from any
     changes.
-    
+
     @param range a js range to copy
     @return a full copy of the range
     """
@@ -80,7 +80,7 @@ def cloneRange(rng):
 def collapse(rng, start):
     """
     Collapse a JS range object to the start or end point
-    
+
     @param range js range to collapse
     @param start if True, collapse to start, otherwise to end
     """
@@ -91,7 +91,7 @@ def compareBoundaryPoint(rng, compare, how):
     """
     Compare endpoints of 2 ranges, returning -1, 0, or 1 depending on whether
     the compare endpoint comes before, at, or after the range endpoint.
-    
+
     @param range range to compare against
     @param compare range to compare
     @param how a constant to choose which endpoint of each range to compare,
@@ -105,7 +105,7 @@ def copyContents(rng, copyInto):
     """
     Copy the contents of the range into the given element, including any
     tags needed to make it complete.  The DOM is not changed.
-    
+
     @param range js range to copy contents out of.
     @param copyInto an element to copy these contents into
     """
@@ -115,7 +115,7 @@ def copyContents(rng, copyInto):
 def createFromDocument(doc):
     """
     Create an empty JS range from a document
-    
+
     @param doc DOM document
     @return a empty JS range
     """
@@ -125,7 +125,7 @@ def createFromDocument(doc):
 def createRange(doc, startPoint, startOffset, endPoint, endOffset):
     """
     Create a JS range with the given endpoints
-    
+
     @param startPoint Start text of the selection
     @param startOffset offset into start text
     @param endPoint End text of the selection
@@ -142,7 +142,7 @@ def createRange(doc, startPoint, startOffset, endPoint, endOffset):
 def deleteContents(rng):
     """
     Remove the contents of the js range from the DOM
-    
+
     @param range js range to remove
     """
     rng.deleteContents()
@@ -153,7 +153,7 @@ def extractContents(rng, copyInto):
     Extract the contents of the range into the given element, removing them
     from the DOM.  Any tags needed to make the contents complete are included.
     Element object ids are not maintained.
-    
+
     @param range js range to extract contents from
     @param copyInto an element to extract these contents into
     """
@@ -164,7 +164,7 @@ def fillRangePoints(fillRange):
     """
     Fill the start and end point of a Range object, using the javascript
     range.
-    
+
     @param fillRange range object to set the endpoints of
     """
     jsRange = fillRange._getJSRange()
@@ -187,7 +187,7 @@ def fillRangePoints(fillRange):
 def getCommonAncestor(rng):
     """
     Get lowest common ancestor element of the given js range
-    
+
     @param range js range to get ancestor element of
     @return the lowest element that completely encompasses the range
     """
@@ -198,7 +198,7 @@ def getHtmlText(rng):
     """
     Get the complete html fragment enclosed by this range.  Ensures that all
     opening and closing tags are included.
-    
+
     @param range js range to get the html of
     @return an html string of the range
     """
@@ -209,7 +209,7 @@ def getHtmlText(rng):
 def getText(rng):
     """
     Get the pure text that is included in a js range
-    
+
     @param range js range to get the text of
     @return string of the range's text
     """
@@ -221,7 +221,7 @@ def surroundContents(rng, copyInto):
     Surround the contents of the range with the given element, and put the
     element in their place.  Any tags needed to make the contents complete
     are included.  Element object ids are not maintained.
-    
+
     @param range js range to surround with this element
     @param copyInto element to surround the range's contents with
     """
@@ -234,7 +234,7 @@ def findTextPoint(node, offset):
     If the found range is not on a text node, this finds the cooresponding
     text node to where the selection is.  If it is on a text node, just
     directly creates the endpoint from it.
-    
+
     @param node node returned as an endpoint of a range
     @param offset offset returned to the endpoint of a range
     @return A range end point with a proper (or None) text node
@@ -272,7 +272,7 @@ class Range:
         """
         Returns all text nodes between (and including) two arbitrary text nodes.
         Caller must ensure startNode comes before endNode.
-        
+
         @param startNode start node to traverse
         @param endNode end node to finish traversal
         @return A list of all text nodes between these two text nodes
@@ -304,25 +304,25 @@ class Range:
     def __init__(self, arg1, arg2=None):
         """
         Creates an empty range on this document
-        
+
         @param doc Document to create an empty range in
 
         Creates a range that encompasses the given element
-        
+
         @param element Element to create a range around
 
         Creates a range that is a cursor at the given location
-        
+
         @param cursorPoint a single point to make a cursor range
 
         Create a range that extends between the given points.  Caller must
         ensure that end comes after start
-        
+
         @param startPoint start point of the range
         @param endPoint end point of the range
 
         Internal method for creating a range from a JS object
-        
+
         @param document
         @param rangeObj
         """
@@ -350,7 +350,7 @@ class Range:
         """
         Internal function for retrieving the range, external callers should NOT
         USE THIS
-        
+
         @return
         """
         return self.m_range
@@ -360,7 +360,7 @@ class Range:
         """
         Internal call to set the range, which skips some checks and settings
         this SHOULD NOT be used externally.
-        
+
         @param startPoint
         @param endPoint
         """
@@ -372,7 +372,7 @@ class Range:
     def collapse(self, start):
         """
         Collapses the range into a cursor, either to the start or end point
-        
+
         @param start if True, cursor is the start point, otherwise the end point
         """
         if self.m_range is not None:
@@ -392,7 +392,7 @@ class Range:
         returning -1, 0, or 1 depending whether the comparison endpoint comes
         before, at, or after this endpoint.  how is a constant determining which
         endpoints to compare, for example Range.START_TO_START.
-        
+
         @param compare Range to compare against this one.
         @param how constant indicating which endpoints to compare
         @return -1, 0, or 1 indicating relative order of the endpoints
@@ -407,7 +407,7 @@ class Range:
         """
         Make a copy of the contents of this range, into the given element.  All
         tags required to make the range complete will be included
-        
+
         @param copyInto an element to copy the contents into, ie
                         DOM.createSpanElement()
         """
@@ -445,7 +445,7 @@ class Range:
         Place the contents of this range into a SPAN element, removing them
         from the DOM.  All tags required to make the range complete will be
         included.  This does not preserve the element object ids of the contents.
-        
+
         @return a SPAN element unattached to the DOM, containing the range
                 contents.
         """
@@ -459,7 +459,7 @@ class Range:
         Place the contents of this range into the given element, removing them
         from the DOM.  All tags required to make the range complete will be
         included.  This does not preserve the element object ids of the contents.
-        
+
         @param copyInto an element to extract the contents into, ie
                         DOM.createSpanElement()
         """
@@ -471,7 +471,7 @@ class Range:
         """*
         Get the element that is the lowest common ancestor of both ends of the
         range.  In other words, the smallest element that includes the range.
-        
+
         @return the element that completely encompasses this range
         """
         self.ensureRange()
@@ -482,7 +482,7 @@ class Range:
         """
         Gets a single point of the cursor location if this is a cursor, otherwise
         returns None.
-        
+
         @return the single point if this is a cursor and not a selection
         """
         return self.isCursor() and self.m_startPoint or None
@@ -491,7 +491,7 @@ class Range:
     def getDocument(self):
         """
         Get the DOM Document this range is within
-        
+
         @return document this range is in
         """
         return self.m_document
@@ -501,7 +501,7 @@ class Range:
         """
         Get the end point of the range.  Not a copy, so changing this alters
         the range.
-        
+
         @return the end point object
         """
         self.ensureEndPoints()
@@ -511,7 +511,7 @@ class Range:
     def getHtmlText(self):
         """
         Gets an HTML string represnting all elements enclosed by this range.
-        
+
         @return An html string of this range
         """
         self.ensureRange()
@@ -522,7 +522,7 @@ class Range:
         """
         Get the JS object representing this range.  Since it is highly browser
         dependent, it is not recommended to operate on this
-        
+
         @return JavaScriptObject representing this range
         """
         self.ensureRange()
@@ -533,7 +533,7 @@ class Range:
         """
         Get the start point of the range.  Not a copy, so changing this alters
         the range.
-        
+
         @return the start point object
         """
         self.ensureEndPoints()
@@ -543,7 +543,7 @@ class Range:
     def getText(self):
         """
         Gets the plain text that is enclosed by this range
-        
+
         @return A string of the text in this range
         """
         self.ensureRange()
@@ -553,7 +553,7 @@ class Range:
     def isCursor(self):
         """
         Returns whether this is a cursor, ie the start and end point are equal
-        
+
         @return True if start == end
         """
         self.ensureEndPoints()
@@ -576,7 +576,7 @@ class Range:
         """
         TODO NOT IMPLEMENTED YET
         Move the end points to encompass a boundary type, such as a word.
-        
+
         @param topMostNode a Node not to traverse above, or None
         @param type unit to move boundary by, such as RangeEndPoint.MOVE_WORD
         """
@@ -588,7 +588,7 @@ class Range:
     def setCursor(self, cursorPoint):
         """
         Sets the range to a point cursor.
-        
+
         @param cursorPoint A single endpoint to create a cursor range at
         """
         self.setRange(cursorPoint, cursorPoint)
@@ -598,7 +598,7 @@ class Range:
         """
         Sets just the end point of the range.  New endPoint must reside within
         the same document as the current startpoint, and must occur after it.
-        
+
         @param startPoint New start point for this range
         """
         assert ((self.m_startPoint is not None)  or
@@ -611,13 +611,13 @@ class Range:
         """
         Sets the range to encompass the given element.  May not work around
         non-text containing elements.
-        
+
         @param element Element to surround by this range
         @return whether a range can be placed around this element.
 
         Set the range to be between the two given points.  Both points must be
         within the same document, and end must come after start.
-        
+
         @param startPoint Start point to set the range to
         @param endPoint End point to set the range to
         """
@@ -645,7 +645,7 @@ class Range:
         """
         Sets just the start point of the range.  New startPoint must reside within
         the same document as the current endpoint, and must occur before it.
-        
+
         @param startPoint New start point for this range
         """
         assert ((self.m_endPoint is not None)  and
@@ -662,11 +662,11 @@ class Range:
         complete are included in the child content.  This does not preserve the
         element object ids of the contents.  The range will surround this
         element after this operation.
-        
+
         @param copyInto an element to place the contents into, which will replace
                         them in the DOM after this operation
         """
-        
+
         if copyInto is None:
             copyInto = self.m_document.createElement("span")
         self.ensureRange()
@@ -716,7 +716,7 @@ class Range:
     def setDocument(self, doc):
         """
         Set the document this range is contained within
-        
+
         @param doc document to set
         """
         if self.m_document != doc:

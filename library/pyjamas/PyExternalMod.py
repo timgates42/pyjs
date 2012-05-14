@@ -66,4 +66,4 @@ class PyjamasExternalModule:
             return self.__parseJSON(res)['result']
         JS("""
         @{{self}}[@{{method}}] = @{{inner}};
-        """) 
+        """)

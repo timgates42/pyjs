@@ -15,7 +15,7 @@ def init():
         var listener, curElem = this;
         while (curElem && !(listener = curElem.__listener))
             curElem = curElem.parentElement;
-    
+
         if (listener)
             @{{dispatchEvent}}($wnd.event, curElem, listener);
     };
@@ -107,7 +107,7 @@ def getAbsoluteLeft(elem):
     JS("""
     // getBoundingClientRect() throws a JS exception if the elem is not attached
     // to the document, so we wrap it in a try/catch block
-    var zoomMultiple = $doc.body.parentElement.offsetWidth / 
+    var zoomMultiple = $doc.body.parentElement.offsetWidth /
                        $doc.body.offsetWidth;
     try {
         return Math.floor((@{{elem}}.getBoundingClientRect().left / zoomMultiple) +
@@ -121,7 +121,7 @@ def getAbsoluteTop(elem):
     JS("""
     // getBoundingClientRect() throws a JS exception if the elem is not attached
     // to the document, so we wrap it in a try/catch block
-    var zoomMultiple = $doc.body.parentElement.offsetWidth / 
+    var zoomMultiple = $doc.body.parentElement.offsetWidth /
                        $doc.body.offsetWidth;
     try {
         var scrollTop = $doc.parent ? $doc.parent.body.scrollTop : 0;

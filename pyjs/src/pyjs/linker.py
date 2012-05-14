@@ -28,20 +28,20 @@ else:
 
 
 
-translator_opts = [ 'debug', 
-        'print_statements', 
-        'internal_ast', 
-        'function_argument_checking', 
-        'attribute_checking', 
-        'bound_methods', 
-        'descriptors', 
-        'source_tracking', 
-        'stupid_mode', 
-        'line_tracking', 
-        'store_source', 
-        'inline_code', 
-        'operator_funcs ', 
-        'number_classes', 
+translator_opts = [ 'debug',
+        'print_statements',
+        'internal_ast',
+        'function_argument_checking',
+        'attribute_checking',
+        'bound_methods',
+        'descriptors',
+        'source_tracking',
+        'stupid_mode',
+        'line_tracking',
+        'store_source',
+        'inline_code',
+        'operator_funcs ',
+        'number_classes',
         'list_imports',
         'translator',
     ]
@@ -137,7 +137,7 @@ def out_translate(platform, file_names, out_file, module_name,
         opts = [pyjs.PYTHON] + [os.path.join(pydir, translate_cmd)] + translate_cmd_opts + opts
 
         pyjscompile_cmd = '"%s"' % '" "'.join(opts)
-        
+
         proc = subprocess.Popen(pyjscompile_cmd,
                            stdin=subprocess.PIPE,
                            stdout=subprocess.PIPE,
@@ -160,7 +160,7 @@ def out_translate(platform, file_names, out_file, module_name,
     #print "translate", out_file, deps, js_libs, stdout_value
 
     return deps, js_libs
-    
+
 _path_cache= {}
 def module_path(name, path, platform=None):
     if name == '__pyjamas__' or name == '__javascript__':
@@ -218,7 +218,7 @@ def module_path(name, path, platform=None):
         if p in _path_cache[name] and not _path_cache[name][p] is None:
             return _path_cache[name][p]
         _path_cache[name][p] = None
-    
+
     return None
     raise RuntimeError, "Module %r not found" % name
 
@@ -229,7 +229,7 @@ class BaseLinker(object):
 
     def __init__(self, modules, output='output',
                  compiler=None,
-                 debug=False, 
+                 debug=False,
                  js_libs=[], static_js_libs=[], early_static_js_libs=[], late_static_js_libs=[], dynamic_js_libs=[],
                  early_static_app_libs = [], unlinked_modules = [], keep_lib_files = False,
                  platforms=[], path=[],
@@ -352,7 +352,7 @@ class BaseLinker(object):
                                     module_name + plat_suffix + pyjs.MOD_SUFFIX)
         if out_file in self.done.get(platform, []):
             return
-        
+
         # translate if
         #  -    no platform
         #  - or if we have an override

@@ -26,7 +26,7 @@ except:
 import logging
 
 from options import (all_compile_options, add_compile_options,
-                     get_compile_options, debug_options, speed_options, 
+                     get_compile_options, debug_options, speed_options,
                      pythonic_options)
 
 if os.environ.has_key('PYJS_SYSPATH'):
@@ -382,7 +382,7 @@ PYJSLIB_BUILTIN_CLASSES=[
     "tuple",
     "complex",
     "slice",
-    
+
     "Ellipsis", # atom
     ]
 
@@ -773,7 +773,7 @@ class Translator(object):
         'noNumberClasses': [('number_classes', False)],
         'NumberClasses': [('number_classes', True)],
     }
-    
+
     pyjslib_prefix = "$p"
 
     def __init__(self, compiler,
@@ -798,7 +798,7 @@ class Translator(object):
         self.output = output
         self.dynamic = dynamic
         self.findFile = findFile
-        
+
         self.set_compile_options(kw)
         # compile options
 
@@ -975,7 +975,7 @@ class Translator(object):
             self.w( '/*')
             self.w( 'PYJS_JS: %s' % repr(self.imported_js))
             self.w( '*/')
-            
+
     def set_compile_options(self, opts):
         opts = dict(all_compile_options, **opts)
         for opt, value in opts.iteritems():
@@ -983,7 +983,7 @@ class Translator(object):
                 setattr(self, opt, value)
             else:
                 raise Exception("Translator got an unknown option %s" % opt)
-        
+
         self.ignore_debug = False
         self.inline_bool = self.inline_code
         self.inline_len = self.inline_code
@@ -991,7 +991,7 @@ class Translator(object):
         self.inline_cmp = self.inline_code
         self.inline_getitem = self.inline_code
         if self.number_classes:
-            self.operator_funcs = True        
+            self.operator_funcs = True
 
     def w(self, txt, newline=True, output=None, translate=True):
         if translate and txt:
@@ -1107,7 +1107,7 @@ class Translator(object):
 
         self.pop_lookup()
         if code != '%s':
-            # XXX: Why is it here? It adds staticmethod to ANY decorated func, 
+            # XXX: Why is it here? It adds staticmethod to ANY decorated func,
             #      Even if its not method!
             code = code % ("@"+"{{staticmethod}}(%s)")
             if staticmethod:
@@ -1167,7 +1167,7 @@ class Translator(object):
         if len(words) == 0:
             return words[0] # WTF FIXME TODO ?????
         return self.attrib_join(words)
-    
+
     def pyjslib_name(self, name, args=None):
         if args is None:
             return "$p['" + name + "']"
@@ -1365,7 +1365,7 @@ class Translator(object):
             zero = "$constant_int_0"
             return self.__inline_len_code_str2 % locals()
         return "@{{len}}(%(e)s)" % locals()
-                                         
+
 
     __inline_eq_code_str = """((%(v1)s=%(e1)s)===(%(v2)s=%(e2)s)&&%(v1)s===null?true:
     (%(v1)s===null?false:(%(v2)s===null?false:
@@ -2078,8 +2078,8 @@ var %s = arguments.length >= %d ? arguments[arguments.length-1] : arguments[argu
                         importName,
                         context,
                         self.modpfx()[:-1],
-                    )                        
-                        
+                    )
+
                 if not assignBase:
                     self.w( self.spacing() + import_stmt + ', null, false);')
                 self._lhsFromName(importName, current_klass, modtype)
@@ -2636,7 +2636,7 @@ var %(e)s_name = (typeof %(e)s.__name__ == 'undefined' ? %(e)s.name : %(e)s.__na
                     if expr.lineno:
                         lineno = expr.lineno
                     l = []
-                   
+
                     if isinstance(expr, self.ast.Tuple):
                         for x in expr.nodes:
                             l.append("((%s_name == %s.__name__)||@{{_isinstance}}(%s,%s))" % (pyjs_try_err,
@@ -2708,7 +2708,7 @@ var %(e)s_name = (typeof %(e)s.__name__ == 'undefined' ? %(e)s.name : %(e)s.__na
         self.stacksize_depth -= 1
         self.generator_switch_case(increment=True)
         self.is_generator = save_is_generator
-        
+
     def _with(self, v, current_klass):
         """
         http://www.python.org/dev/peps/pep-0343/
@@ -2726,14 +2726,14 @@ var %(e)s_name = (typeof %(e)s.__name__ == 'undefined' ? %(e)s.name : %(e)s.__na
         save_output = self.output
         self.output = StringIO()
         self.indent()
-        
+
         for node in body_nodes:
             self._stmt(node, current_klass)
-            
+
         self.dedent()
         captured_output = self.output
         self.output = save_output
-        
+
         self.w(self.spacing() + "%(__with)s(%(expr)s, function(%(withvar)s){" %
                dict(expr=expr,
                     __with=self.pyjslib_name('__with'),
@@ -3346,16 +3346,16 @@ var %(e)s_name = (typeof %(e)s.__name__ == 'undefined' ? %(e)s.name : %(e)s.__na
             raise TranslationError(
                 "unsupported type (in _assign)", v.expr, self.module_name)
         return lhs
-    
 
-    def _assigns_list(self, v, current_klass, expr): # DANIEL KLUEV VERSION 
+
+    def _assigns_list(self, v, current_klass, expr): # DANIEL KLUEV VERSION
         """
         Handles all kinds of assignments for Assign, For and so on.
-        
+
         expr is string representing expr to assign, i.e. self.expr() result
-        
+
         Calls itself recursively for AssTuple
-        
+
         Returns list of JS strings
         """
         assigns = []
@@ -3371,7 +3371,7 @@ var %(e)s_name = (typeof %(e)s.__name__ == 'undefined' ? %(e)s.name : %(e)s.__na
                 desc_setattr = ("""%(l)s.__is_instance__ && """
                                 """typeof %(l)s.__setattr__ == 'function' ? """
                                 """%(l)s.__setattr__('%(a)s', %(r)s) : """
-                                """%(setattr)s(%(l)s, '%(a)s', %(r)s); """ % 
+                                """%(setattr)s(%(l)s, '%(a)s', %(r)s); """ %
                                 dict(
                                     setattr=self.pyjslib_name('setattr'),
                                     l=lhs,
@@ -3412,7 +3412,7 @@ var %(e)s_name = (typeof %(e)s.__name__ == 'undefined' ? %(e)s.name : %(e)s.__na
                     upper = self.expr(v.upper, current_klass)
                 obj = self.expr(v.expr, current_klass)
                 assigns.append(self.track_call(
-                    self.pyjslib_name("__setslice", 
+                    self.pyjslib_name("__setslice",
                                       args=[obj, lower, upper, expr]),
                     v.lineno) + ';')
                 return assigns
@@ -3428,20 +3428,20 @@ var %(e)s_name = (typeof %(e)s.__name__ == 'undefined' ? %(e)s.name : %(e)s.__na
             """
             child_nodes = v.getChildNodes()
             extended_unpack = 'null'
-            
-            # Grammar and parser do not support extended unpack yet, 
+
+            # Grammar and parser do not support extended unpack yet,
             #   should check each child and assign index if found extended flag
             for child in child_nodes:
                 pass
-            
+
             tempName = self.uniqid("$tupleassign")
             unpack_call = self.track_call(
-                self.pyjslib_name('__ass_unpack', 
+                self.pyjslib_name('__ass_unpack',
                                   args=[expr, len(child_nodes), extended_unpack]
                                   ), v.lineno)
-            
+
             assigns.append("var " + tempName + " = " + unpack_call + ";")
-            
+
             for index,child in enumerate(child_nodes):
                 unpacked_value = tempName + "[" + str(index) + "]";
                 assigns.extend(self._assigns_list(child, current_klass, unpacked_value))
@@ -3452,7 +3452,7 @@ var %(e)s_name = (typeof %(e)s.__name__ == 'undefined' ? %(e)s.name : %(e)s.__na
         assigns.append(lhs + " "+ op + " " + expr + ";")
         return assigns
 
-    def _assign(self, node, current_klass): # DANIEL KLUEV VERSION 
+    def _assign(self, node, current_klass): # DANIEL KLUEV VERSION
         if len(node.nodes) != 1:
             tempvar = self.uniqid("$assign")
             tnode = self.ast.Assign([self.ast.AssName(tempvar, "OP_ASSIGN", node.lineno)], node.expr, node.lineno)
@@ -3498,8 +3498,8 @@ var %(e)s_name = (typeof %(e)s.__name__ == 'undefined' ? %(e)s.name : %(e)s.__na
             # XXX: should trigger exceptions if expr resolves to undefined
             expr = self.expr(node.expr, current_klass)
             self.w(self.spacing() + expr + ";")
-     
-     
+
+
     def _if(self, node, current_klass):
         save_is_generator = self.is_generator
         if self.is_generator:
@@ -3691,7 +3691,7 @@ var %(e)s_name = (typeof %(e)s.__name__ == 'undefined' ? %(e)s.name : %(e)s.__na
         else:
             assTestvar = ""
         reuse_tuple = "false"
-        
+
         if self.inline_code:
             rhs = nextval
         else:
@@ -3744,7 +3744,7 @@ var %(e)s_name = (typeof %(e)s.__name__ == 'undefined' ? %(e)s.name : %(e)s.__na
         self.generator_add_state()
         self.generator_switch_open()
         self.generator_switch_case(increment=False)
-        
+
         for line in assigns:
             self.w( self.spacing() + line)
 
@@ -3811,7 +3811,7 @@ var %(e)s_name = (typeof %(e)s.__name__ == 'undefined' ? %(e)s.name : %(e)s.__na
         self.w( self.dedent() + "}")
         self.generator_switch_case(increment=True)
         self.is_generator = save_is_generator
-		
+
 
     def _const(self, node):
         if isinstance(node.value, int):
@@ -3960,7 +3960,7 @@ var %(e)s_name = (typeof %(e)s.__name__ == 'undefined' ? %(e)s.name : %(e)s.__na
             return """((%(v1)s=%(e1)s)!=null && (%(v2)s=%(e2)s)!=null && typeof %(v1)s=='string'?
 %(s)s\t@{{sprintf}}(%(v1)s,%(v2)s):
 %(s)s\t((%(v1)s=%(v1)s%%%(v2)s)<0&&%(v2)s>0?%(v1)s+%(v2)s:%(v1)s))""" % locals()
-                                                                          
+
         return """(typeof (%(v1)s=%(e1)s)==typeof (%(v2)s=%(e2)s) && typeof %(v1)s=='number'?
 %(s)s\t((%(v1)s=%(v1)s%%%(v2)s)<0&&%(v2)s>0?%(v1)s+%(v2)s:%(v1)s):
 %(s)s\t@{{op_mod}}(%(v1)s,%(v2)s))""" % locals()
@@ -4067,10 +4067,10 @@ var %(e)s_name = (typeof %(e)s.__name__ == 'undefined' ? %(e)s.name : %(e)s.__na
 
     def _tuple(self, node, current_klass):
         return self.track_call("$p['tuple']([" + ", ".join([self.expr(x, current_klass) for x in node.nodes]) + "])", node.lineno)
-    
+
     def _set(self, node, current_klass):
-        return self.track_call("$p['set']([" + ", ".join([self.expr(x, current_klass) for x in node.nodes]) + "])", node.lineno)        
-    
+        return self.track_call("$p['set']([" + ", ".join([self.expr(x, current_klass) for x in node.nodes]) + "])", node.lineno)
+
     def _sliceobj(self, node, current_klass):
         args = ", ".join([self.expr(x, current_klass) for x in node.nodes])
         return self.track_call(self.pyjslib_name("slice", args=args),
@@ -4123,12 +4123,12 @@ var %(e)s_name = (typeof %(e)s.__name__ == 'undefined' ? %(e)s.name : %(e)s.__na
                 ], node.value)
             varinit = self.pyjslib_name("dict", args='')
         else:
-            raise TranslationError("unsupported collection comprehension", 
+            raise TranslationError("unsupported collection comprehension",
                                    node, self.module_name)
-            
+
         for qual in node.quals[::-1]:
             if len(qual.ifs) > 1:
-                raise TranslationError("unsupported ifs (in _collcomp)", 
+                raise TranslationError("unsupported ifs (in _collcomp)",
                                        node, self.module_name)
             tassign = qual.assign
             tlist = qual.list

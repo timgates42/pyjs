@@ -49,7 +49,7 @@ class GearsDatabase:
             self.uncheckedClose()
         #except ex:
         #    raise DatabaseException(ex.getDescription(), ex)
-        
+
     """*
     * Executes the specified SQL statement and returns a {@link ResultSet}
     * containing the results.

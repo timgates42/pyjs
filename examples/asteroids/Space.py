@@ -142,7 +142,7 @@ class GameCanvas(GWTCanvas):
 
         self.width = w
         self.height = h
-        self.key_up = self.key_down = self.key_left = self.key_right = self.key_fire = False        
+        self.key_up = self.key_down = self.key_left = self.key_right = self.key_fire = False
 
         images = ['./images/Ship1.png', './images/Ship2.png', './images/Asteroid.png']
         loadImages(images, self)
@@ -157,7 +157,7 @@ class GameCanvas(GWTCanvas):
 
         self.num_asteroids = NUM_ASTEROIDS
 
-        self.sinkEvents(Event.KEYEVENTS) 
+        self.sinkEvents(Event.KEYEVENTS)
         self.onTimer()
 
     def onImagesLoaded(self, imagesHandles):
@@ -171,7 +171,7 @@ class GameCanvas(GWTCanvas):
         self.reset()
 
         self.run = True
-        
+
     def addTo(self, panel):
         panel.add(self)
         self.top = DOM.getAbsoluteTop(self.getElement())
@@ -280,7 +280,7 @@ class GameCanvas(GWTCanvas):
             self.yy -= self.height
         elif self.dy < 0 and self.yy < 0:
             self.yy += self.height
-        
+
     def setKey(self, k, set):
         DOM.eventPreventDefault(DOM.eventGetCurrentEvent())
         if k == KeyboardListener.KEY_UP:
@@ -293,7 +293,7 @@ class GameCanvas(GWTCanvas):
             self.key_right = set
         elif k == 32:
             self.key_fire = set
-            
+
     def onKeyPress(self, sender, keyCode, modifiers = None):
         pass
         #self.setKey(keyCode, True)
@@ -346,7 +346,7 @@ class GameCanvas(GWTCanvas):
         self.dy = 0
         self.rot = 0
         self.speed = 0
-        
+
     def draw(self):
 
         #if not self.loader.isLoaded():

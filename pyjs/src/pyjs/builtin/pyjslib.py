@@ -953,7 +953,7 @@ def ___import___(path, context, module_name=None, get_base=True):
             if get_base:
                 return JS("$pyjs.loaded_modules[@{{topName}}]")
             return module
-    
+
     # If we are here, the module is not loaded (yet).
     if JS("$pyjs.options.dynamic_loading"):
         module = __dynamic_load__(importName)
@@ -4110,7 +4110,7 @@ class tuple:
 
     def __len__(self):
         return INT(JS("""@{{self}}.__array.length"""))
-    
+
     def index(self, value, _start=0):
         JS("""
         var start = @{{_start}}.valueOf();
@@ -4134,7 +4134,7 @@ class tuple:
             }
         }
         """)
-        raise ValueError("list.index(x): x not in list")    
+        raise ValueError("list.index(x): x not in list")
 
     def __contains__(self, value):
         try:
@@ -4602,7 +4602,7 @@ class slice:
             self.stop = a1
             self.start = None
             self.step = None
-            
+
     def __cmp__(self, x):
         r = cmp(self.start, x.start)
         if r != 0:
@@ -4611,8 +4611,8 @@ class slice:
         if r != 0:
             return r
         r = cmp(self.step, x.step)
-        return r        
-            
+        return r
+
     def indices(self, length):
         """
         PySlice_GetIndicesEx at ./Objects/sliceobject.c
@@ -4626,14 +4626,14 @@ class slice:
             step = self.step
             if step == 0:
                 raise ValueError("slice step cannot be zero")
-            
+
         if step < 0:
             defstart = length - 1
             defstop = -1
         else:
             defstart = 0
             defstop = length
-            
+
         if self.start is None:
             start = defstart
         else:
@@ -4650,7 +4650,7 @@ class slice:
                     start = length - 1
                 else:
                     start = length
-    
+
         if self.stop is None:
             stop = defstop
         else:
@@ -4675,11 +4675,11 @@ class slice:
             slicelength = (stop - start + 1)/step + 1;
         else:
             slicelength = (stop - start - 1)/step + 1;
-            
+
         return (start, stop, step)
 
     def __repr__(self):
-        return "slice(%s, %s, %s)" % (self.start, self.stop, self.step)            
+        return "slice(%s, %s, %s)" % (self.start, self.stop, self.step)
 
 JS("@{{slice}}.__str__ = @{{slice}}.__repr__;")
 JS("@{{slice}}.toString = @{{slice}}.__str__;")
@@ -5703,7 +5703,7 @@ def xrange(start, stop = None, step = 1):
     @{{!x}}['__str__'] = @{{!x}}.toString;
     return @{{!x}};
     """)
-    
+
 def get_len_of_range(lo, hi, step):
     n = 0
     JS("""
@@ -5723,10 +5723,10 @@ def range(start, stop = None, step = 1):
         raise TypeError("xrange() integer end argument expected, got %s" % stop.__class__.__name__)
     if not JS("@{{step}}!== null && @{{step}}.__number__ && (@{{step}}.__number__ != 0x01 || isFinite(@{{step}}))"):
         raise TypeError("xrange() integer step argument expected, got %s" % step.__class__.__name__)
-    
+
     if step == 0:
         raise ValueError("range() step argument must not be zero")
-    
+
     if step > 0:
         n = get_len_of_range(ilow, stop, step)
     else:
@@ -6389,13 +6389,13 @@ class complex:
     def __init__(self, real, imag):
         self.real = float(real)
         self.imag = float(imag)
-        
+
     def __repr__(self):
         if self.real:
             return "(%s+%sj)" % (self.real, self.imag)
         else:
             return "%sj" % self.imag
-    
+
     def __add__(self, b):
         if isinstance(b, complex):
             return complex(self.real + b.real, self.imag + b.imag)
@@ -6403,7 +6403,7 @@ class complex:
             return complex(self.real + b, self.imag)
         else:
             raise TypeError("unsupported operand type(s) for +: '%r', '%r'" % (self, b))
-        
+
 JS("@{{complex}}['__radd__'] = @{{complex}}['__add__'];")
 JS("@{{complex}}['__str__'] = @{{complex}}['__repr__'];")
 JS("@{{complex}}['toString'] = @{{complex}}['__repr__'];")
@@ -8266,7 +8266,7 @@ def __with(mgr, func):
         # The normal and non-local-goto cases are handled here
         if exc:
             exit(mgr, None, None, None)
-            
+
 init()
 
 Ellipsis = EllipsisType()

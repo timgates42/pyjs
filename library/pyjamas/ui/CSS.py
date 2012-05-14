@@ -18,15 +18,15 @@ class StyleSheetCssFile:
         print "css file", cssFile
         if _doc is None:
             _doc = doc()
-        _doc.getElementsByTagName("head").item(0).appendChild(self._e) 
+        _doc.getElementsByTagName("head").item(0).appendChild(self._e)
 
     def remove(self):
         parent = DOM.getParent(self._e)
-        DOM.removeChild(parent, self._e) 
-        
+        DOM.removeChild(parent, self._e)
+
 def setStyleElementText(el, text):
     DOM.appendChild(el, doc().createTextNode(text))
-    
+
 class StyleSheetCssText:
 
     def __init__(self, text='', _doc=None):
@@ -36,9 +36,9 @@ class StyleSheetCssText:
 
         if _doc is None:
             _doc = doc()
-        _doc.getElementsByTagName("head").item(0).appendChild(self._e) 
+        _doc.getElementsByTagName("head").item(0).appendChild(self._e)
 
     def remove(self):
         parent = DOM.getParent(self._e)
-        DOM.removeChild(parent, self._e) 
-        
+        DOM.removeChild(parent, self._e)
+

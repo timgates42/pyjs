@@ -23,25 +23,25 @@ from pyjamas.ui.ClickListener import ClickHandler
 
 class _Attribute(object):
     "Attribute definition class with method set and remove"
-    def __init__(self, element, attribute, 
+    def __init__(self, element, attribute,
                  attribute_type=None, type_restriction=None):
         self.element = element
         self.attribute = attribute
         self._type = attribute_type
         self._restriction = type_restriction
-        
+
     def get(self):
         "Get the value"
         return DOM.getAttribute(self.element, self.attribute)
-        
+
     def set(self, value):
         "Set the value"
         DOM.setAttribute(self.element, self.attribute, value)
-        
+
     def remove(self):
-        "Remove the attribute from the element" 
+        "Remove the attribute from the element"
         DOM.removeAttribute(self.element, self.attribute)
-        
+
 class _Attributes(object):
     "Attribute container class"
     def __init__(self, element):
@@ -53,7 +53,7 @@ class _Attributes(object):
         self.rev = _Attribute(element, 'rev', 'link-types', 'ci')
         self.charset = _Attribute(element, 'charset', 'charset', 'ci')
         self.target = _Attribute(element, 'target', 'target', 'ci')
-        
+
 class Anchor(Widget, ClickHandler, _Attributes):
     """Anchor attribute, use this to create the equivalent of the <a></a> tag.
     The attributes: name, href. hreflang, type, rel, rev, charset are in the
@@ -71,7 +71,7 @@ class Anchor(Widget, ClickHandler, _Attributes):
         self.widget = None
         Widget.__init__(self, **kwargs)
         ClickHandler.__init__(self)
-        
+
     def setWidget(self, widget):
         """ Add child widget
         """

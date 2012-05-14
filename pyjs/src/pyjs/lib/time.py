@@ -69,13 +69,13 @@ class struct_time(object):
         return self.__str__()
 
     def __getitem__(self, idx):
-        return [self.tm_year, self.tm_mon, self.tm_mday, 
-                self.tm_hour, self.tm_min, self.tm_sec, 
+        return [self.tm_year, self.tm_mon, self.tm_mday,
+                self.tm_hour, self.tm_min, self.tm_sec,
                 self.tm_wday, self.tm_yday, self.tm_isdst][idx]
 
     def __getslice__(self, lower, upper):
-        return [self.tm_year, self.tm_mon, self.tm_mday, 
-                self.tm_hour, self.tm_min, self.tm_sec, 
+        return [self.tm_year, self.tm_mon, self.tm_mday,
+                self.tm_hour, self.tm_min, self.tm_sec,
                 self.tm_wday, self.tm_yday, self.tm_isdst][lower:upper]
 
 def gmtime(t=None):

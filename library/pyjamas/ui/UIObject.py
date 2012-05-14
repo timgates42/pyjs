@@ -166,7 +166,7 @@ class UIObject(Applier):
 
     def addStyleDependentName(self, styleSuffix):
         """Adds a secondary or dependent style name to this element.
-           For example if the primary stylename is gwt-TextBox, 
+           For example if the primary stylename is gwt-TextBox,
            self.addStyleDependentName("readonly") will return
            gwt-TextBox-readonly.
         """
@@ -176,7 +176,7 @@ class UIObject(Applier):
         """Remove a style from the element associated with this UIObject.  This is
         a CSS class name."""
         self.setStyleName(self.element, style, False)
-    
+
     def removeStyleDependentName(self, styleSuffix):
         """Remove a dependent style name by specifying the style name's suffix.
         """

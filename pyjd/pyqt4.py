@@ -63,7 +63,7 @@ class _RowElementProxy:
 
 class _ElementBase(object):
 
-    
+
     @property
     def nodeType(self):
         return self._js("nodeType")
@@ -71,35 +71,35 @@ class _ElementBase(object):
     @property
     def innerHTML(self):
         return self.getAttribute("html")
-    
+
     @property
     def length(self):
         return self.getAttribute("length")
-    
+
     @property
     def type(self):
         return self.getAttribute("type")
-    
+
     @property
     def offsetParent(self):
         return int(self.getAttribute("offsetParent") or "0")
 
-    
+
     @property
     def offsetTop(self):
         return int(self.getAttribute("offsetTop") or "0")
 
-    
+
     @property
     def offsetLeft(self):
         return int(self.getAttribute("offsetLeft") or "0")
-    
+
 
     @property
     def scrollTop(self):
         return int(self.getAttribute("scrollTop") or "0")
 
-    
+
     @property
     def firstChild(self):
         return int(self.getAttribute("firstChild") or None)
@@ -112,7 +112,7 @@ class _ElementBase(object):
     @property
     def rows(self):
         return _RowElementProxy(self)
-    
+
 
     def setInnerText(self, text):
         self.setInnerHTML(html_quote(text))
@@ -129,29 +129,29 @@ class _ElementBase(object):
         element.appendInside(child._element)
 
 
-        
+
     def getParent(self):
         return _ElementProxy(self._element.parent())
-    
-    
+
+
     def _js(self, cmd):
         return self._element.evaluateJavaScript("this.%s" % cmd)
-        
-    
+
+
     def cloneNode(self, arg):
         return _ElementProxy(self._element.clone())
 
     def blur(self):
         self._js("blur()");
-    
+
 
     def focus(self):
         self._js("focus()");
 
 
 class _NewElement(_ElementBase):
-    
-    
+
+
     def __init__(self, tag_name, **attrs):
         self._tag_name = tag_name.lower()
         self._inner_html = ""
@@ -167,16 +167,16 @@ class _NewElement(_ElementBase):
         if name.lower() == "style":
             print "Warning: style should be set with setStyleAttribute and not with setAttribute"
         self._attrs[name.lower()] = value
-        
+
 
     def setStyleAttribute(self, name, value):
         self._styles[name.lower()] = value
-        
-    
+
+
     def setInnerHTML(self, html):
         self._inner_html = html
 
-        
+
     def setInnerText(self, text):
         self._inner_html = html_quote(text)
 
@@ -203,11 +203,11 @@ class _ElementProxy(_ElementBase):
     def __init__(self, element):
         self._element = element
 
-        
+
     def __hash__(self):
         return hash(self._element)
 
-        
+
     def __repr__(self):
         return "<%s>" % unicode(self._element.tagName())
 
@@ -218,7 +218,7 @@ class _ElementProxy(_ElementBase):
             return _ElementProxy(value)
         return unicode(value)
 
-        
+
     def setAttribute(self, name, value):
         if name == "className":
             name = "class"
@@ -281,7 +281,7 @@ def JS(code):
     print "js: %r" % code
     global app
     print app.getDomDocument().evaluateJavaScript(code)
-    
+
 
 
 
@@ -353,18 +353,18 @@ def run():
     print "-"*60
     print _current_web_frame().toHtml()
 
-    
-    
-    
+
+
+
 class Listener(QObject):
-    
+
     def __init__(self, element, event, callback):
         QObject.__init__(self)
         self._element = element
         self._event = event
         self._callback = callback
 
-    
+
     @pyqtSignature("QVariant", result="bool")
     def execute(self, event_data):
         class _Event(unicode):
@@ -379,5 +379,5 @@ class Listener(QObject):
             return True
         return result
 
-        
+
 

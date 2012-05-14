@@ -49,8 +49,8 @@ if not hasattr(sys, 'frozen'):
         GetModule('msxml6.dll')
     except:
         pass
-    GetModule('mshtml.tlb') 
-    #GetModule('progdlg.tlb') 
+    GetModule('mshtml.tlb')
+    #GetModule('progdlg.tlb')
 
 from comtypes.gen import SHDocVw
 from comtypes.gen import MSHTML
@@ -70,7 +70,7 @@ except:
 atl = windll.atl                  # If this fails, you need atl.dll
 
 # do this after gen stuff, above
-import mshtmlevents 
+import mshtmlevents
 
 SID_SShellBrowser = GUID("{000214E2-0000-0000-C000-000000000046}")
 
@@ -100,7 +100,7 @@ class IOleInPlaceActiveObject(IOleWindow):
         COMMETHOD([], HRESULT, 'TranslateAccelerator',
                   ( ['in'], POINTER(MSG), 'pMsg' ))
         ]
-    
+
 
 # http://www.mail-archive.com/comtypes-users@lists.sourceforge.net/msg00439.html
 class IServiceProvider(IUnknown):
@@ -155,7 +155,7 @@ class EventSink(object):
             # in order to get at the URI.
             self.workaround_ignore_first_doc_complete = True
             return
-            
+
         self._loaded()
 
     def NewWindow2(self, this, *args):
@@ -242,7 +242,7 @@ class Browser(EventSink):
                               "AtlAxWin",
                               "about:blank",
                               WS_OVERLAPPEDWINDOW |
-                              WS_VISIBLE | 
+                              WS_VISIBLE |
                               WS_HSCROLL | WS_VSCROLL,
                               CW_USEDEFAULT,
                               CW_USEDEFAULT,
@@ -313,7 +313,7 @@ class Browser(EventSink):
         return self.getDomDocument().parentWindow
 
     def _addXMLHttpRequestEventListener(self, node, event_name, event_fn):
-        
+
         #print "_addXMLHttpRequestEventListener", event_name
 
         rcvr = mshtmlevents._DispEventReceiver()
@@ -330,7 +330,7 @@ class Browser(EventSink):
         return ifc
 
     def addEventListener(self, node, event_name, event_fn):
-        
+
         rcvr = mshtmlevents._DispEventReceiver()
         rcvr.dispmap = {0: event_fn}
 
@@ -350,7 +350,7 @@ class Browser(EventSink):
         return attrib_name
 
     def _addWindowEventListener(self, event_name, event_fn, wnd=None):
-        
+
         #print "_addWindowEventListener", event_name, event_fn
         #rcvr = mshtmlevents.GetDispEventReceiver(MSHTML.HTMLWindowEvents,
         #                   event_fn, "on%s" % event_name)
@@ -379,11 +379,11 @@ class Browser(EventSink):
         o = comtypes.client.CreateObject('MSXML2.XMLHTTP.3.0')
         #print "getXMLHttpRequest", o
         return Dispatch(o)
-        
+
     def getDOMParser(self):
         o = comtypes.client.CreateObject('MSXML.DOMDocument')
         return Dispatch(o)
-    
+
     def getUri(self):
         return self.application
 
@@ -410,7 +410,7 @@ class Browser(EventSink):
         if self.appdir:
             pth = os.path.abspath(self.appdir)
         sys.path.append(pth)
-        
+
     def on_unload_callback(self, *args):
         PostQuitMessage(0)
 
@@ -427,13 +427,13 @@ def MainWin(one_event):
     # Pump Messages
     msg = MSG()
     pMsg = pointer(msg)
-    
+
     while 1:
         res = GetMessage( pMsg, NULL, 0, 0)
         if res == -1:
             return 0
         if res == 0:
-            break 
+            break
 
         if timer_q:
             fn = timer_q.pop()
@@ -445,10 +445,10 @@ def MainWin(one_event):
         app = wv.pBrowser.Application
         ao = app.QueryInterface(IOleInPlaceActiveObject)
         if ao.TranslateAccelerator(pMsg):
-        #if not TranslateAccelerator( 
-        #                wv.hwnd,  #handle to receiving window 
-        #                NULL,    #handle to active accelerator table 
-        #                pMsg):     #message data 
+        #if not TranslateAccelerator(
+        #                wv.hwnd,  #handle to receiving window
+        #                NULL,    #handle to active accelerator table
+        #                pMsg):     #message data
             TranslateMessage(pMsg)
             DispatchMessage(pMsg)
 
@@ -456,7 +456,7 @@ def MainWin(one_event):
             break
 
     return msg.wParam
-    
+
 def add_timer_queue(fn):
     timer_q.append(fn)
     PostMessage(c_int(wv.hwnd), UINT(WM_USER_TIMER), WPARAM(0), LPARAM(0xffff))

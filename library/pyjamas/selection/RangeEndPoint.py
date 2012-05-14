@@ -72,7 +72,7 @@ class RangeEndPoint:
         """
         Create a range end point at the start or end of an element.  The actual
         selection will occur at the first/last text node within this element.
-        
+
         @param element: element to create this end point in
         @param start: whether to make the end point at the start or the end
         """
@@ -110,7 +110,7 @@ class RangeEndPoint:
     def getOffset(self):
         """
         Get the offset into the text node
-        
+
         @return offset in characters
         """
         return self.m_offset
@@ -119,11 +119,11 @@ class RangeEndPoint:
         """
         Get the string of the text node of this end point, either up to or
         starting from the offset:
-        
+
         "som|e text"
           True  : "e text"
           False : "som"
-        
+
         @param asStart whether to get the text as if this is a start point
         @return the text before or after the offset, or None if this is not set
         """
@@ -145,7 +145,7 @@ class RangeEndPoint:
         """
         Get the text node of this end point, note this can be None if there are
         no text anchors available or if this is just an element.
-        
+
         @return the text node
         """
         if isTextNode(self.m_node):
@@ -155,7 +155,7 @@ class RangeEndPoint:
     def getElement(self):
         """
         Get the Element of this end point, if this is not a textual end point.
-        
+
         @return the text node
         """
         if self.isTextNode():
@@ -172,7 +172,7 @@ class RangeEndPoint:
         text nodes where 0 characters are actually used.  If asStart is True then
         move a cursor at the end of a text node to the beginning of the next
         vice versa for False.
-        
+
         @param asStart Whether to do this as a start or end range point
         """
         text = self.getTextNode()
@@ -190,7 +190,7 @@ class RangeEndPoint:
         TODO IMPLEMENTED ONLY FOR CHARACTER
         Move the end point forwards or backwards by one unit of type, such as
         by a word.
-        
+
         @param forward True if moving forward
         @param topMostNode top node to not move past, or None
         @param limit an endpoint not to move past, or None
@@ -281,7 +281,7 @@ class RangeEndPoint:
         non-textual element, a non-text endpoint is returned.  If the point falls
         within a text-containing element but not within any of the actual child
         text, tries to find the closest text point.
-        
+
         @param element An element this point falls within
         @param absX Absolute X coordinate, ie from  Event.getClientX
         @param absY Absolute Y coordinate, ie from  Event.getClientY
@@ -526,7 +526,7 @@ class RangeEndPoint:
     def setOffset(self, offset):
         """
         Set the offset into the text node
-        
+
         @param offset offset in characters
         """
         self.m_offset = offset
@@ -535,7 +535,7 @@ class RangeEndPoint:
     def setTextNode(self, textNode, start=None):
         """
         Set this range end point at the start or end of a text node
-        
+
         @param text text node this end point starts/end in
         @param start whether to make the end point at the start or the end
         """
@@ -550,7 +550,7 @@ class RangeEndPoint:
         """
         Set the range end point at the start or end of an element.  The actual
         selection will occur at the first/last text node within this element.
-        
+
         @param element element to set this end point in
         @param start whether to make the end point at the start or the end
         """
@@ -563,7 +563,7 @@ class RangeEndPoint:
     def __str__(self):
         """
         Get the text of this with a "|" at the offset
-        
+
         @return a string representation of this endpoint
         """
         return self.getString(False) + "|" + self.getString(True)

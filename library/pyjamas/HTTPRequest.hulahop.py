@@ -27,7 +27,7 @@ class HTTPRequest(object):
         postData = None
         if not hasattr(handler, 'onCompletion'):
             raise RuntimeError("Invalid call to asyncGet: handler is not a valid request handler")
-        return XULrunnerHackCallback(self, 'GET', user, pwd, url, postData, 
+        return XULrunnerHackCallback(self, 'GET', user, pwd, url, postData,
                                      handler, returnxml, content_type, headers)
 
     def asyncPost(self, url, postData, handler, returnxml=False,
@@ -37,7 +37,7 @@ class HTTPRequest(object):
         arguments, and it takes some extra parameters"""
         if not hasattr(handler, 'onCompletion'):
             raise RuntimeError("Invalid call to asyncPost: handler is not a valid request handler")
-        return XULrunnerHackCallback(self, 'POST', user, pwd, url, postData, 
+        return XULrunnerHackCallback(self, 'POST', user, pwd, url, postData,
                                      handler, returnxml, content_type, headers)
 
     def asyncDelete(self, url, handler, returnxml=False,
@@ -48,7 +48,7 @@ class HTTPRequest(object):
         postData = None
         if not hasattr(handler, 'onCompletion'):
             raise RuntimeError("Invalid call to asyncDelete: handler is not a valid request handler")
-        return XULrunnerHackCallback(self, 'DELETE', user, pwd, url, postData, 
+        return XULrunnerHackCallback(self, 'DELETE', user, pwd, url, postData,
                                      handler, returnxml, content_type, headers)
 
     def asyncPut(self, url, postData, handler, returnxml=False,
@@ -58,6 +58,6 @@ class HTTPRequest(object):
         arguments, and it takes some extra parameters"""
         if not hasattr(handler, 'onCompletion'):
             raise RuntimeError("Invalid call to asyncPut: handler is not a valid request handler")
-        return XULrunnerHackCallback(self, 'PUT', user, pwd, url, postData, 
+        return XULrunnerHackCallback(self, 'PUT', user, pwd, url, postData,
                                      handler, returnxml, content_type, headers)
 

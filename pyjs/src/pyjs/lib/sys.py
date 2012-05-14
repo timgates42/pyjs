@@ -157,7 +157,7 @@ stderr = None
 def sys_init():
     global stdout
     stdout = _StdStream()
-    
+
     global stderr
     stderr = _StdStream()
 

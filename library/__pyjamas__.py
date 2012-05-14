@@ -42,10 +42,10 @@ def get_main_frame():
     return main_frame
 
 def doc():
-    return main_frame.getDomDocument() 
+    return main_frame.getDomDocument()
 
 def wnd():
-    return main_frame.getDomWindow() 
+    return main_frame.getDomWindow()
 
 def JS(code):
     """ try to avoid using this function, it will only give you grief

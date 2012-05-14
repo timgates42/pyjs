@@ -20,13 +20,13 @@ A list of the Python objects that should be documented. Objects can be specified
 --docformat NAME
      The markup language that should be used by default to process modules' docstrings. This is only used for modules that do not define the special __docformat__ variable; it is recommended that you explicitly specify __docformat__ in all your modules.
 --graph GRAPHTYPE
-     
+
 Include graphs of type GRAPHTYPE in the generated output. Graphs are generated using the Graphviz dot executable. If this executable is not on the path, then use --dotpath to specify its location. This option may be repeated to include multiple graph types in the output. To include all graphs, use --graph all. The available graph types are:
 classtree: displays each class's base classes and subclasses;
 callgraph: displays the callers and callees of each function or method. These graphs are based on profiling information, which must be specified using the --pstate option.
 umlclass: displays each class's base classes and subclasses, using UML style. Methods and attributes are listed in the classes where they are defined. If type information is available about attributes (via the @type field), then those types are displayed as separate classes, and the attributes are displayed as associations.
 --inheritance STYLE
-     
+
 The format that should be used to display inherited methods, variables, and properties. Currently, three styles are supported. To see an example of each style, click on it:
 grouped: Inherited objects are gathered into groups, based on which class they are inherited from.
 listed: Inherited objects are listed in a short list at the end of the summary table.
@@ -45,9 +45,9 @@ print paths
 command = ['epydoc', "-v",  "-v",
            '--parse-only',
            '--html',
-           '-o', 'api', 
-           '--name', 'Pyjamas', 
-           '--url', 'http://pyjs.org', 
+           '-o', 'api',
+           '--name', 'Pyjamas',
+           '--url', 'http://pyjs.org',
            ]+list(paths)
 
 def quote_shell(x):

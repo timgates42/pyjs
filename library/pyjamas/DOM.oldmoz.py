@@ -113,7 +113,7 @@ def releaseCapture(elem):
     JS("""
     if ((@{{sCaptureElem}} != null) && @{{compare}}(@{{elem}}, @{{sCaptureElem}}))
         @{{sCaptureElem}} = null;
-    
+
 	if (!@{{elem}}.isSameNode) {
 		if (@{{elem}} == $wnd.__captureElem) {
 			$wnd.__captureElem = null;

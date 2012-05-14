@@ -10,7 +10,7 @@ class Canvas(Widget):
         var el = this.canvas;
         if (typeof $wnd.G_vmlCanvasManager != "undefined") {
             var parent = el.parent;
-            
+
             el = $wnd.G_vmlCanvasManager.fixElement_(el);
             el.getContext = function () {
                 if (this.context_) {
@@ -18,7 +18,7 @@ class Canvas(Widget):
                 }
                 return this.context_ = new $wnd.CanvasRenderingContext2D(el);
             };
-        
+
             el.attachEvent("onpropertychange", function (e) {
                 // we need to watch changes to width and height
                 switch (e.propertyName) {
@@ -30,7 +30,7 @@ class Canvas(Widget):
             });
 
             // if style.height is set
-            
+
             var attrs = el.attributes;
             if (attrs.width && attrs.width.specified) {
                 // TODO: use runtimeStyle and coordsize
@@ -44,11 +44,11 @@ class Canvas(Widget):
             }
         }
         var ctx = el.getContext("2d");
-        
+
         ctx._createPattern = ctx.createPattern;
         ctx.createPattern = function(img, rep) {
             // Next line breaks things for Chrome
-            //if (!(img instanceof Image)) img = img.getElement(); 
+            //if (!(img instanceof Image)) img = img.getElement();
             return this._createPattern(img, rep);
             }
 
@@ -61,7 +61,7 @@ class Canvas(Widget):
             else if (a.length==5) return this._drawImage(a[0], a[1], a[2], a[3], a[4]);
             return this._drawImage(a[0], a[1], a[2]);
             }
-        
+
         this.context = ctx;
         """)
 

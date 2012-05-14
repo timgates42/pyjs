@@ -15,7 +15,7 @@ class HTTPRequest(object):
         if user and pwd and not "Authorization" in headers:
             import base64
             headers["Authorization"] = 'Basic %s' % (base64.b64encode('%s:%s' % (user, pwd)))
-        
+
         if content_type is not None:
             headers["Content-Type"] = content_type
         if not "Content-Type" in headers:

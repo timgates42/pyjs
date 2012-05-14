@@ -163,7 +163,7 @@ class StringTest(UnitTest):
 
     def testStrList(self):
         self.assertEqual(str([5,6]), "[5, 6]")
-        
+
     def testStrFloat(self):
         f1 = 1.5
         self.assertEqual(str(f1), "1.5")

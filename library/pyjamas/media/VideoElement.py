@@ -17,57 +17,57 @@
 @TagName(VideoElement.TAG)
 class VideoElement(MediaElement):
     TAG = "video"
-    
+
     def create(self):
         return Document.get().createElement(TAG).cast()
-    
-    
+
+
     def __init__(self):
         pass
-    
-    
+
+
     def getWidth(self):
         JS("""
         return this.width;
         """)
-    
-    
+
+
     def setWidth(self, width):
         JS("""
         this.width = width;
         """)
-    
-    
+
+
     def getHeight(self):
         JS("""
         return this.height;
         """)
-    
-    
+
+
     def setHeight(self, height):
         JS("""
         this.height = height;
         """)
-    
-    
+
+
     def getVideoWidth(self):
         JS("""
         return this.videoWidth;
         """)
-    
-    
+
+
     def getVideoHeight(self):
         JS("""
         return this.videoHeight;
         """)
-    
-    
+
+
     def getPoster(self):
         JS("""
         return this.poster;
         """)
-    
-    
+
+
     def setPoster(self, url):
         JS("""
         this.poster = url;

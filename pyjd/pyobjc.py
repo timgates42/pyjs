@@ -19,7 +19,7 @@ class MyObject(NibClassBuilder.AutoBaseClass):
         url = NSURL.URLWithString_(urlString)
         request = NSURLRequest.requestWithURL_(url)
         self.webview.mainFrame().loadRequest_(request)
-        
+
 if __name__ == "__main__":
     AppHelper.runEventLoop()
 

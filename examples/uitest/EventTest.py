@@ -27,6 +27,6 @@ class EventTest(UnitTest):
         self.write_test_output('removeButton')
 
     def lastTestChecks(self):
-    
+
         self.assertTrue(self.buttonClickTestOccurred, 'testButtonClick failed')
 

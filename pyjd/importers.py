@@ -134,7 +134,7 @@ def _fs_import(dir, modname, fqname):
         code = Module(mod, filename)
         code.compile()
         code = code.getCode()
-        
+
         if platform_file and t_p_py:
             out_t_py = t_p_py
             out_filename = platform_file

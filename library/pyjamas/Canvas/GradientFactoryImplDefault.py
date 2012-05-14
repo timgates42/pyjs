@@ -25,6 +25,6 @@
 """
 def createLinearGradient(x0, y0, x1, y1, c):
         return LinearGradientImplDefault(x0,y0,x1,y1,c)
-    
+
 def createRadialGradient(x0, y0, r0, x1, y1, r1, c):
         return RadialGradientImplDefault(x0,y0,r0,x1,y1,r1,c)
