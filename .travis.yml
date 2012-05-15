@@ -14,6 +14,7 @@ python:
 # Upload pyv8-build.tar.gz to https://github.com/pyjs/pyjs/downloads
 
 install:
+  - sudo apt-get install libboost-python-dev
   - wget https://github.com/downloads/pyjs/pyjs/pyv8-build.2012-05-15.tar.gz
   - tar xzvf pyv8-build.2012-05-15.tar.gz
 
