@@ -2,8 +2,10 @@ language: python
 python:
   - 2.7
 install:
-  - wget https://github.com/downloads/pyjs/pyjs/pyv8-build.tar.gz
-  - tar xzvf pyv8-build.tar.gz
+  - svn checkout http://pyv8.googlecode.com/svn/trunk/ pyv8-read-only
+  - cd pyv8-read-only
+  - python setup.py build
+  - ls build
 env:
   - PYTHONPATH=$HOME/builds/pyjs/pyjs/pyv8-build/
 script:
