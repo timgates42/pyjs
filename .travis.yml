@@ -2,6 +2,7 @@ language: python
 python:
   - 2.7
 install:
+  - sudo apt-get install libboost-python-dev
   - svn checkout http://pyv8.googlecode.com/svn/trunk/ pyv8-read-only
   - cd pyv8-read-only
   - python setup.py build
