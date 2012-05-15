@@ -31,6 +31,8 @@ try:
 except:
     from md5 import md5
 
+from pprint import pprint, pformat
+
 AVAILABLE_PLATFORMS = ('IE6', 'Opera', 'OldMoz', 'Safari', 'Mozilla')
 
 if pyjs.pyjspth is None:
@@ -405,8 +407,7 @@ def serve(path):
 
 def build(top_module, pyjs, options, app_platforms,
           runtime_options, args):
-    print "Building :", top_module
-    print "PYJSPATH :", '\n    '.join(['['] + [p for p in pyjs.path]) + '\n]'
+    print "Building: %s\nPYJSPATH: %s" % (top_module, pformat(pyjs.path))
 
     translator_arguments= translator.get_compile_options(options)
 
