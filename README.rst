@@ -1,3 +1,6 @@
+.. image:: https://secure.travis-ci.org/pyjs/pyjs.png?branch=master
+   :target: http://travis-ci.org/pyjs/pyjs
+
 Pyjs
 =======
 
