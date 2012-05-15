@@ -20,13 +20,12 @@ install:
 
 script:
   - export PYTHONPATH=`pwd`/pyv8-build
-  - echo $PYTHONPATH
-  - ls $PYTHONPATH
-  - pwd
   - cd examples/libtest/
   - python ../../pyv8/pyv8run.py LibTest
 
 notifications:
-  irc: "irc.freenode.org#pyjs"
-  use_notice: true
-  skip_join: true
+  irc:
+    channels:
+      - "irc.freenode.org#pyjs"
+    use_notice: true
+    skip_join: true
