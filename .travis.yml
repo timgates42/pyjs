@@ -1,15 +1,16 @@
 language: python
 python:
   - 2.7
+env:
+  - PYTHONPATH=$HOME/builds/pyjs/pyjs/pyv8-read-only/build/lib.linux-i686-2.7
 install:
   - sudo apt-get install libboost-python-dev
-  - svn checkout http://pyv8.googlecode.com/svn/trunk/ pyv8-read-only
+  - svn co -q http://pyv8.googlecode.com/svn/trunk/ pyv8-read-only
   - cd pyv8-read-only
-  - python setup.py build
-  - ls build
-env:
-  - PYTHONPATH=$HOME/builds/pyjs/pyjs/pyv8-build/
+  - svn co -q http://v8.googlecode.com/svn/trunk/ build/v8
+  - DEBUG=false python setup.py build
 script:
+  - pwd
   - cd examples/libtest/
   - python ../../pyv8/pyv8run.py LibTest
 notifications:
