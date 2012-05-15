@@ -18,7 +18,7 @@ install:
   - tar xzvf pyv8-build.tar.gz
 
 script:
-  - export PYTHONPATH=`cwd`/pyv8-build
+  - export PYTHONPATH=`pwd`/pyv8-build
   - echo $PYTHONPATH
   - ls $PYTHONPATH
   - pwd
