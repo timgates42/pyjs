@@ -141,7 +141,7 @@ def add_compile_options(parser):
 
     parser.add_option("--no-line-tracking",
                       dest = "line_tracking",
-                      action="store_true",
+                      action="store_false",
                       help = "Do not generate code for source tracking on every line",
                      )
     parser.add_option("--line-tracking",
