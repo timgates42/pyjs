@@ -1,257 +1,383 @@
-debug_options={}
-speed_options={}
-pythonic_options={}
+from optparse import SUPPRESS_HELP, NO_DEFAULT
 
-all_compile_options = dict(
-    debug = False,
-    print_statements=True,
-    function_argument_checking=False,
-    attribute_checking=False,
-    getattr_support=True,
-    bound_methods=True,
-    descriptors=False,
-    source_tracking=False,
-    line_tracking=False,
-    store_source=False,
-    inline_code=False,
-    operator_funcs=True,
-    number_classes=False,
-    create_locals=False,
-    stupid_mode=False,
-    translator='proto',
+#-----------------------------------------------------------( group namespace )
+
+class Groups(object):
+
+    DEFAULT    = ('default', True)
+    NODEFAULT  = ('default', False)
+    DEBUG      = ('debug',   True)
+    NODEBUG    = ('debug',   False)
+    SPEED      = ('speed',   True)
+    NOSPEED    = ('speed',   False)
+    STRICT     = ('strict',  True)
+    NOSTRICT   = ('strict',  False)
+
+#----------------------------------------------------------( option container )
+
+class Mappings(object):
+
+    class Defaults(object):
+
+        def __init__(self, mappings, *grps):
+            self._mappings = mappings
+            self._groups = set(grps) & set(mappings._groups_cache.keys())
+
+        def __iter__(self):
+            for grp in self._groups:
+                for dest in self._mappings._groups_cache[grp]:
+                    yield dest
+
+        def __getitem__(self, key, exc=KeyError):
+            for grp in self._groups:
+                if key in self._mappings._groups_cache[grp]:
+                    return grp[1]
+            raise exc(key)
+
+        __getattr__ = lambda k: self.__getitem__(k, exc=AttributeError)
+
+        def iteritems(self):
+            for o in self:
+                yield (o, self[o])
+
+        def items(self):
+            return list(self.iteritems())
+
+        def keys(self):
+            return list(self)
+
+        def get(self, key, *args):
+            try:
+                return self[key]
+            except KeyError:
+                if args:
+                    return args[0]
+                raise
+
+    _opt_sig = ('names', 'aliases', 'groups', 'spec')
+    _grp_sig = ('names', 'aliases', 'spec')
+    _opt_sig_hash = set(_opt_sig)
+    _grp_sig_hash = set(_grp_sig)
+
+    def __init__(self):
+        groups = {}
+        for n, g in Groups.__dict__.iteritems():
+            if not n.startswith('_'):
+                groups[g] = set()
+        super(self.__class__, self).__setattr__('_cache', dict())
+        super(self.__class__, self).__setattr__('_groups', dict())
+        super(self.__class__, self).__setattr__('_groups_cache', groups)
+
+    def __iter__(self):
+        for k in self._cache:
+            yield k
+
+    def __contains__(self, key):
+        return key in self._cache
+
+    def __getitem__(self, key, exc=KeyError):
+        try:
+            return self._cache[key]
+        except KeyError:
+            raise exc(key)
+
+    def __setitem__(self, key, kwds):
+        if not key:
+            raise TypeError('Malformed name.')
+        n = 'opt'
+        if key.isupper():
+            n = 'grp'
+        new = '_%s' % n
+        sig = '_%s_sig' % n
+        sig_hash = '_%s_sig_hash' % n
+        try:
+            None in kwds
+        except TypeError:
+            raise TypeError('Must pass list or dict.')
+        else:
+            try:
+                kwds[None]
+            except TypeError:
+                kwds= dict(zip(getattr(self, sig), kwds))
+            except KeyError:
+                pass
+        if set(kwds.keys()) != getattr(self, sig_hash):
+            raise TypeError('Malformed signature.')
+        getattr(self, new)(key, **kwds)
+
+    __getattr__ = lambda k: self.__getitem__(k, exc=AttributeError)
+    __setattr__ = __setitem__
+
+    def _opt(self, dest, **kwds):
+        if not dest or set(kwds.keys()) != self._opt_sig_hash:
+            raise TypeError('Malformed option signature.')
+        spec = kwds['spec']
+        spec['dest'] = dest
+        if len(set(['action', 'callback', 'choices']) & set(spec.keys())) == 0:
+            spec['action'] = 'store_true'
+        spec['help'] = '%s [%s]' % (spec['help'], spec['default'])
+        for g in kwds['groups']:
+            self._groups_cache[g].add(dest)
+        if spec['default'] is True:
+            self._groups_cache[Groups.DEFAULT].add(dest)
+        elif spec['default'] is False:
+            self._groups_cache[Groups.NODEFAULT].add(dest)
+        no = kwds['nonames'] = set()
+        if spec['default'] in (True, False):
+            for n in kwds['names'] + kwds['aliases']:
+                for repl in [('--with', '--without', 1),
+                             ('--enable', '--disable', 1),
+                             ('--', '--no-', 1)]:
+                    rev = n.replace(*repl)
+                    if rev != n:
+                        no.add(rev)
+        kwds['nonames'] = list(no)
+        self._cache[dest] = kwds
+
+    def _grp(self, dest, **kwds):
+        if not dest or set(kwds.keys()) != self._grp_sig_hash:
+            raise TypeError('Malformed group signature.')
+        dest = getattr(Groups, dest)
+        spec = kwds['spec']
+        spec['action'] = 'callback'
+        spec['callback'] = self._grp_set
+        spec['callback_kwargs'] = {'_group': dest}
+        no = kwds['nonames'] = set()
+        for n in kwds['names'] + kwds['aliases']:
+            for repl in [('--with', '--without', 1),
+                         ('--enable', '--disable', 1),
+                         ('--', '--no-', 1)]:
+                rev = n.replace(*repl)
+                if rev != n:
+                    no.add(rev)
+        kwds['nonames'] = list(no)
+        self._groups[dest] = kwds
+
+    def _grp_set(self, inst, opt, value, parser, *args, **kwds):
+        no = False
+        name, flag = kwds['_group']
+        props = self._groups[name, flag]
+        if opt in props['nonames']:
+            no = True
+        for f in (flag, not flag):
+            flag_o = f
+            if no:
+                flag_o = not flag_o
+            for dest in self._groups_cache[name, f]:
+                setattr(parser.values, dest, flag_o)
+
+    def iteritems(self):
+        for o in self:
+            yield (o, self[o])
+
+    def items(self):
+        return list(self.iteritems())
+
+    def keys(self):
+        return list(self)
+
+    def get(self, key, *args):
+        try:
+            return self[key]
+        except KeyError:
+            if args:
+                return args[0]
+            raise
+
+    def defaults(self, *grps):
+        return self.Defaults(self, *grps)
+
+    def bind(self, parser):
+        opts = self._cache
+        grps = self._groups
+        ordered = []
+        props = []
+        for k, v in grps.iteritems():
+            props.append(v)
+        for k, v in opts.iteritems():
+            ordered.append((v['names'][0], k))
+        for k, v in sorted(ordered):
+            props.append(opts[v])
+        for p in props:
+            variants = [(p['names'], {})]
+            if p['aliases']:
+                variants.append((p['aliases'], {'help': SUPPRESS_HELP}))
+            if p['nonames']:
+                vspec = {'help': SUPPRESS_HELP}
+                if p['spec']['action'] == 'store_true':
+                    vspec.update({'default': NO_DEFAULT,
+                                  'action': 'store_false'})
+                variants.append((p['nonames'], vspec))
+            for args, updates in variants:
+                spec = {}
+                spec.update(p['spec'])
+                spec.update(updates)
+                parser.add_option(*args,
+                                  **spec)
+
+    def link(self, options):
+        ret = {}
+        for k in self:
+            ret[k] = getattr(options, k)
+        return ret
+
+#----------------------------------------------------------( mapping instance )
+
+all_compile_options = Mappings()
+
+#---------------------------------------------------------( group definitions )
+
+all_compile_options.DEFAULT = (
+    ['--enable-default', '-D'],
+    [],
+    dict(help='(group) enable DEFAULT options')
+)
+all_compile_options.DEBUG = (
+    ['--enable-debug', '-d'],
+    ['--debug'],
+    dict(help='(group) enable DEBUG options')
+)
+all_compile_options.SPEED = (
+    ['--enable-speed', '-O'],
+    [],
+    dict(help='(group) enable SPEED options, degrade STRICT')
+)
+all_compile_options.STRICT = (
+    ['--enable-strict', '-S'],
+    ['--strict'],
+    dict(help='(group) enable STRICT options, degrade SPEED')
 )
 
-def add_compile_options(parser):
+#--------------------------------------------------------( option definitions )
 
-    global debug_options, speed_options, pythonic_options
+all_compile_options.debug = (
+    ['--enable-wrap-calls'],
+    ['--debug-wrap'],
+    [Groups.DEBUG, Groups.NOSPEED],
+    dict(help='enable call site debugging',
+         default=False)
+)
+all_compile_options.print_statements = (
+    ['--enable-print-statements'],
+    ['--print-statements'],
+    [Groups.NOSPEED],
+    dict(help='enable printing to console',
+         default=True)
+)
+all_compile_options.function_argument_checking = (
+    ['--enable-check-args'],
+    ['--function-argument-checking'],
+    [Groups.STRICT, Groups.NOSPEED],
+    dict(help='enable function argument validation',
+         default=False)
+)
+all_compile_options.attribute_checking = (
+    ['--enable-check-attrs'],
+    ['--attribute-checking'],
+    [Groups.STRICT, Groups.NOSPEED],
+    dict(help='enable attribute validation',
+         default=False)
+)
+all_compile_options.getattr_support = (
+    ['--enable-accessor-proto'],
+    ['--getattr-support'],
+    [Groups.STRICT, Groups.NOSPEED],
+    dict(help='enable __get/set/delattr__() accessor protocol',
+         default=True)
+)
+all_compile_options.bound_methods = (
+    ['--enable-bound-methods'],
+    ['--bound-methods'],
+    [Groups.STRICT, Groups.NOSPEED],
+    dict(help='enable proper method binding',
+         default=True)
+)
+all_compile_options.descriptors = (
+    ['--enable-descriptor-proto'],
+    ['--descriptors'],
+    [Groups.STRICT, Groups.NOSPEED],
+    dict(help='enable __get/set/del__ descriptor protocol',
+         default=False)
+)
+all_compile_options.source_tracking = (
+    ['--enable-track-sources'],
+    ['--source-tracking'],
+    [Groups.DEBUG, Groups.STRICT, Groups.NOSPEED],
+    dict(help='enable tracking original sources',
+         default=False)
+)
+all_compile_options.line_tracking = (
+    ['--enable-track-lines'],
+    ['--line-tracking'],
+    [Groups.DEBUG, Groups.STRICT],
+    dict(help='enable tracking original sources: every line',
+         default=False)
+)
+all_compile_options.store_source = (
+    ['--enable-store-sources'],
+    ['--store-source'],
+    [Groups.DEBUG, Groups.STRICT],
+    dict(help='enable storing original sources in javascript',
+         default=False)
+)
+all_compile_options.inline_code = (
+    ['--enable-inline-code'],
+    ['--inline-code'],
+    [Groups.SPEED],
+    dict(help='enable bool/eq/len inlining',
+         default=False)
+)
+all_compile_options.operator_funcs = (
+    ['--enable-operator-funcs'],
+    ['--operator-funcs'],
+    [Groups.STRICT, Groups.NOSPEED],
+    dict(help='enable operators-as-functions',
+         default=True)
+)
+all_compile_options.number_classes = (
+    ['--enable-number-classes'],
+    ['--number-classes'],
+    [Groups.STRICT, Groups.NOSPEED],
+    dict(help='enable float/int/long as classes',
+         default=False)
+)
+all_compile_options.create_locals = (
+    ['--enable-locals'],
+    ['--create-locals'],
+    [],
+    dict(help='enable locals()',
+         default=False)
+)
+all_compile_options.stupid_mode = (
+    ['--enable-stupid-mode'],
+    ['--stupid-mode'],
+    [],
+    dict(help='enable minimalism by relying on javascript-isms',
+         default=False)
+)
+all_compile_options.translator = (
+    ['--use-translator'],
+    ['--translator'],
+    [],
+    dict(help='override translator',
+         action='store',
+         choices=['proto', 'dict'],
+         default='proto')
+)
+#all_compile_options.internal_ast = (
+#    ['--enable-internal-ast'],
+#    ['--internal-ast'],
+#    [],
+#    dict(help='enable internal AST parsing',
+#         default=True)
+#)
 
-#    parser.add_option("--internal-ast",
-#                      dest="internal_ast",
-#                      action="store_true",
-#                      help="Use internal AST parser instead of standard python one"
-#                     )
-#    parser.add_option("--no-internal-ast",
-#                      dest="internal_ast",
-#                      action="store_false",
-#                      help="Use standard python parser instead of internal AST one"
-#                     )
+#----------------------------------------------------------( public interface )
 
-    parser.add_option("--debug-wrap",
-                      dest="debug",
-                      action="store_true",
-                      help="Wrap function calls with javascript debug code",
-                     )
-    parser.add_option("--no-debug-wrap",
-                      dest="debug",
-                      action="store_false",
-                     )
-    debug_options['debug'] = True
-    speed_options['debug'] = False
+get_compile_options = all_compile_options.link
+add_compile_options = all_compile_options.bind
 
-    parser.add_option("--no-print-statements",
-                      dest="print_statements",
-                      action="store_false",
-                      help="Remove all print statements",
-                     )
-    parser.add_option("--print-statements",
-                      dest="print_statements",
-                      action="store_true",
-                      help="Generate code for print statements",
-                     )
-    speed_options['print_statements'] = False
 
-    parser.add_option("--no-function-argument-checking",
-                      dest = "function_argument_checking",
-                      action="store_false",
-                      help = "Do not generate code for function argument checking",
-                     )
-    parser.add_option("--function-argument-checking",
-                      dest = "function_argument_checking",
-                      action="store_true",
-                      help = "Generate code for function argument checking",
-                     )
-    speed_options['function_argument_checking'] = False
-    pythonic_options['function_argument_checking'] = True
-
-    parser.add_option("--no-attribute-checking",
-                      dest = "attribute_checking",
-                      action="store_false",
-                      help = "Do not generate code for attribute checking",
-                     )
-    parser.add_option("--attribute-checking",
-                      dest = "attribute_checking",
-                      action="store_true",
-                      help = "Generate code for attribute checking",
-                     )
-    speed_options['attribute_checking'] = False
-    pythonic_options['attribute_checking'] = True
-
-    parser.add_option("--no-getattr-support",
-                      dest = "getattr_support",
-                      action="store_false",
-                      help = "Do not support __getattr__()",
-                     )
-    parser.add_option("--getattr-support",
-                      dest = "getattr_support",
-                      action="store_true",
-                      help = "Support __getattr__()",
-                     )
-    speed_options['getattr_support'] = False
-    pythonic_options['getattr_support'] = True
-
-    parser.add_option("--no-bound-methods",
-                      dest = "bound_methods",
-                      action="store_false",
-                      help = "Do not generate code for binding methods",
-                     )
-    parser.add_option("--bound-methods",
-                      dest = "bound_methods",
-                      action="store_true",
-                      help = "Generate code for binding methods",
-                     )
-    speed_options['bound_methods'] = False
-    pythonic_options['bound_methods'] = True
-
-    parser.add_option("--no-descriptors",
-                      dest = "descriptors",
-                      action="store_false",
-                      help = "Do not generate code for descriptor calling",
-                     )
-    parser.add_option("--descriptors",
-                      dest = "descriptors",
-                      action="store_true",
-                      help = "Generate code for descriptor calling",
-                     )
-    speed_options['descriptors'] = False
-    pythonic_options['descriptors'] = True
-
-    parser.add_option("--no-source-tracking",
-                      dest = "source_tracking",
-                      action="store_false",
-                      help = "Do not generate code for source tracking",
-                     )
-    parser.add_option("--source-tracking",
-                      dest = "source_tracking",
-                      action="store_true",
-                      help = "Generate code for source tracking",
-                     )
-    debug_options['source_tracking'] = True
-    speed_options['source_tracking'] = False
-    pythonic_options['source_tracking'] = True
-
-    parser.add_option("--no-line-tracking",
-                      dest = "line_tracking",
-                      action="store_false",
-                      help = "Do not generate code for source tracking on every line",
-                     )
-    parser.add_option("--line-tracking",
-                      dest = "line_tracking",
-                      action="store_true",
-                      help = "Generate code for source tracking on every line",
-                     )
-    debug_options['line_tracking'] = True
-    pythonic_options['line_tracking'] = True
-
-    parser.add_option("--no-store-source",
-                      dest = "store_source",
-                      action="store_false",
-                      help = "Do not store python code in javascript",
-                     )
-    parser.add_option("--store-source",
-                      dest = "store_source",
-                      action="store_true",
-                      help = "Store python code in javascript",
-                     )
-    debug_options['store_source'] = True
-    pythonic_options['store_source'] = True
-
-    parser.add_option("--no-inline-code",
-                      dest = "inline_code",
-                      action="store_false",
-                      help = "Do not generate inline code for bool/eq/len",
-                     )
-    parser.add_option("--inline-code",
-                      dest = "inline_code",
-                      action="store_true",
-                      help = "Generate inline code for bool/eq/len",
-                     )
-    speed_options['inline_code'] = True
-
-    parser.add_option("--no-operator-funcs",
-                      dest = "operator_funcs",
-                      action="store_false",
-                      help = "Do not generate function calls for operators",
-                     )
-    parser.add_option("--operator-funcs",
-                      dest = "operator_funcs",
-                      action="store_true",
-                      help = "Generate function calls for operators",
-                     )
-    speed_options['operator_funcs'] = False
-    pythonic_options['operator_funcs'] = True
-
-    parser.add_option("--no-number-classes",
-                      dest = "number_classes",
-                      action="store_false",
-                      help = "Do not use number classes",
-                     )
-    parser.add_option("--number-classes",
-                      dest = "number_classes",
-                      action="store_true",
-                      help = "Use classes for numbers (float, int, long)",
-                     )
-    speed_options['number_classes'] = False
-    pythonic_options['number_classes'] = True
-
-    parser.add_option("--create-locals",
-                      dest = "create_locals",
-                      action="store_true",
-                      help = "Create locals",
-                     )
-
-    parser.add_option("--no-stupid-mode",
-                      dest = "stupid_mode",
-                      action="store_false",
-                      help = "Doesn't rely on javascriptisms",
-                     )
-    parser.add_option("--stupid-mode",
-                      dest = "stupid_mode",
-                      action="store_true",
-                      help = "Creates minimalist code, relying on javascript",
-                     )
-
-    parser.add_option("--translator",
-                      dest = "translator",
-                      default="proto",
-                      help = "Specify the translator: proto|dict",
-                     )
-
-    def set_multiple(option, opt_str, value, parser, **kwargs):
-        for k in kwargs.keys():
-            setattr(parser.values, k, kwargs[k])
-
-    parser.add_option("-d", "--debug",
-                      action="callback",
-                      callback = set_multiple,
-                      callback_kwargs = debug_options,
-                      help="Set all debugging options",
-                     )
-    parser.add_option("-O",
-                      action="callback",
-                      callback = set_multiple,
-                      callback_kwargs = speed_options,
-                      help="Set all options that maximize speed",
-                     )
-    parser.add_option("--strict",
-                      action="callback",
-                      callback = set_multiple,
-                      callback_kwargs = pythonic_options,
-                      help="Set all options that mimic standard python behavior",
-                     )
-    parser.set_defaults(**all_compile_options)
-
-def get_compile_options(opts):
-    d = {}
-    for opt in all_compile_options:
-        d[opt] = getattr(opts, opt)
-    return d
+debug_options = all_compile_options.defaults(Groups.DEBUG, Groups.NODEBUG)
+speed_options = all_compile_options.defaults(Groups.SPEED, Groups.NOSPEED)
+pythonic_options = all_compile_options.defaults(Groups.STRICT, Groups.NOSTRICT)
