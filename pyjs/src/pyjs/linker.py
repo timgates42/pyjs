@@ -4,6 +4,7 @@ import util
 import logging
 import pyjs
 import subprocess
+from optparse import SUPPRESS_HELP, NO_DEFAULT
 from pyjs import translator
 if translator.name == 'proto':
     builtin_module = 'pyjslib'
@@ -443,13 +444,13 @@ class BaseLinker(object):
 
 
 def add_linker_options(parser):
-    parser.add_option("-o", "--output", dest="output", default='output',
+    parser.add_option("-o", "--output", dest="output", default='output', metavar='PATH',
                       help="directory to which the app should be written")
-
-    parser.add_option("-j", "--include-js", dest="js_includes",
-                      action="append", default=[],
-                      help="javascripts to load into the same frame as the rest of the script")
-    parser.add_option("-I", "--library_dir", dest="library_dirs",
+    parser.add_option("-I", "--search-path", dest="library_dirs", metavar='PATH',
                       default=[],
                       action="append", help="additional paths appended to PYJSPATH")
-
+    parser.add_option("--library_dir", dest="library_dirs", default=NO_DEFAULT,
+                      action="append", help=SUPPRESS_HELP, )
+    parser.add_option("-j", "--include-js", dest="js_includes", metavar='FILE',
+                      action="append", default=[],
+                      help="javascripts to load into the same frame as the rest of the script")

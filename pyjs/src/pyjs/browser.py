@@ -22,7 +22,7 @@ else:
 
 from pyjs import util
 from cStringIO import StringIO
-from optparse import OptionParser
+from optparse import OptionParser, OptionGroup
 import pyjs
 import re
 import traceback
@@ -444,20 +444,27 @@ def build(top_module, pyjs, options, app_platforms,
 
 
 def build_script():
-    usage = """
-    usage: %prog [options] <application module name>
+    usage = """usage: %prog [OPTIONS] MODULE
 
-    This is the command line builder for the pyjamas project, which can
-    be used to build Ajax applications from Python.
-    For more information, see the website at http://pyjs.org/
-    """
+Command line interface to the pyjs.org suite: Python Application -> AJAX Application.
+MODULE is the translation entry point; it MUST be importable by the toolchain.
+For more information, see the website at http://pyjs.org/"""
     global app_platforms
     parser = OptionParser(usage = usage)
-    # TODO: compile options
-    translator.add_compile_options(parser)
-    linker.add_linker_options(parser)
+    parser_group_trans = OptionGroup(parser, 'Translator Options',
+                                    'Configures the semantics/bourdaries/expectations of '
+                                    'the generated application code. --enable-OPTIONs '
+                                    'are mirrored by --disable-OPTIONs. --enable-GROUPs '
+                                    'and --disable-GROUPs modify several OPTIONs at once.')
+    parser_group_linker = OptionGroup(parser, 'Linker Options',
+                                      'Configures the includes/paths/destination of the application '
+                                      'code, static resources, and supporting project files.')
+    translator.add_compile_options(parser_group_trans)
+    linker.add_linker_options(parser_group_linker)
+    parser.add_option_group(parser_group_trans)
+    parser.add_option_group(parser_group_linker)
     parser.add_option("-P", "--platforms", dest="platforms",
-        help="platforms to build for, comma-separated")
+                      help="comma-separated list of target platforms")
     parser.add_option("-l", "--log-level", dest="log_level",
                       default=None,
                       type="int",
