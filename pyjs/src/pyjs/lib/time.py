@@ -246,7 +246,8 @@ var _DATE_FORMAT_REGXES = {
     'd': new RegExp('^[0-9]{2}'),
     'm': new RegExp('^[0-9]{2}'),
     'H': new RegExp('^[0-9]{2}'),
-    'M': new RegExp('^[0-9]{2}')
+    'M': new RegExp('^[0-9]{2}'),
+    'S': new RegExp('^[0-9]{2}')
 }
 
 /*
@@ -321,6 +322,12 @@ function strptime(datestring, format) {
             return null;
         }
         date.setMinutes(parsed.M);
+    }
+    if (typeof parsed.S != "undefined") {
+        if (parsed.S < 0 || parsed.S > 59) {
+            return null;
+        }
+        date.setSeconds(parsed.S);
     }
     // new Date().setFullYear(2010,01,31) returns March 3
     if (typeof parsed.m != "undefined" && date.getMonth() != parsed.m-1) {
