@@ -241,12 +241,12 @@ def ctime(t=None):
 # See http://www.logilab.org/blogentry/6731
 JS("""
 var _DATE_FORMAT_REGXES = {
-    'Y': new RegExp('^-?[0-9]+'),
-    'y': new RegExp('^-?[0-9]{1,2}'),
-    'd': new RegExp('^[0-9]{1,2}'),
-    'm': new RegExp('^[0-9]{1,2}'),
-    'H': new RegExp('^[0-9]{1,2}'),
-    'M': new RegExp('^[0-9]{1,2}')
+    'Y': new RegExp('^-?[0-9]{4}'),
+    'y': new RegExp('^-?[0-9]{2}'),
+    'd': new RegExp('^[0-9]{2}'),
+    'm': new RegExp('^[0-9]{2}'),
+    'H': new RegExp('^[0-9]{2}'),
+    'M': new RegExp('^[0-9]{2}')
 }
 
 /*
@@ -321,6 +321,11 @@ function strptime(datestring, format) {
             return null;
         }
         date.setMinutes(parsed.M);
+    }
+    // new Date().setFullYear(2010,01,31) returns March 3
+    if (typeof parsed.m != "undefined" && date.getMonth() != parsed.m-1) {
+        // date.getMonth() and parsed.m don't correspond
+        return null;
     }
     return date;
 };
