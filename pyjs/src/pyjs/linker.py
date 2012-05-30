@@ -454,3 +454,12 @@ def add_linker_options(parser):
     parser.add_option("-j", "--include-js", dest="js_includes", metavar='FILE',
                       action="append", default=[],
                       help="javascripts to load into the same frame as the rest of the script")
+    parser.add_option("--dynamic-link", dest="multi_file", default=False,
+                      action="store_true",
+                      help="shared modules linked BEFORE runtime, late-bind (ASYNC <script>)")
+    parser.add_option("-m", "--multi-file", dest="multi_file", default=NO_DEFAULT,
+                      action="store_true", help=SUPPRESS_HELP)
+    parser.add_option("--dynamic-load", dest="unlinked_modules", action="append", metavar='REGEX',
+                      help="shared modules linked DURING runtime, on-demand; regex (SYNC XHR)")
+    parser.add_option("--dynamic", dest="unlinked_modules", default=NO_DEFAULT,
+                      action="store_true", help=SUPPRESS_HELP)

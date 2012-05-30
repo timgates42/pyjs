@@ -444,7 +444,7 @@ def build(top_module, pyjs, options, app_platforms,
 
 
 def build_script():
-    usage = """usage: %prog [OPTIONS] MODULE
+    usage = """usage: %prog [options] MODULE
 
 Command line interface to the pyjs.org suite: Python Application -> AJAX Application.
 MODULE is the translation entry point; it MUST be importable by the toolchain.
@@ -457,8 +457,8 @@ For more information, see the website at http://pyjs.org/"""
                                     'are mirrored by --disable-OPTIONs. --enable-GROUPs '
                                     'and --disable-GROUPs modify several OPTIONs at once.')
     parser_group_linker = OptionGroup(parser, 'Linker Options',
-                                      'Configures the includes/paths/destination of the application '
-                                      'code, static resources, and supporting project files.')
+                                      'Configures the includes/paths/destination of application '
+                                      'code, static resources, and project support files.')
     translator.add_compile_options(parser_group_trans)
     linker.add_linker_options(parser_group_linker)
     parser.add_option_group(parser_group_trans)
@@ -469,12 +469,6 @@ For more information, see the website at http://pyjs.org/"""
                       default=None,
                       type="int",
                       help="The python log level as an int")
-    parser.add_option(
-        "-m", "--multi-file", dest="multi_file",
-        default=False,
-        action="store_true",
-        help="Include each module via a script-tag instead of writing"
-              " the whole code into the main cache.html file")
 
     parser.add_option("-A", "--auto-build", dest="auto_build",
                       default=False,
@@ -509,13 +503,6 @@ For more information, see the website at http://pyjs.org/"""
         "--public-folder",
         dest="public_folder",
         help="Specifiy the public folder. (Contents copied into the output dir, see -o)."
-        )
-
-    parser.add_option(
-        "--dynamic",
-        dest="unlinked_modules",
-        action="append",
-        help="regular expression for modules that will not be linked and thus loaded dynamically"
         )
 
     parser.add_option(
