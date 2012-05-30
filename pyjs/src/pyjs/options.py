@@ -115,7 +115,6 @@ class Mappings(object):
         spec['dest'] = dest
         if len(set(['action', 'callback', 'choices']) & set(spec.keys())) == 0:
             spec['action'] = 'store_true'
-        spec['help'] = '%s [%s]' % (spec['help'], spec['default'])
         for g in kwds['groups']:
             self._groups_cache[g].add(dest)
         if spec['default'] is True:
@@ -254,112 +253,112 @@ all_compile_options.debug = (
     ['--enable-wrap-calls'],
     ['--debug-wrap'],
     [Groups.DEBUG, Groups.NOSPEED],
-    dict(help='enable call site debugging',
+    dict(help='enable call site debugging [%default]',
          default=False)
 )
 all_compile_options.print_statements = (
     ['--enable-print-statements'],
     ['--print-statements'],
     [Groups.NOSPEED],
-    dict(help='enable printing to console',
+    dict(help='enable printing to console [%default]',
          default=True)
 )
 all_compile_options.function_argument_checking = (
     ['--enable-check-args'],
     ['--function-argument-checking'],
     [Groups.STRICT, Groups.NOSPEED],
-    dict(help='enable function argument validation',
+    dict(help='enable function argument validation [%default]',
          default=False)
 )
 all_compile_options.attribute_checking = (
     ['--enable-check-attrs'],
     ['--attribute-checking'],
     [Groups.STRICT, Groups.NOSPEED],
-    dict(help='enable attribute validation',
+    dict(help='enable attribute validation [%default]',
          default=False)
 )
 all_compile_options.getattr_support = (
     ['--enable-accessor-proto'],
     ['--getattr-support'],
     [Groups.STRICT, Groups.NOSPEED],
-    dict(help='enable __get/set/delattr__() accessor protocol',
+    dict(help='enable __get/set/delattr__() accessor protocol [%default]',
          default=True)
 )
 all_compile_options.bound_methods = (
     ['--enable-bound-methods'],
     ['--bound-methods'],
     [Groups.STRICT, Groups.NOSPEED],
-    dict(help='enable proper method binding',
+    dict(help='enable proper method binding [%default]',
          default=True)
 )
 all_compile_options.descriptors = (
     ['--enable-descriptor-proto'],
     ['--descriptors'],
     [Groups.STRICT, Groups.NOSPEED],
-    dict(help='enable __get/set/del__ descriptor protocol',
+    dict(help='enable __get/set/del__ descriptor protocol [%default]',
          default=False)
 )
 all_compile_options.source_tracking = (
     ['--enable-track-sources'],
     ['--source-tracking'],
     [Groups.DEBUG, Groups.STRICT, Groups.NOSPEED],
-    dict(help='enable tracking original sources',
+    dict(help='enable tracking original sources [%default]',
          default=False)
 )
 all_compile_options.line_tracking = (
     ['--enable-track-lines'],
     ['--line-tracking'],
     [Groups.DEBUG, Groups.STRICT],
-    dict(help='enable tracking original sources: every line',
+    dict(help='enable tracking original sources: every line [%default]',
          default=False)
 )
 all_compile_options.store_source = (
     ['--enable-store-sources'],
     ['--store-source'],
     [Groups.DEBUG, Groups.STRICT],
-    dict(help='enable storing original sources in javascript',
+    dict(help='enable storing original sources in javascript [%default]',
          default=False)
 )
 all_compile_options.inline_code = (
     ['--enable-inline-code'],
     ['--inline-code'],
     [Groups.SPEED],
-    dict(help='enable bool/eq/len inlining',
+    dict(help='enable bool/eq/len inlining [%default]',
          default=False)
 )
 all_compile_options.operator_funcs = (
     ['--enable-operator-funcs'],
     ['--operator-funcs'],
     [Groups.STRICT, Groups.NOSPEED],
-    dict(help='enable operators-as-functions',
+    dict(help='enable operators-as-functions [%default]',
          default=True)
 )
 all_compile_options.number_classes = (
     ['--enable-number-classes'],
     ['--number-classes'],
     [Groups.STRICT, Groups.NOSPEED],
-    dict(help='enable float/int/long as classes',
+    dict(help='enable float/int/long as classes [%default]',
          default=False)
 )
 all_compile_options.create_locals = (
     ['--enable-locals'],
     ['--create-locals'],
     [],
-    dict(help='enable locals()',
+    dict(help='enable locals() [%default]',
          default=False)
 )
 all_compile_options.stupid_mode = (
     ['--enable-stupid-mode'],
     ['--stupid-mode'],
     [],
-    dict(help='enable minimalism by relying on javascript-isms',
+    dict(help='enable minimalism by relying on javascript-isms [%default]',
          default=False)
 )
 all_compile_options.translator = (
     ['--use-translator'],
     ['--translator'],
     [],
-    dict(help='override translator',
+    dict(help='override translator [%default]',
          action='store',
          choices=['proto', 'dict'],
          default='proto')
