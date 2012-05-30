@@ -4,6 +4,7 @@ from optparse import SUPPRESS_HELP, NO_DEFAULT
 
 class Groups(object):
 
+    ALL        = ('all',     True)
     DEFAULT    = ('default', True)
     NODEFAULT  = ('default', False)
     DEBUG      = ('debug',   True)
@@ -115,6 +116,7 @@ class Mappings(object):
         spec['dest'] = dest
         if len(set(['action', 'callback', 'choices']) & set(spec.keys())) == 0:
             spec['action'] = 'store_true'
+        self._groups_cache[Groups.ALL].add(dest)
         for g in kwds['groups']:
             self._groups_cache[g].add(dest)
         if spec['default'] is True:
@@ -222,26 +224,26 @@ class Mappings(object):
 
 #----------------------------------------------------------( mapping instance )
 
-all_compile_options = Mappings()
+mappings = Mappings()
 
 #---------------------------------------------------------( group definitions )
 
-all_compile_options.DEFAULT = (
+mappings.DEFAULT = (
     ['--enable-default', '-D'],
     [],
     dict(help='(group) enable DEFAULT options')
 )
-all_compile_options.DEBUG = (
+mappings.DEBUG = (
     ['--enable-debug', '-d'],
     ['--debug'],
     dict(help='(group) enable DEBUG options')
 )
-all_compile_options.SPEED = (
+mappings.SPEED = (
     ['--enable-speed', '-O'],
     [],
     dict(help='(group) enable SPEED options, degrade STRICT')
 )
-all_compile_options.STRICT = (
+mappings.STRICT = (
     ['--enable-strict', '-S'],
     ['--strict'],
     dict(help='(group) enable STRICT options, degrade SPEED')
@@ -249,112 +251,112 @@ all_compile_options.STRICT = (
 
 #--------------------------------------------------------( option definitions )
 
-all_compile_options.debug = (
+mappings.debug = (
     ['--enable-wrap-calls'],
     ['--debug-wrap'],
     [Groups.DEBUG, Groups.NOSPEED],
     dict(help='enable call site debugging [%default]',
          default=False)
 )
-all_compile_options.print_statements = (
+mappings.print_statements = (
     ['--enable-print-statements'],
     ['--print-statements'],
     [Groups.NOSPEED],
     dict(help='enable printing to console [%default]',
          default=True)
 )
-all_compile_options.function_argument_checking = (
+mappings.function_argument_checking = (
     ['--enable-check-args'],
     ['--function-argument-checking'],
     [Groups.STRICT, Groups.NOSPEED],
     dict(help='enable function argument validation [%default]',
          default=False)
 )
-all_compile_options.attribute_checking = (
+mappings.attribute_checking = (
     ['--enable-check-attrs'],
     ['--attribute-checking'],
     [Groups.STRICT, Groups.NOSPEED],
     dict(help='enable attribute validation [%default]',
          default=False)
 )
-all_compile_options.getattr_support = (
+mappings.getattr_support = (
     ['--enable-accessor-proto'],
     ['--getattr-support'],
     [Groups.STRICT, Groups.NOSPEED],
     dict(help='enable __get/set/delattr__() accessor protocol [%default]',
          default=True)
 )
-all_compile_options.bound_methods = (
+mappings.bound_methods = (
     ['--enable-bound-methods'],
     ['--bound-methods'],
     [Groups.STRICT, Groups.NOSPEED],
     dict(help='enable proper method binding [%default]',
          default=True)
 )
-all_compile_options.descriptors = (
+mappings.descriptors = (
     ['--enable-descriptor-proto'],
     ['--descriptors'],
     [Groups.STRICT, Groups.NOSPEED],
     dict(help='enable __get/set/del__ descriptor protocol [%default]',
          default=False)
 )
-all_compile_options.source_tracking = (
+mappings.source_tracking = (
     ['--enable-track-sources'],
     ['--source-tracking'],
     [Groups.DEBUG, Groups.STRICT, Groups.NOSPEED],
     dict(help='enable tracking original sources [%default]',
          default=False)
 )
-all_compile_options.line_tracking = (
+mappings.line_tracking = (
     ['--enable-track-lines'],
     ['--line-tracking'],
     [Groups.DEBUG, Groups.STRICT],
     dict(help='enable tracking original sources: every line [%default]',
          default=False)
 )
-all_compile_options.store_source = (
+mappings.store_source = (
     ['--enable-store-sources'],
     ['--store-source'],
     [Groups.DEBUG, Groups.STRICT],
     dict(help='enable storing original sources in javascript [%default]',
          default=False)
 )
-all_compile_options.inline_code = (
+mappings.inline_code = (
     ['--enable-inline-code'],
     ['--inline-code'],
     [Groups.SPEED],
     dict(help='enable bool/eq/len inlining [%default]',
          default=False)
 )
-all_compile_options.operator_funcs = (
+mappings.operator_funcs = (
     ['--enable-operator-funcs'],
     ['--operator-funcs'],
     [Groups.STRICT, Groups.NOSPEED],
     dict(help='enable operators-as-functions [%default]',
          default=True)
 )
-all_compile_options.number_classes = (
+mappings.number_classes = (
     ['--enable-number-classes'],
     ['--number-classes'],
     [Groups.STRICT, Groups.NOSPEED],
     dict(help='enable float/int/long as classes [%default]',
          default=False)
 )
-all_compile_options.create_locals = (
+mappings.create_locals = (
     ['--enable-locals'],
     ['--create-locals'],
     [],
     dict(help='enable locals() [%default]',
          default=False)
 )
-all_compile_options.stupid_mode = (
+mappings.stupid_mode = (
     ['--enable-stupid-mode'],
     ['--stupid-mode'],
     [],
     dict(help='enable minimalism by relying on javascript-isms [%default]',
          default=False)
 )
-all_compile_options.translator = (
+mappings.translator = (
     ['--use-translator'],
     ['--translator'],
     [],
@@ -363,7 +365,7 @@ all_compile_options.translator = (
          choices=['proto', 'dict'],
          default='proto')
 )
-#all_compile_options.internal_ast = (
+#mappings.internal_ast = (
 #    ['--enable-internal-ast'],
 #    ['--internal-ast'],
 #    [],
@@ -373,10 +375,10 @@ all_compile_options.translator = (
 
 #----------------------------------------------------------( public interface )
 
-get_compile_options = all_compile_options.link
-add_compile_options = all_compile_options.bind
+get_compile_options = mappings.link
+add_compile_options = mappings.bind
 
-
-debug_options = all_compile_options.defaults(Groups.DEBUG, Groups.NODEBUG)
-speed_options = all_compile_options.defaults(Groups.SPEED, Groups.NOSPEED)
-pythonic_options = all_compile_options.defaults(Groups.STRICT, Groups.NOSTRICT)
+debug_options = mappings.defaults(Groups.DEBUG, Groups.NODEBUG)
+speed_options = mappings.defaults(Groups.SPEED, Groups.NOSPEED)
+pythonic_options = mappings.defaults(Groups.STRICT, Groups.NOSTRICT)
+all_compile_options = mappings.defaults(Groups.ALL)
