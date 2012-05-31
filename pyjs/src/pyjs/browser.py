@@ -452,12 +452,11 @@ For more information, see the website at http://pyjs.org/"""
     global app_platforms
     parser = OptionParser(usage = usage)
     parser_group_trans = OptionGroup(parser, 'Translator Options',
-                                    'Configures the semantics/bourdaries/expectations of '
-                                    'the generated application code. --enable-OPTIONs '
-                                    'are mirrored by --disable-OPTIONs. --enable-GROUPs '
-                                    'and --disable-GROUPs modify several OPTIONs at once.')
+                                    'Configures the semantics/expectations of '
+                                    'application code. Each --enable-* implies '
+                                    '--disable-*. Groups modify several options at once.')
     parser_group_linker = OptionGroup(parser, 'Linker Options',
-                                      'Configures the includes/paths/destination of application '
+                                      'Configures the includes/destination of application '
                                       'code, static resources, and project support files.')
     translator.add_compile_options(parser_group_trans)
     linker.add_linker_options(parser_group_linker)
