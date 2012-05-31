@@ -4,7 +4,7 @@ import util
 import logging
 import pyjs
 import subprocess
-from optparse import SUPPRESS_HELP, NO_DEFAULT
+from pyjs import options
 from pyjs import translator
 if translator.name == 'proto':
     builtin_module = 'pyjslib'
@@ -443,23 +443,52 @@ class BaseLinker(object):
         pass
 
 
-def add_linker_options(parser):
-    parser.add_option("-o", "--output", dest="output", default='output', metavar='PATH',
-                      help="directory to which the app should be written")
-    parser.add_option("-I", "--search-path", dest="library_dirs", metavar='PATH',
-                      default=[],
-                      action="append", help="additional paths appended to PYJSPATH")
-    parser.add_option("--library_dir", dest="library_dirs", default=NO_DEFAULT,
-                      action="append", help=SUPPRESS_HELP, )
-    parser.add_option("-j", "--include-js", dest="js_includes", metavar='FILE',
-                      action="append", default=[],
-                      help="javascripts to load into the same frame as the rest of the script")
-    parser.add_option("--dynamic-link", dest="multi_file", default=False,
-                      action="store_true",
-                      help="shared modules linked BEFORE runtime, late-bind (ASYNC <script>)")
-    parser.add_option("-m", "--multi-file", dest="multi_file", default=NO_DEFAULT,
-                      action="store_true", help=SUPPRESS_HELP)
-    parser.add_option("--dynamic-load", dest="unlinked_modules", action="append", metavar='REGEX',
-                      help="shared modules linked DURING runtime, on-demand; regex (SYNC XHR)")
-    parser.add_option("--dynamic", dest="unlinked_modules", default=NO_DEFAULT,
-                      action="store_true", help=SUPPRESS_HELP)
+mappings = options.Mappings()
+get_linker_options = mappings.link
+add_linker_options = mappings.bind
+
+
+mappings.output = (
+    ['-o', '--output'],
+    [],
+    [],
+    dict(help='assemble/finalize project in this directory [%default]',
+         metavar='PATH',
+         default='output')
+)
+mappings.library_dirs = (
+    ['-I', '--search-path'],
+    ['--library_dir'],
+    [],
+    dict(help='additional paths appended to PYJSPATH [%default]',
+         type='string',
+         action='append',
+         metavar='PATH',
+         default=[])
+)
+mappings.js_includes = (
+    ['-j', '--include-js'],
+    [],
+    [],
+    dict(help='<script>s loaded in the application frame [%default]',
+         type='string',
+         metavar='FILE',
+         default=[])
+)
+mappings.multi_file = (
+    ['--dynamic-link'],
+    ['-m', '--multi-file'],
+    [],
+    dict(help='shared modules linked BEFORE runtime (late-bind) ASYNC <script> [%default]',
+         default=False)
+)
+mappings.unlinked_modules = (
+    ['--dynamic-load'],
+    ['--dynamic'],
+    [],
+    dict(help='shared modules linked DURING runtime (on-demand), regex; SYNC XHR [%default]',
+         type='string',
+         action='append',
+         metavar='REGEX',
+         default=[])
+)
