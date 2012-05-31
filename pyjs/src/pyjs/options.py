@@ -60,6 +60,9 @@ class Mappings(object):
     _opt_sig_hash = set(_opt_sig)
     _grp_sig_hash = set(_grp_sig)
 
+    _opt_types = {str: 'string', int: 'int', long: 'long',
+                  float: 'float', complex: 'complex'}
+
     def __init__(self):
         groups = {}
         for n, g in Groups.__dict__.iteritems():
@@ -114,8 +117,21 @@ class Mappings(object):
             raise TypeError('Malformed option signature.')
         spec = kwds['spec']
         spec['dest'] = dest
-        if len(set(['action', 'callback', 'choices']) & set(spec.keys())) == 0:
-            spec['action'] = 'store_true'
+        if 'choices' in spec:
+            spec['type'] = 'choice'
+        if 'type' not in spec:
+            dtype = type(spec.get('default', ''))
+            spec['type'] = self._opt_types.get(dtype, None)
+        if 'action' not in spec:
+            if spec.get('default', None) in (True, False):
+                spec['action'] = 'store_true'
+            else:
+                spec['action'] = 'store'
+        if spec['action'] != 'callback':
+            spec['callback'] = self._opt_set
+            spec['callback_kwargs'] = {'_action': spec['action'],
+                                       '_cache': kwds}
+            spec['action'] = 'callback'
         self._groups_cache[Groups.ALL].add(dest)
         for g in kwds['groups']:
             self._groups_cache[g].add(dest)
@@ -124,7 +140,7 @@ class Mappings(object):
         elif spec['default'] is False:
             self._groups_cache[Groups.NODEFAULT].add(dest)
         no = kwds['nonames'] = set()
-        if spec['default'] in (True, False):
+        if spec.get('default', None) in (True, False):
             for n in kwds['names'] + kwds['aliases']:
                 for repl in [('--with', '--without', 1),
                              ('--enable', '--disable', 1),
@@ -153,6 +169,15 @@ class Mappings(object):
                     no.add(rev)
         kwds['nonames'] = list(no)
         self._groups[dest] = kwds
+
+    def _opt_set(self, inst, opt, value, parser, *args, **kwds):
+        action, cache = kwds['_action'], kwds['_cache']
+        if opt in cache['aliases']:
+            #XXX add noaliases
+            print 'WARNING: `%s` is DEPRECATED! replacement: `%s`' % (opt, '` or `'.join(cache['names']))
+        if action == 'store_true' and opt in cache['nonames']:
+            action = 'store_false'
+        inst.take_action(action, inst.dest, opt, value, parser.values, parser)
 
     def _grp_set(self, inst, opt, value, parser, *args, **kwds):
         no = False
@@ -204,11 +229,7 @@ class Mappings(object):
             if p['aliases']:
                 variants.append((p['aliases'], {'help': SUPPRESS_HELP}))
             if p['nonames']:
-                vspec = {'help': SUPPRESS_HELP}
-                if p['spec']['action'] == 'store_true':
-                    vspec.update({'default': NO_DEFAULT,
-                                  'action': 'store_false'})
-                variants.append((p['nonames'], vspec))
+                variants.append((p['nonames'], {'help': SUPPRESS_HELP}))
             for args, updates in variants:
                 spec = {}
                 spec.update(p['spec'])
@@ -361,7 +382,6 @@ mappings.translator = (
     ['--translator'],
     [],
     dict(help='override translator [%default]',
-         action='store',
          choices=['proto', 'dict'],
          default='proto')
 )
