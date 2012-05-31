@@ -117,13 +117,19 @@ class Mappings(object):
             raise TypeError('Malformed option signature.')
         spec = kwds['spec']
         spec['dest'] = dest
+        default = spec.setdefault('default', NO_DEFAULT)
+        dt = type(default)
+        if self._opt_types.get(dt, None) is not None or dt is bool:
+            spec['help'] += ' [%default]'
         if 'choices' in spec:
             spec['type'] = 'choice'
         if 'type' not in spec:
-            dtype = type(spec.get('default', ''))
-            spec['type'] = self._opt_types.get(dtype, None)
+            dt2 = dt
+            if default is NO_DEFAULT:
+                dt2 = str
+            spec['type'] = self._opt_types.get(dt2, None)
         if 'action' not in spec:
-            if spec.get('default', None) in (True, False):
+            if default in (True, False):
                 spec['action'] = 'store_true'
             else:
                 spec['action'] = 'store'
@@ -135,12 +141,12 @@ class Mappings(object):
         self._groups_cache[Groups.ALL].add(dest)
         for g in kwds['groups']:
             self._groups_cache[g].add(dest)
-        if spec['default'] is True:
+        if default is True:
             self._groups_cache[Groups.DEFAULT].add(dest)
-        elif spec['default'] is False:
+        elif default is False:
             self._groups_cache[Groups.NODEFAULT].add(dest)
         no = kwds['nonames'] = set()
-        if spec.get('default', None) in (True, False):
+        if default in (True, False):
             for n in kwds['names'] + kwds['aliases']:
                 for repl in [('--with', '--without', 1),
                              ('--enable', '--disable', 1),
@@ -276,112 +282,112 @@ mappings.debug = (
     ['--enable-wrap-calls'],
     ['--debug-wrap'],
     [Groups.DEBUG, Groups.NOSPEED],
-    dict(help='enable call site debugging [%default]',
+    dict(help='enable call site debugging',
          default=False)
 )
 mappings.print_statements = (
     ['--enable-print-statements'],
     ['--print-statements'],
     [Groups.NOSPEED],
-    dict(help='enable printing to console [%default]',
+    dict(help='enable printing to console',
          default=True)
 )
 mappings.function_argument_checking = (
     ['--enable-check-args'],
     ['--function-argument-checking'],
     [Groups.STRICT, Groups.NOSPEED],
-    dict(help='enable function argument validation [%default]',
+    dict(help='enable function argument validation',
          default=False)
 )
 mappings.attribute_checking = (
     ['--enable-check-attrs'],
     ['--attribute-checking'],
     [Groups.STRICT, Groups.NOSPEED],
-    dict(help='enable attribute validation [%default]',
+    dict(help='enable attribute validation',
          default=False)
 )
 mappings.getattr_support = (
     ['--enable-accessor-proto'],
     ['--getattr-support'],
     [Groups.STRICT, Groups.NOSPEED],
-    dict(help='enable __get/set/delattr__() accessor protocol [%default]',
+    dict(help='enable __get/set/delattr__() accessor protocol',
          default=True)
 )
 mappings.bound_methods = (
     ['--enable-bound-methods'],
     ['--bound-methods'],
     [Groups.STRICT, Groups.NOSPEED],
-    dict(help='enable proper method binding [%default]',
+    dict(help='enable proper method binding',
          default=True)
 )
 mappings.descriptors = (
     ['--enable-descriptor-proto'],
     ['--descriptors'],
     [Groups.STRICT, Groups.NOSPEED],
-    dict(help='enable __get/set/del__ descriptor protocol [%default]',
+    dict(help='enable __get/set/del__ descriptor protocol',
          default=False)
 )
 mappings.source_tracking = (
     ['--enable-track-sources'],
     ['--source-tracking'],
     [Groups.DEBUG, Groups.STRICT, Groups.NOSPEED],
-    dict(help='enable tracking original sources [%default]',
+    dict(help='enable tracking original sources',
          default=False)
 )
 mappings.line_tracking = (
     ['--enable-track-lines'],
     ['--line-tracking'],
     [Groups.DEBUG, Groups.STRICT],
-    dict(help='enable tracking original sources: every line [%default]',
+    dict(help='enable tracking original sources: every line',
          default=False)
 )
 mappings.store_source = (
     ['--enable-store-sources'],
     ['--store-source'],
     [Groups.DEBUG, Groups.STRICT],
-    dict(help='enable storing original sources in javascript [%default]',
+    dict(help='enable storing original sources in javascript',
          default=False)
 )
 mappings.inline_code = (
     ['--enable-inline-code'],
     ['--inline-code'],
     [Groups.SPEED],
-    dict(help='enable bool/eq/len inlining [%default]',
+    dict(help='enable bool/eq/len inlining',
          default=False)
 )
 mappings.operator_funcs = (
     ['--enable-operator-funcs'],
     ['--operator-funcs'],
     [Groups.STRICT, Groups.NOSPEED],
-    dict(help='enable operators-as-functions [%default]',
+    dict(help='enable operators-as-functions',
          default=True)
 )
 mappings.number_classes = (
     ['--enable-number-classes'],
     ['--number-classes'],
     [Groups.STRICT, Groups.NOSPEED],
-    dict(help='enable float/int/long as classes [%default]',
+    dict(help='enable float/int/long as classes',
          default=False)
 )
 mappings.create_locals = (
     ['--enable-locals'],
     ['--create-locals'],
     [],
-    dict(help='enable locals() [%default]',
+    dict(help='enable locals()',
          default=False)
 )
 mappings.stupid_mode = (
     ['--enable-stupid-mode'],
     ['--stupid-mode'],
     [],
-    dict(help='enable minimalism by relying on javascript-isms [%default]',
+    dict(help='enable minimalism by relying on javascript-isms',
          default=False)
 )
 mappings.translator = (
     ['--use-translator'],
     ['--translator'],
     [],
-    dict(help='override translator [%default]',
+    dict(help='override translator',
          choices=['proto', 'dict'],
          default='proto')
 )

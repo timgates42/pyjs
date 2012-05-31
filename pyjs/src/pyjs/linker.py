@@ -452,7 +452,7 @@ mappings.output = (
     ['-o', '--output'],
     [],
     [],
-    dict(help='assemble/finalize project in this directory [%default]',
+    dict(help='assemble/finalize project in this directory',
          metavar='PATH',
          default='output')
 )
@@ -460,7 +460,7 @@ mappings.library_dirs = (
     ['-I', '--search-path'],
     ['--library_dir'],
     [],
-    dict(help='additional paths appended to PYJSPATH [%default]',
+    dict(help='additional paths appended to PYJSPATH',
          type='string',
          action='append',
          metavar='PATH',
@@ -470,7 +470,7 @@ mappings.js_includes = (
     ['-j', '--include-js'],
     [],
     [],
-    dict(help='<script>s loaded in the application frame [%default]',
+    dict(help='<script>s loaded in the application frame',
          type='string',
          metavar='FILE',
          default=[])
@@ -479,14 +479,14 @@ mappings.multi_file = (
     ['--dynamic-link'],
     ['-m', '--multi-file'],
     [],
-    dict(help='shared modules linked BEFORE runtime (late-bind) ASYNC <script> [%default]',
+    dict(help='shared modules linked BEFORE runtime (late-bind) ASYNC <script>',
          default=False)
 )
 mappings.unlinked_modules = (
     ['--dynamic-load'],
     ['--dynamic'],
     [],
-    dict(help='shared modules linked DURING runtime (on-demand), regex; SYNC XHR [%default]',
+    dict(help='shared modules linked DURING runtime (on-demand), regex; SYNC XHR',
          type='string',
          action='append',
          metavar='REGEX',
