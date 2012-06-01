@@ -467,8 +467,8 @@ mappings.library_dirs = (
          default=[])
 )
 mappings.js_includes = (
+    ['--static-link'],
     ['-j', '--include-js'],
-    [],
     [],
     dict(help='<script>s loaded in the application frame',
          type='string',

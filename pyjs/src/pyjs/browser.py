@@ -21,6 +21,7 @@ else:
     raise ValueError("unknown translator engine '%s'" % translator.name)
 
 from pyjs import util
+from pyjs import options
 from cStringIO import StringIO
 from optparse import OptionParser, OptionGroup
 import pyjs
@@ -450,96 +451,25 @@ Command line interface to the pyjs.org suite: Python Application -> AJAX Applica
 MODULE is the translation entry point; it MUST be importable by the toolchain.
 For more information, see the website at http://pyjs.org/"""
     global app_platforms
+
     parser = OptionParser(usage = usage)
-    parser_group_trans = OptionGroup(parser, 'Translator Options',
+    parser_group_builder = OptionGroup(parser, 'Builder',
+                                      'Configures the high-level properties of current '
+                                      'command and final project assembly.')
+    parser_group_trans = OptionGroup(parser, 'Translator',
                                     'Configures the semantics/expectations of '
                                     'application code. Each --enable-* implies '
                                     '--disable-*. Groups modify several options at once.')
-    parser_group_linker = OptionGroup(parser, 'Linker Options',
+    parser_group_linker = OptionGroup(parser, 'Linker',
                                       'Configures the includes/destination of application '
                                       'code, static resources, and project support files.')
+    add_builder_options(parser_group_builder)
     translator.add_compile_options(parser_group_trans)
     linker.add_linker_options(parser_group_linker)
+    parser.add_option_group(parser_group_builder)
     parser.add_option_group(parser_group_trans)
     parser.add_option_group(parser_group_linker)
-    parser.add_option("-P", "--platforms", dest="platforms",
-                      help="comma-separated list of target platforms")
-    parser.add_option("-l", "--log-level", dest="log_level",
-                      default=None,
-                      type="int",
-                      help="The python log level as an int")
 
-    parser.add_option("-A", "--auto-build", dest="auto_build",
-                      default=False,
-                      action="store_true",
-                      help="Runs continuous re-builds on file changes")
-
-    parser.add_option("-i", "--list-imports", dest="list_imports",
-                      default=False,
-                      action="store_true",
-                      help="List import dependencies (without compiling)")
-
-    parser.add_option(
-        "-c", "--cache-buster", action="store_true",
-        dest="cache_buster",
-        default=False,
-        help="Enable browser cache-busting (MD5 hash added to output filenames)",
-        )
-
-    parser.add_option(
-        "--apploader-file",
-        dest="apploader_file",
-        help="Specify the application html loader file."
-        )
-
-    parser.add_option(
-        "--bootstrap-file",
-        dest="bootstrap_file",
-        help="Specify the bootstrap code. (Used when application html file is generated)."
-        )
-
-    parser.add_option(
-        "--public-folder",
-        dest="public_folder",
-        help="Specifiy the public folder. (Contents copied into the output dir, see -o)."
-        )
-
-    parser.add_option(
-        "--no-compile-inplace", dest="compile_inplace",
-        action="store_false",
-        help="Store all js compiled files in output/lib"
-        )
-
-    parser.add_option(
-        "--no-keep-lib-files", dest="keep_lib_files",
-        action="store_false",
-        help="Deletes the js compiled files after linking"
-        )
-
-    parser.add_option(
-        "--compile-inplace", dest="compile_inplace",
-        default=True,
-        action="store_true",
-        help="Store js compiled files in the same place as the python source"
-        )
-
-    parser.add_option(
-        "--keep-lib-files", dest="keep_lib_files",
-        default=True,
-        action="store_true",
-        help="Keep the js compiled files"
-        )
-
-    parser.set_defaults(output="output",
-                        js_includes=[],
-                        js_static_includes=[],
-                        library_dirs=[],
-                        platforms=(','.join(AVAILABLE_PLATFORMS)),
-                        bootstrap_file="bootstrap.js",
-                        apploader_file=None,
-                        public_folder="public",
-                        unlinked_modules=[],
-                        )
     options, _args = parser.parse_args()
     args = []
     for a in _args:
@@ -621,3 +551,84 @@ For more information, see the website at http://pyjs.org/"""
         first_loop = False
         time.sleep(1)
 
+
+mappings = options.Mappings()
+add_builder_options = mappings.bind
+get_builder_options = mappings.link
+
+
+mappings.platforms = (
+    ['-P', '--platforms'],
+    [],
+    [],
+    dict(help='comma-separated list of target platforms',
+         default=(','.join(AVAILABLE_PLATFORMS)))
+)
+mappings.log_level = (
+    ['-v', '--verbosity'],
+    ['-l', '--log-level'],
+    [],
+    dict(help='numeric Python logging level',
+         type='int',
+         metavar='LEVEL')
+)
+mappings.auto_build = (
+    ['-A', '--enable-rebuilds'],
+    ['--auto-build'],
+    [],
+    dict(help='continuously rebuild on file changes',
+         default=False)
+)
+mappings.list_imports = (
+    ['-i', '--list-imports'],
+    [],
+    [],
+    dict(help='list import dependencies (no translation)',
+         default=False)
+)
+mappings.cache_buster = (
+    ['-c', '--enable-signatures'],
+    ['--cache-buster'],
+    [],
+    dict(help='enable browser cache-busting; append md5 hashes to filenames',
+         default=False)
+)
+mappings.apploader_file = (
+    ['--frame'],
+    ['--apploader-file'],
+    [],
+    dict(help='application html loader file',
+        type='string',
+         metavar='FILE',
+         default=None)
+)
+mappings.bootstrap_file = (
+    ['--bootloader'],
+    ['--bootstrap-file'],
+    [],
+    dict(help='application initial JS import/bootstrap code',
+         metavar='FILE',
+         default='bootstrap.js')
+)
+mappings.public_folder = (
+    ['--resources'],
+    ['--public-folder'],
+    [],
+    dict(help='application resource directory; contents copied to output dir',
+         metavar='PATH',
+         default='public')
+)
+mappings.compile_inplace = (
+    ['--enable-compile-inplace'],
+    ['--compile-inplace'],
+    [],
+    dict(help='store ouput JS in the same place as the Python source',
+         default=False)
+)
+mappings.keep_lib_files = (
+    ['--enable-preserve-libs'],
+    ['--keep-lib-files'],
+    [],
+    dict(help='do not remove intermediate compiled JS libs',
+        default=True)
+)
