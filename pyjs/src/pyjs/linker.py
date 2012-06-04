@@ -142,14 +142,13 @@ def out_translate(platform, file_names, out_file, module_name,
         proc = subprocess.Popen(pyjscompile_cmd,
                            stdin=subprocess.PIPE,
                            stdout=subprocess.PIPE,
-                           stderr=subprocess.PIPE,
                            shell=shell,
                            cwd=pydir,
                            env=os.environ
                            )
-        stdout_value, stderr_value = proc.communicate('')
-        if stderr_value:
-            raise translator.TranslationError(stderr_value, None)
+        stdout_value, ret = proc.communicate('')[0], proc.returncode
+        if ret:
+            raise translator.TranslationError('general fail in translator process')
 
     if translator_args.get('list_imports', None):
         print "List Imports %s:" % platform, file_names
