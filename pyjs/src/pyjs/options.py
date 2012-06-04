@@ -70,12 +70,13 @@ class Mappings(object):
         for n, g in Groups.__dict__.iteritems():
             if not n.startswith('_'):
                 groups[g] = set()
+        super(self.__class__, self).__setattr__('_order', list())
         super(self.__class__, self).__setattr__('_cache', dict())
         super(self.__class__, self).__setattr__('_groups', dict())
         super(self.__class__, self).__setattr__('_groups_cache', groups)
 
     def __iter__(self):
-        for k in self._cache:
+        for k in self._order:
             yield k
 
     def __contains__(self, key):
@@ -159,6 +160,7 @@ class Mappings(object):
                     rev = n.replace(*repl)
                     if rev != n:
                         no.append(rev)
+        self._order.append(dest)
         self._cache[dest] = kwds
 
     def _grp(self, dest, **kwds):
@@ -227,7 +229,7 @@ class Mappings(object):
         return self.Defaults(self, *grps)
 
     def bind(self, parser):
-        for x in (self._groups, self._cache):
+        for x in (self._groups, self):
             for k, o in x.iteritems():
                 for key, pub, pos, alt in [('names', True, True, None),
                                            ('nonames', False, False, None),
