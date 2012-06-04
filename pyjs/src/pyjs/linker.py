@@ -432,33 +432,6 @@ get_linker_options = mappings.link
 add_linker_options = mappings.bind
 
 
-mappings.output = (
-    ['-o', '--output'],
-    [],
-    [],
-    dict(help='assemble/finalize project in this directory',
-         metavar='PATH',
-         default='output')
-)
-mappings.library_dirs = (
-    ['-I', '--search-path'],
-    ['--library_dir'],
-    [],
-    dict(help='additional paths appended to PYJSPATH',
-         type='string',
-         action='append',
-         metavar='PATH',
-         default=[])
-)
-mappings.js_includes = (
-    ['--static-link'],
-    ['-j', '--include-js'],
-    [],
-    dict(help='<script>s loaded in the application frame',
-         type='string',
-         metavar='FILE',
-         default=[])
-)
 mappings.multi_file = (
     ['--dynamic-link'],
     ['-m', '--multi-file'],
@@ -475,4 +448,31 @@ mappings.unlinked_modules = (
          action='append',
          metavar='REGEX',
          default=[])
+)
+mappings.js_includes = (
+    ['--static-link'],
+    ['-j', '--include-js'],
+    [],
+    dict(help='<script>s loaded in the application frame',
+         type='string',
+         metavar='FILE',
+         default=[])
+)
+mappings.library_dirs = (
+    ['-I', '--search-path'],
+    ['--library_dir'],
+    [],
+    dict(help='additional paths appended to PYJSPATH',
+         type='string',
+         action='append',
+         metavar='PATH',
+         default=[])
+)
+mappings.output = (
+    ['-o', '--output'],
+    [],
+    [],
+    dict(help='assemble/finalize project in this directory',
+         metavar='PATH',
+         default='output')
 )
