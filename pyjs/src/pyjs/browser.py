@@ -557,13 +557,6 @@ add_builder_options = mappings.bind
 get_builder_options = mappings.link
 
 
-mappings.platforms = (
-    ['-P', '--platforms'],
-    [],
-    [],
-    dict(help='comma-separated list of target platforms',
-         default=(','.join(AVAILABLE_PLATFORMS)))
-)
 mappings.log_level = (
     ['-v', '--verbosity'],
     ['-l', '--log-level'],
@@ -572,25 +565,18 @@ mappings.log_level = (
          type='int',
          metavar='LEVEL')
 )
-mappings.auto_build = (
-    ['-A', '--enable-rebuilds'],
-    ['--auto-build'],
+mappings.platforms = (
+    ['-P', '--platforms'],
     [],
-    dict(help='continuously rebuild on file changes',
-         default=False)
+    [],
+    dict(help='comma-separated list of target platforms',
+         default=(','.join(AVAILABLE_PLATFORMS)))
 )
 mappings.list_imports = (
-    ['-i', '--list-imports'],
-    [],
+    ['--list-imports'],
+    ['-i'],
     [],
     dict(help='list import dependencies (no translation)',
-         default=False)
-)
-mappings.cache_buster = (
-    ['-c', '--enable-signatures'],
-    ['--cache-buster'],
-    [],
-    dict(help='enable browser cache-busting; append md5 hashes to filenames',
          default=False)
 )
 mappings.apploader_file = (
@@ -617,6 +603,20 @@ mappings.public_folder = (
     dict(help='application resource directory; contents copied to output dir',
          metavar='PATH',
          default='public')
+)
+mappings.auto_build = (
+    ['--enable-rebuilds'],
+    ['--auto-build', '-A'],
+    [],
+    dict(help='continuously rebuild on file changes',
+         default=False)
+)
+mappings.cache_buster = (
+    ['--enable-signatures'],
+    ['--cache-buster', '-c'],
+    [],
+    dict(help='enable browser cache-busting; append md5 hashes to filenames',
+         default=False)
 )
 mappings.compile_inplace = (
     ['--enable-compile-inplace'],
