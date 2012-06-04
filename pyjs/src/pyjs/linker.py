@@ -13,7 +13,7 @@ elif translator.name == 'dict':
 else:
     raise ValueError("unknown translator engine '%s'" % translator.name)
 translate_cmd = 'translator.py'
-translate_cmd_opts = ['--translator=%s' % translator.name]
+translate_cmd_opts = ['--use-translator=%s' % translator.name]
 
 
 if pyjs.pyjspth is None:
@@ -28,24 +28,7 @@ else:
     PYJAMASLIB_PATH = os.path.join(pyjs.pyjspth, "library")
 
 
-
-translator_opts = [ 'debug',
-        'print_statements',
-        'internal_ast',
-        'function_argument_checking',
-        'attribute_checking',
-        'bound_methods',
-        'descriptors',
-        'source_tracking',
-        'stupid_mode',
-        'line_tracking',
-        'store_source',
-        'inline_code',
-        'operator_funcs ',
-        'number_classes',
-        'list_imports',
-        'translator',
-    ]
+translator_opts = options.all_compile_options.keys()
 non_boolean_opts = ['translator']
 assert set(non_boolean_opts) < set(translator_opts)
 
@@ -62,15 +45,17 @@ def is_modified(in_file,out_file):
 
 def get_translator_opts(args):
     opts = []
-    for k in translator_opts:
+    for k in options.mappings:
         if args.has_key(k):
-            nk = k.replace("_", "-")
+            #XXX somewhat of a hack ... should have a method
+            # for default positive and default negative
+            nk = options.mappings[k]['names'][0]
             if k in non_boolean_opts:
-                opts.append("--%s=%s" % (nk, args[k]))
+                opts.append("%s=%s" % (nk, args[k]))
             elif args[k]:
-                opts.append("--%s" % nk)
+                opts.append("%s" % nk)
             elif k != 'list_imports':
-                opts.append("--no-%s" % nk)
+                opts.append(nk.replace('en', 'dis', 1))
     return opts
 
 def parse_outfile(out_file):
