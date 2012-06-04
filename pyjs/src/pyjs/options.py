@@ -1,4 +1,5 @@
 from optparse import SUPPRESS_HELP, NO_DEFAULT
+from logging import warn
 
 #-----------------------------------------------------------( group namespace )
 
@@ -61,10 +62,11 @@ class Mappings(object):
     _grp_sig_hash = set(_grp_sig)
 
     _opt_types = {str: 'string', int: 'int', long: 'long',
-                  float: 'float', complex: 'complex'}
+                  float: 'float', complex: 'complex',
+                  NO_DEFAULT: 'string'}
 
     def __init__(self):
-        groups = {}
+        groups = dict()
         for n, g in Groups.__dict__.iteritems():
             if not n.startswith('_'):
                 groups[g] = set()
@@ -115,29 +117,15 @@ class Mappings(object):
     def _opt(self, dest, **kwds):
         if not dest or set(kwds.keys()) != self._opt_sig_hash:
             raise TypeError('Malformed option signature.')
+        for k in ('aliases', 'groups', 'names'):
+            kwds[k] = list(kwds[k])
         spec = kwds['spec']
         spec['dest'] = dest
+        tf = (True, False)
+        tfs = ''
+        pat = '%(help)s%(tfs)s'
         default = spec.setdefault('default', NO_DEFAULT)
-        dt = type(default)
-        if self._opt_types.get(dt, None) is not None or dt is bool:
-            spec['help'] += ' [%default]'
-        if 'choices' in spec:
-            spec['type'] = 'choice'
-        if 'type' not in spec:
-            dt2 = dt
-            if default is NO_DEFAULT:
-                dt2 = str
-            spec['type'] = self._opt_types.get(dt2, None)
-        if 'action' not in spec:
-            if default in (True, False):
-                spec['action'] = 'store_true'
-            else:
-                spec['action'] = 'store'
-        if spec['action'] != 'callback':
-            spec['callback'] = self._opt_set
-            spec['callback_kwargs'] = {'_action': spec['action'],
-                                       '_cache': kwds}
-            spec['action'] = 'callback'
+        default_type = self._opt_types.get(type(default), None)
         self._groups_cache[Groups.ALL].add(dest)
         for g in kwds['groups']:
             self._groups_cache[g].add(dest)
@@ -145,58 +133,77 @@ class Mappings(object):
             self._groups_cache[Groups.DEFAULT].add(dest)
         elif default is False:
             self._groups_cache[Groups.NODEFAULT].add(dest)
-        no = kwds['nonames'] = set()
-        if default in (True, False):
-            for n in kwds['names'] + kwds['aliases']:
+        if default in tf:
+            spec['action'] = 'store_true'
+        if 'action' not in spec:
+            spec['action'] = 'store'
+        if 'choices' in spec:
+            spec['type'] = 'choice'
+        if 'type' not in spec:
+            spec['type'] = default_type
+        if default in tf or default_type is not None:
+            tfs = ' [%default]'
+        spec['help'] = pat % {'tfs': tfs,
+                              'help': spec['help']}
+        if spec['action'] != 'callback':
+            spec['callback'] = self._opt_set
+            spec['callback_kwargs'] = {'_action': spec['action'],
+                                       '_cache': kwds}
+            spec['action'] = 'callback'
+        for k, nk in (('names', 'nonames'), ('aliases', 'noaliases')):
+            no = kwds[nk] = list()
+            for n in kwds[k]:
                 for repl in [('--with', '--without', 1),
                              ('--enable', '--disable', 1),
                              ('--', '--no-', 1)]:
                     rev = n.replace(*repl)
                     if rev != n:
-                        no.add(rev)
-        kwds['nonames'] = list(no)
+                        no.append(rev)
         self._cache[dest] = kwds
 
     def _grp(self, dest, **kwds):
         if not dest or set(kwds.keys()) != self._grp_sig_hash:
             raise TypeError('Malformed group signature.')
+        for k in ('aliases', 'names'):
+            kwds[k] = list(kwds[k])
         dest = getattr(Groups, dest)
         spec = kwds['spec']
         spec['action'] = 'callback'
         spec['callback'] = self._grp_set
         spec['callback_kwargs'] = {'_group': dest}
-        no = kwds['nonames'] = set()
-        for n in kwds['names'] + kwds['aliases']:
-            for repl in [('--with', '--without', 1),
-                         ('--enable', '--disable', 1),
-                         ('--', '--no-', 1)]:
-                rev = n.replace(*repl)
-                if rev != n:
-                    no.add(rev)
-        kwds['nonames'] = list(no)
+        for k, nk in (('names', 'nonames'), ('aliases', 'noaliases')):
+            no = kwds[nk] = list()
+            for n in kwds[k]:
+                for repl in [('--with', '--without', 1),
+                             ('--enable', '--disable', 1),
+                             ('--', '--no-', 1)]:
+                    rev = n.replace(*repl)
+                    if rev != n:
+                        no.append(rev)
         self._groups[dest] = kwds
 
     def _opt_set(self, inst, opt, value, parser, *args, **kwds):
-        action, cache = kwds['_action'], kwds['_cache']
-        if opt in cache['aliases']:
-            #XXX add noaliases
-            print 'WARNING: `%s` is DEPRECATED! replacement: `%s`' % (opt, '` or `'.join(cache['names']))
-        if action == 'store_true' and opt in cache['nonames']:
-            action = 'store_false'
-        inst.take_action(action, inst.dest, opt, value, parser.values, parser)
+        cache = kwds['_cache']
+        action = kwds['_action']
+        positive = kwds['_positive']
+        alternates = kwds['_alternates']
+        tf = {'store_true': positive and 'store_true' or 'store_false',
+              'store_false': positive and 'store_false' or 'store_true'}
+        if alternates:
+            warn('[%s] is deprecated, see [%s]' % (opt, ', '.join(alternates)))
+        inst.take_action(tf.get(action, action), inst.dest,
+                         opt, value, parser.values, parser)
 
     def _grp_set(self, inst, opt, value, parser, *args, **kwds):
-        no = False
         name, flag = kwds['_group']
-        props = self._groups[name, flag]
-        if opt in props['nonames']:
-            no = True
-        for f in (flag, not flag):
-            flag_o = f
-            if no:
-                flag_o = not flag_o
-            for dest in self._groups_cache[name, f]:
-                setattr(parser.values, dest, flag_o)
+        positive = kwds['_positive']
+        alternates = kwds['_alternates']
+        tf = {True: positive, False: not positive}
+        if alternates:
+            warn('[%s] is deprecated, see [%s]' % (opt, ', '.join(alternates)))
+        for boolean in tf:
+            for dest in self._groups_cache[name, boolean]:
+                setattr(parser.values, dest, tf[boolean])
 
     def iteritems(self):
         for o in self:
@@ -220,28 +227,21 @@ class Mappings(object):
         return self.Defaults(self, *grps)
 
     def bind(self, parser):
-        opts = self._cache
-        grps = self._groups
-        ordered = []
-        props = []
-        for k, v in grps.iteritems():
-            props.append(v)
-        for k, v in opts.iteritems():
-            ordered.append((v['names'][0], k))
-        for k, v in sorted(ordered):
-            props.append(opts[v])
-        for p in props:
-            variants = [(p['names'], {})]
-            if p['aliases']:
-                variants.append((p['aliases'], {'help': SUPPRESS_HELP}))
-            if p['nonames']:
-                variants.append((p['nonames'], {'help': SUPPRESS_HELP}))
-            for args, updates in variants:
-                spec = {}
-                spec.update(p['spec'])
-                spec.update(updates)
-                parser.add_option(*args,
-                                  **spec)
+        for x in (self._groups, self._cache):
+            for k, o in x.iteritems():
+                for key, pub, pos, alt in [('names', True, True, None),
+                                           ('nonames', False, False, None),
+                                           ('aliases', False, True, o['names']),
+                                           ('noaliases', False, False, o['nonames'])]:
+                    signatures = o[key]
+                    if signatures:
+                        spec = o['spec'].copy()
+                        kwds = spec['callback_kwargs'].copy()
+                        kwds.update({'_positive': pos, '_alternates': alt})
+                        if not pub:
+                            spec.update({'help': SUPPRESS_HELP})
+                        spec.update({'callback_kwargs': kwds})
+                        parser.add_option(*signatures, **spec)
 
     def link(self, options):
         ret = {}
