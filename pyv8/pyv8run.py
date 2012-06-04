@@ -70,13 +70,6 @@ def main():
     translator.add_compile_options(parser)
 
     parser.add_option(
-        "--dynamic",
-        dest="unlinked_modules",
-        action="append",
-        help="regular expression for modules that will not be linked"
-        "and thus loaded dynamically"
-        )
-    parser.add_option(
         "-c",
         dest="command",
         help="Python command to run")
