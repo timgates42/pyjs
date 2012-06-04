@@ -445,14 +445,14 @@ def build(top_module, pyjs, options, app_platforms,
 
 
 def build_script():
-    usage = """usage: %prog [options] MODULE
+    usage = """usage: %prog [OPTIONS...] APPLICATION [MODULE...]
 
 Command line interface to the pyjs.org suite: Python Application -> AJAX Application.
-MODULE is the translation entry point; it MUST be importable by the toolchain.
-For more information, see the website at http://pyjs.org/"""
+APPLICATION is the translation entry point; it MUST be importable by the toolchain.
+MODULE(s) will also translate, if available; they MUST be importable by the toolchain."""
     global app_platforms
 
-    parser = OptionParser(usage = usage)
+    parser = OptionParser(usage=usage, epilog='For more information, see http://pyjs.org/')
     parser_group_builder = OptionGroup(parser, 'Builder',
                                       'Configures the high-level properties of current '
                                       'command and final project assembly.')
