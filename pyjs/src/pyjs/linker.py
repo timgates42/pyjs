@@ -455,6 +455,7 @@ mappings.js_includes = (
     [],
     dict(help='<script>s loaded in the application frame',
          type='string',
+         action='append',
          metavar='FILE',
          default=[])
 )
