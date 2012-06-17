@@ -89,10 +89,10 @@ INDEX = {
             {{example.{name}.demos}}
         </ul>
 {{example.{name}._comment_start}} -->
-        <h4 class='source'><a href="{name}/">source directory</a> ({name})<h4>
+        <h4 class='source'><a href="https://github.com/pyjs/pyjs/tree/master/examples/{name}/">source directory</a> ({name})<h4>
     ''',
     'demo': r'''
-        <li class='demo'>(demo) <a href="{name}/output/{target}.html">{target}</a></li>
+        <li class='demo'>(demo) <a href="{target}.html">{target}</a></li>
     ''',
 }
 
@@ -294,6 +294,12 @@ def translate():
             args += TARGETS[target].get('additional_args', [])
         else:
             opts = []
+        opts += ['--enable-strict',
+                 '--enable-signatures',
+                 '--enable-preserve-libs',
+                 '--disable-debug',
+                 '--dynamic-link',
+                 '-o', '../__output__']
         cmd = [ENV['BIN_PYTHON'], ENV['BIN_PYJSBUILD']] + ENV['ARG_PYJSBUILD'] + opts + args
 
         if not [ENV['ARG_PYJSBUILD']] + opts + args:
@@ -324,7 +330,7 @@ def install(package=None, **packages):
         packages[name] = example
     if not packages:
         raise TypeError('Nothing to install.')
-    index = os.path.join(ENV['DIR_EXAMPLES'], 'index.html')
+    index = os.path.join(ENV['DIR_EXAMPLES'], '__output__', 'index.html')
     try:
         if os.path.isfile(index):
             idx_out_fd = open(index, 'r+')
