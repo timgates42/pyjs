@@ -9,6 +9,7 @@ import urllib
 #import bz2
 import zipfile
 #import tarfile
+import shutil
 from optparse import OptionParser
 
 
@@ -81,6 +82,7 @@ PACKAGE = {
 
 INDEX = {
     'example': r'''
+        <!-- start {name} {{example.{name}._comment_end}}
         <tr>{{example.{name}.demo1}}
 
             <td rowspan="{{example.{name}.numdemos}}">
@@ -92,6 +94,7 @@ INDEX = {
             </td>
         </tr>
         {{example.{name}.demos}}
+        {{example.{name}._comment_start}} -->
     ''',
     'demo': r'''
         <td><a href="{target}.html">{target}</a></td>
@@ -376,3 +379,14 @@ def install(package=None, **packages):
         idx_out_fd.write(index_new)
     finally:
         idx_out_fd.close()
+
+
+    _static_dir = os.path.join(ENV['BASE_EXAMPLES'], '_examples', 'static')
+    _output_dir = os.path.join(ENV['BASE_EXAMPLES'], '__output__', 'static')
+
+    if not os.path.exists(_output_dir):
+        try:
+           shutil.copytree(_static_dir, _output_dir)
+        except Exception, e:
+           sys.stdout.write("Error copying static directory to output directory\n")
+           sys.stdout.write("%s\n" % e)
