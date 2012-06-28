@@ -1415,7 +1415,7 @@ String['prototype']['rstrip'] = function(chars) {
 };
 
 String['prototype']['startswith'] = function(prefix, start, end) {
-    // FIXME: accept tuples as suffix (since 2['5'])
+    // FIXME: accept tuples as suffix (since 2.5)
     if (typeof start == 'undefined') start = 0;
     if (typeof end == 'undefined') end = this['length'];
 
@@ -1425,7 +1425,7 @@ String['prototype']['startswith'] = function(prefix, start, end) {
 };
 
 String['prototype']['endswith'] = function(suffix, start, end) {
-    // FIXME: accept tuples as suffix (since 2['5'])
+    // FIXME: accept tuples as suffix (since 2.5)
     if (typeof start == 'undefined') start = 0;
     if (typeof end == 'undefined') end = this['length'];
 
@@ -5895,7 +5895,7 @@ def repr(x):
        // If we get here, the class isn't one we know -> return the class name.
        // Note that we replace underscores with dots so that the name will
        // (hopefully!) look like the original Python name.
-       // (XXX this was for pyjamas 0['4'] but may come back in an optimised mode)
+       // (XXX this was for pyjamas 0.4 but may come back in an optimised mode)
 
        //var s = constructor['$$replace'](new RegExp('_', "g"), '.');
        return "<" + constructor + " object>";

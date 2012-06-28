@@ -296,7 +296,7 @@ def init():
 }
 
 @{{String_startswith}} = function(prefix, start, end) {
-    // FIXME: accept tuples as suffix (since 2['5'])
+    // FIXME: accept tuples as suffix (since 2.5)
     if (@{{isUndefined}}(start)) start = 0;
     if (@{{isUndefined}}(end)) end = this['length'];
 
@@ -306,7 +306,7 @@ def init():
 }
 
 @{{String_endswith}} = function(suffix, start, end) {
-    // FIXME: accept tuples as suffix (since 2['5'])
+    // FIXME: accept tuples as suffix (since 2.5)
     if (@{{isUndefined}}(start)) start = 0;
     if (@{{isUndefined}}(end)) end = this['length'];
 

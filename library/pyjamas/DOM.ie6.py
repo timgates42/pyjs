@@ -52,7 +52,7 @@ def compare(elem1, elem2):
 def createInputRadio(group):
     JS("""
     ua = navigator['userAgent']['toLowerCase']();
-    if (ua['indexOf']('msie 9['0']') != -1) {
+    if (ua['indexOf']('msie 9.0') != -1) {
         var elem = $doc['createElement']("INPUT");
         elem['type'] = 'radio';
         elem['name'] = @{{group}};

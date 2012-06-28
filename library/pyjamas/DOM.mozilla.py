@@ -65,7 +65,7 @@ def eventGetButton(evt):
 def getAbsoluteLeft(elem):
     JS("""
     // Firefox 3 expects getBoundingClientRect
-    // getBoundingClientRect can be float: 73['1'] instead of 74, see
+    // getBoundingClientRect can be float: 73.1 instead of 74, see
     // gwt's workaround at user/src/com/google/gwt/dom/client/DOMImplMozilla['java']:47
     // Please note, their implementation has 1px offset.
     if (   typeof @{{elem}}['getBoundingClientRect'] == 'function'  ) {

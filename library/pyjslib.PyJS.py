@@ -420,7 +420,7 @@ pyjslib['String_rstrip'] = function(chars) {
 }
 
 pyjslib['String_startswith'] = function(prefix, start, end) {
-    // FIXME: accept tuples as suffix (since 2['5'])
+    // FIXME: accept tuples as suffix (since 2.5)
     if (pyjslib['isUndefined'](start)) start = 0;
     if (pyjslib['isUndefined'](end)) end = this['length'];
 
@@ -430,7 +430,7 @@ pyjslib['String_startswith'] = function(prefix, start, end) {
 }
 
 pyjslib['String_endswith'] = function(suffix, start, end) {
-    // FIXME: accept tuples as suffix (since 2['5'])
+    // FIXME: accept tuples as suffix (since 2.5)
     if (pyjslib['isUndefined'](start)) start = 0;
     if (pyjslib['isUndefined'](end)) end = this['length'];
 
