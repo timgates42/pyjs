@@ -20,18 +20,27 @@ except ImportError:
 class JSONTranslations(NullTranslations):
     re_nplurals = re.compile('nplurals *= *(\d+)')
     re_plural = re.compile('plural *= *([^;]+)')
+    base_url = None
+    domain = None
 
     def __init__(self, *args, **kwargs):
         NullTranslations.__init__(self, *args, **kwargs)
+        self.new_catalog()
+
+    def new_catalog(self, base_url=None, domain=None, lang=None):
         self._catalog = {}
+        self.lang = lang
         self.plural = lambda n: int(n != 1) # germanic plural by default
 
-    def load(self, base_url, domain=None, lang=None, onCompletion=None, onError=None):
+    def load(self, base_url=None, domain=None, lang=None, onCompletion=None, onError=None):
+        if base_url is None:
+            base_url = self.base_url
+        if domain is None:
+            domain = self.domain
         url = base_url
         if domain is not None and lang is not None:
             url = "%s/%s_%s.json" % (url, domain, lang)
-        self._catalog = {}
-        self.plural = lambda n: int(n != 1) # germanic plural by default
+        self.new_catalog(base_url, domain, lang)
         self._onCompletion = onCompletion
         self._onError = onError
         HTTPRequest().asyncGet(url, self)

@@ -4,18 +4,16 @@ from pyjamas.ui.Button import Button
 from pyjamas.ui.HTML import HTML
 from pyjamas.ui.Label import Label
 from pyjamas import Window
-from pyjamas.JSONTranslations import JSONTranslations
+from i18n import i18n, _, ngettext
+import pygwt
 
-t = JSONTranslations()
-_ = t.gettext
+
 lang = [
     'nl_NL',
     'de_DE',
     'en_US',
 ]
 
-
-import pygwt
 
 class GettextExample(object):
 
@@ -36,14 +34,14 @@ class GettextExample(object):
         self.l.setText(_("Hello World (label)"))
         text = [_("Hello from %s") % pygwt.getModuleBaseURL()]
         for i in range(4):
-            text.append(t.ngettext('%(num)d single', '%(num)d plural', i) % dict(num=i))
+            text.append(ngettext('%(num)d single', '%(num)d plural', i) % dict(num=i))
         text = '<br />'.join(text)
         self.base.setHTML(text)
 
     def greet(self, fred):
         fred.setText(_("No, really click me!"))
         Window.alert(_("Hello, there!"))
-        t.load("lang", "Gettext", lang[0], onCompletion=self.change_texts)
+        i18n.load(lang=lang[0], onCompletion=self.change_texts)
         lang.append(lang.pop(0))
 
 if __name__ == '__main__':
