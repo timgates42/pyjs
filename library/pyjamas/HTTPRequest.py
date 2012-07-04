@@ -194,7 +194,10 @@ class HTTPRequest(object):
         #    print "setting cookie", c
 
         handlers[xmlHttp] = handler
-        xmlHttp.send(postData or '')
+        try:
+            xmlHttp.send(postData or '')
+        except:
+            handler.onError("xmlHttp.send error", -1)
 
         return xmlHttp
 
