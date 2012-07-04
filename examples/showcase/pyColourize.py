@@ -506,8 +506,7 @@ class Parser:
         if self.footer:
             self.doPageFooter()
         # Write a little info in the web page source
-        self.out.write('<!--This document created by %s ver.%s on: %s-->\n'%
-                                        (__title__,__version__,time.ctime()))
+        self.out.write('<!-- This document created by %s -->\n' % __title__)
         self.out.write('</body></html>\n')
 
 if __name__ == '__main__':
