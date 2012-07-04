@@ -331,7 +331,6 @@ class TreeItem(UIObject):
                 tree.adopt(self.contentPanel)
 
     def updateState(self):
-        print "updateState"
         if len(self.children) == 0:
             self.setVisible(self.childSpanElem, False)
             #DOM.setAttribute(self.imgElem, "src", self.imgSrc("tree_white.gif"))
