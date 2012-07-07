@@ -829,8 +829,6 @@ class Translator(object):
             #    raise TranslationError(
             #        "reserved word used for top-level module %r" % module_name,
             #        mod, self.module_name)
-            if self.js_module_name in ['pyjslib', 'sys']:
-                self.w( self.spacing() + 'var %s;' % self.js_module_name)
             self.parent_module_name = None
         else:
             self.parent_module_name = '.'.join(module_name.split('.')[:-1])
