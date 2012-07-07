@@ -76,7 +76,7 @@ class GetTestOutput:
 status %s, response %s""" % (self.test_name, str(status), repr(responseText)))
         self.unittest.tests_outstanding -= 1
 
-class UnitTest:
+class UnitTest1:
 
     def __init__(self, test_gen_folder):
         self.test_gen_folder = test_gen_folder

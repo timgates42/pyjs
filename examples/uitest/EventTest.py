@@ -1,11 +1,11 @@
 from pyjamas.ui.RootPanel import RootPanel
 from pyjamas.ui.Button import Button
 
-from UnitTest import UnitTest
+from UnitTest import UnitTest1
 
 from pyjamas import DOM
 
-class EventTest(UnitTest):
+class EventTest(UnitTest1):
 
     def onClick(self, sender):
         self.assertTrue(sender == self.b)
