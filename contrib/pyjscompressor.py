@@ -168,3 +168,4 @@ if __name__ == '__main__':
         dir = sys.argv[1]
         COMPILER = sys.argv[2]
         compress_all(dir)
+
