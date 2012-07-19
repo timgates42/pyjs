@@ -6,18 +6,16 @@
 #
 # The closure compiler requires java to be installed and an entry for your java directory in your system PATH
 # 
-# Set the COMPILER_PATH variable below to your google closure compiler.jar file
-# _or_ make sure to export COMPILER=/path/to/google/compiler
-#
+# The script needs the path to your google closure compiler.jar file:
+# Pass the path to your compiler as the second argument or
+# create an environment variable COMPILER=/path/to/google/compiler
+
 # Then run this script. This will reduce the output size to ~50%.
 
 # To run type:
-# python pyjscompressor.py <path_to_your_pyjamas_output_directory>
+# python pyjscompressor.py <path_to_your_pyjamas_output_directory> [<compiler path>]
 # from command line in the directory of this script
-import re, os, sys, shutil
-
-#Set this string to the path to your compiler.jar
-COMPILER_PATH = r''
+import re, os, sys, shutil, subprocess
 
 
 MERGE_SCRIPTS = re.compile('</script>\s*(?:<!--.*?-->\s*)*<script(?:(?!\ssrc).)*?>', re.DOTALL)
@@ -31,11 +29,15 @@ def compile(js_file, js_output_file, html_file=''):
     else:
         level = 'SIMPLE_OPTIMIZATIONS'
     stderr = '2> /dev/null' if os.name == 'posix' else ''
-    error = os.system('java -jar %s --compilation_level %s '
-        ' --js %s --js_output_file %s %s' % \
-                (COMPILER_PATH, level, js_file, js_output_file, stderr))
+    command = 'java -jar %s --compilation_level %s --js %s --js_output_file %s %s' % \
+              (COMPILER, level, js_file, js_output_file, stderr)
+    try:
+        error = subprocess.call(command)
+    except:
+        raise Exception, 'Error executing command "%s", check the path to your compiler is correct.' % command
     if error:
-        raise Exception, 'Error occurred while compiling %s' % js_file
+        raise Exception, 'Error(s) occurred while compiling %s, possible cause: file may be invalid javascript.' % js_file
+
 
 def compress_css(css_file):
     sys.stdout.write('Compressing %-40s' % css_file)
@@ -117,7 +119,7 @@ def compress(path):
     elif ext == '.html':
         return compress_html(path)
     uncomp_type_size = getsize(path)
-    return (uncomp_type_size,uncomp_type_size)
+    return (uncomp_type_size, uncomp_type_size)
 
 def getsize(path):
     if os.path.isfile(path):
@@ -153,13 +155,16 @@ def compress_all(path):
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        print('usage: python pyjs_compressor.py pyjamas_output_dir')
+        print('usage: python pyjs_compressor.py <pyjamas_output_dir> [<path to compiler.jar>]')
+    elif len(sys.argv) == 2:
+        dir = sys.argv[1]
+        if not os.environ.has_key('COMPILER'):
+            sys.exit('environment variable COMPILER is not defined.\n'
+                     'In bash, export '
+                     'COMPILER=/home/me/google/compiler/compiler.jar or pass the path to your compiler.jar as the second argument.')
+        COMPILER = os.environ['COMPILER']
+        compress_all(dir)
     else:
         dir = sys.argv[1]
-        if not COMPILER_PATH:
-            if not os.environ.has_key('COMPILER'):
-                sys.exit('environment variable COMPILER is not defined.\n'
-                 'In bash, export '
-                 'COMPILER=/home/me/google/compiler/compiler.jar or add the path to your compiler.jar at the top of this script.')
-            COMPILER_PATH = os.environ['COMPILER']
+        COMPILER = sys.argv[2]
         compress_all(dir)
