@@ -122,8 +122,7 @@ def compress(path):
     return (uncomp_type_size, uncomp_type_size)
 
 def getsize(path):
-    if os.path.isfile(path):
-        return os.path.getsize(path)
+    return os.path.getsize(path)
 
 def getcompression(p_size, n_size):
     return n_size / float(p_size) * 100
