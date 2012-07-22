@@ -28,16 +28,11 @@ def compile(js_file, js_output_file, html_file=''):
         level = 'WHITESPACE_ONLY'
     else:
         level = 'SIMPLE_OPTIMIZATIONS'
-    stderr = '2> /dev/null' if os.name == 'posix' else ''
-    command = 'java -jar %s --compilation_level %s --js %s --js_output_file %s %s' % \
-              (COMPILER, level, js_file, js_output_file, stderr)
-    try:
-        error = subprocess.call(command)
-    except:
-        raise Exception, 'Error executing command "%s", check the path to your compiler is correct.' % command
+    args = ['java', '-jar', COMPILER, '--compilation_level', level, '--js', js_file, '--js_output_file', js_output_file]
+    error = subprocess.call(args=args, stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
     if error:
+        shutil.rmtree("temp")
         raise Exception, 'Error(s) occurred while compiling %s, possible cause: file may be invalid javascript.' % js_file
-
 
 def compress_css(css_file):
     sys.stdout.write('Compressing %-40s' % css_file)
@@ -125,7 +120,10 @@ def getsize(path):
     return os.path.getsize(path)
 
 def getcompression(p_size, n_size):
-    return n_size / float(p_size) * 100
+    try:
+        return n_size / float(p_size) * 100
+    except ZeroDivisionError:
+        return 100.0
 
 def compress_all(path):
     if not os.path.exists('temp'):
@@ -155,6 +153,7 @@ def compress_all(path):
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         print('usage: python pyjs_compressor.py <pyjamas_output_dir> [<path to compiler.jar>]')
+        sys.exit()
     elif len(sys.argv) == 2:
         dir = sys.argv[1]
         if not os.environ.has_key('COMPILER'):
@@ -162,9 +161,10 @@ if __name__ == '__main__':
                      'In bash, export '
                      'COMPILER=/home/me/google/compiler/compiler.jar or pass the path to your compiler.jar as the second argument.')
         COMPILER = os.environ['COMPILER']
-        compress_all(dir)
     else:
         dir = sys.argv[1]
         COMPILER = sys.argv[2]
-        compress_all(dir)
-
+        
+    if not os.path.isfile(COMPILER):
+        raise Exception, 'Compiler path "%s" not valid. Check the path to your compiler is correct.' % COMPILER
+    compress_all(dir)
