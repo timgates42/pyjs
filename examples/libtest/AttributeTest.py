@@ -183,6 +183,10 @@ class AttributeTest(UnitTest):
         del Foo.typeof
         self.assertFalse(hasattr(Foo, 'typeof'))
 
+        o = object()
+        self.assertFalse(hasattr(o, 'name'), "hasattr(o, 'name') should be False")
+        self.assertFalse(getattr(o, 'name', False))
+
     def testTypeAttributes(self):
         try:
             x = [].append
