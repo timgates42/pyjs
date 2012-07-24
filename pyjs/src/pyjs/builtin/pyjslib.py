@@ -6187,15 +6187,10 @@ def hasattr(obj, name):
         throw @{{TypeError}}("attribute name must be string");
     }
     if (@{{obj}}=== null) return false;
-    if (typeof @{{obj}}[@{{name}}] == 'undefined' && (
-            typeof @{{obj}}['$$'+@{{name}}] == 'undefined' ||
-            attrib_remap['indexOf'](@{{name}}) < 0)
-      ) {
-        return false;
+    if (attrib_remap['indexOf'](@{{name}}) > 0) {
+        return typeof @{{obj}}['$$'+@{{name}}] != 'undefined';
     }
-    //if (@{{obj}}!= 'object' && typeof @{{obj}}!= 'function')
-    //    return false;
-    return true;
+    return typeof @{{obj}}[@{{name}}] != 'undefined';
     """)
 
 def dir(obj):
