@@ -2,10 +2,10 @@
 # Copyright (C) 2010 Sujan Shakya, suzan.shakya@gmail.com
 #
 # This script works with the google closure compiler
-# http://closure-compiler.googlecode.com/files/compiler-latest.zip 
+# http://closure-compiler.googlecode.com/files/compiler-latest.zip
 #
 # The closure compiler requires java to be installed and an entry for your java directory in your system PATH
-# 
+#
 # The script needs the path to your google closure compiler.jar file:
 # Pass the path to your compiler as the second argument or
 # create an environment variable COMPILER=/path/to/google/compiler
@@ -142,7 +142,7 @@ def compress_all(path):
                 dp, dn = compress(os.path.join(root, file))
                 p_size += dp
                 n_size += dn
-    
+
     compression = getcompression(p_size, n_size)
     shutil.rmtree("temp")
 
@@ -164,7 +164,7 @@ if __name__ == '__main__':
     else:
         dir = sys.argv[1]
         COMPILER = sys.argv[2]
-        
+
     if not os.path.isfile(COMPILER):
         raise Exception, 'Compiler path "%s" not valid. Check the path to your compiler is correct.' % COMPILER
     compress_all(dir)
