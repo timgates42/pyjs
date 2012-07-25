@@ -29,7 +29,7 @@ def compile(js_file, js_output_file, html_file=''):
     else:
         level = 'SIMPLE_OPTIMIZATIONS'
     args = ['java', '-jar', COMPILER, '--compilation_level', level, '--js', js_file, '--js_output_file', js_output_file]
-    error = subprocess.call(args=args, stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
+    error = subprocess.call(args=args, stdout=open(os.devnull, 'w'), stderr=subprocess.STDOUT)
     if error:
         shutil.rmtree("temp")
         raise Exception, 'Error(s) occurred while compiling %s, possible cause: file may be invalid javascript.' % js_file
