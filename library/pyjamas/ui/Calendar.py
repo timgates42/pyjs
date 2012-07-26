@@ -396,8 +396,8 @@ Factory.registerClass('pyjamas.ui.Calendar', 'Calendar', Calendar)
 
 class DateField(Composite):
 
-    img_base = pygwt.getImageBaseURL(False)
-    icon_img = img_base + "/icon_calendar.gif"
+    img_base = pygwt.getImageBaseURL(True)
+    icon_img = img_base + "icon_calendar.gif"
 
     icon_style = "calendar-img"
     today_text = "Today"
