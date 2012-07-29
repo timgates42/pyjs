@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # Copyright (C) 2010 Sujan Shakya, suzan.shakya@gmail.com
+# Copyright (C) 2012 PJSHAB <pjbraby@gmail.com>
+# Copyright (C) 2012 Alok Parlikar <aup@cs.cmu.edu>
 #
 # This script works with the google closure compiler
 # http://closure-compiler.googlecode.com/files/compiler-latest.zip
