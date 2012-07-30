@@ -5,6 +5,7 @@ from UnitTest import UnitTest1
 
 from __pyjamas__ import doc
 
+#TODO: see issue 768
 class DOMTest(UnitTest1):
 
     def testDivHTML(self):

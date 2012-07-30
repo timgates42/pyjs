@@ -5,6 +5,7 @@ from UnitTest import UnitTest1
 
 from pyjamas import DOM
 
+#TODO see issue 768
 class EventTest(UnitTest1):
 
     def onClick(self, sender):

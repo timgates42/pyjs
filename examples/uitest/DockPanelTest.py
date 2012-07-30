@@ -6,6 +6,7 @@ from UnitTest import UnitTest1
 
 from __pyjamas__ import doc
 
+#TODO: see issue #768
 class DockPanelTest(UnitTest1):
 
     def testDockAdd(self):
