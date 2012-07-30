@@ -3,9 +3,6 @@
 # Copyright (C) 2012 PJSHAB <pjbraby@gmail.com>
 # Copyright (C) 2012 Alok Parlikar <aup@cs.cmu.edu>
 #
-# Modified July 2012 by Alok Parlikar, aup@cs.cmu.edu
-# to add multi-processing support
-#
 # This script works with the google closure compiler
 # http://closure-compiler.googlecode.com/files/compiler-latest.zip
 #
@@ -264,7 +261,7 @@ def compress_all(path):
 
     compression = getcompression(p_size, n_size)
 
-    sizes = "Initial size: %.1fKB  Final size: %.1fKB" % \
+    sizes = "Initial size: %.1fKiB  Final size: %.1fKiB" % \
             (p_size / 1024., n_size / 1024.)
     print('%s %s' % (sizes.ljust(51), "%4.1f%%" % compression))
 
