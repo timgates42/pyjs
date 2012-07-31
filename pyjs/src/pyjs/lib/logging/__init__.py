@@ -1166,7 +1166,7 @@ def critical(msg, *args, **kwargs):
     """
     if len(root.handlers) == 0:
         basicConfig()
-    root.critical((msg,)+args, kwargs)
+    root.critical((msg,)+args, **kwargs)
 
 fatal = critical
 
@@ -1176,7 +1176,7 @@ def error(msg, *args, **kwargs):
     """
     if len(root.handlers) == 0:
         basicConfig()
-    root.error((msg,)+args, kwargs)
+    root.error((msg,)+args, **kwargs)
 
 def exception(msg, *args):
     """
@@ -1191,7 +1191,7 @@ def warning(msg, *args, **kwargs):
     """
     if len(root.handlers) == 0:
         basicConfig()
-    root.warning((msg,)+args, kwargs)
+    root.warning((msg,)+args, **kwargs)
 
 warn = warning
 
@@ -1201,7 +1201,7 @@ def info(msg, *args, **kwargs):
     """
     if len(root.handlers) == 0:
         basicConfig()
-    root.info((msg,)+args, kwargs)
+    root.info((msg,)+args, **kwargs)
 
 def debug(msg, *args, **kwargs):
     """
@@ -1209,7 +1209,7 @@ def debug(msg, *args, **kwargs):
     """
     if len(root.handlers) == 0:
         basicConfig()
-    root.debug((msg,)+args, kwargs)
+    root.debug((msg,)+args, **kwargs)
 
 def log(level, msg, *args, **kwargs):
     """
@@ -1217,7 +1217,7 @@ def log(level, msg, *args, **kwargs):
     """
     if len(root.handlers) == 0:
         basicConfig()
-    root.log((level, msg)+args, kwargs)
+    root.log((level, msg)+args, **kwargs)
 
 def disable(level):
     """
