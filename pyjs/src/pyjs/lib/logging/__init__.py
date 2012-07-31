@@ -539,6 +539,27 @@ class Handler(Filterer):
         _handlers[self] = 1
         _handlerList.insert(0, self)
 
+    def createLock(self):
+        """
+        Acquire a thread lock for serializing access to the underlying I/O.
+        """
+        # No threading avaliable
+        pass
+
+    def acquire(self):
+        """
+        Acquire the I/O thread lock.
+        """
+        # No threading avaliable
+        pass
+
+    def release(self):
+        """
+        Release the I/O thread lock.
+        """
+        # No threading avaliable
+        pass
+
     def setLevel(self, level):
         """
         Set the logging level of this handler.
