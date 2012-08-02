@@ -5160,10 +5160,6 @@ class set(object):
         return null;
         """)
 
-    def __eq__(self, other):
-        if len(self) != len(other): return False
-        return self.issubset(other) and other.issubset(self)
-
     def __cmp__(self, other):
         # We (mis)use cmp here for the missing __gt__/__ge__/...
         # if self == other : return 0
@@ -6422,6 +6418,7 @@ if JS("typeof 'a'[0] == 'undefined'"):
     # IE has problems with setting obj.$H on certain DOM objects
     #def __hash(obj):
     JS("""@{{__hash}} = function(obj) {
+        if (obj === null) return null;
         switch (obj['constructor']) {
             case String:
             case Number:
@@ -6486,6 +6483,7 @@ if JS("typeof 'a'[0] == 'undefined'"):
 else:
     #def __hash(obj):
     JS("""@{{__hash}} = function(obj) {
+        if (obj === null) return null;
         switch (obj['constructor']) {
             case String:
             case Number:
