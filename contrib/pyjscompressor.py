@@ -352,8 +352,8 @@ if __name__ == '__main__':
 
     print("Running %d processes" % num_procs)
 
-try:
-    compress_all(directory)
-except KeyboardInterrupt:
-    print('')
-    print('Compression Aborted')
+    try:
+        compress_all(directory)
+    except KeyboardInterrupt:
+        print('')
+        print('Compression Aborted')
