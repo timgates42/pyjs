@@ -144,7 +144,9 @@ class TypeClass:
         return "<type '%s'>" % cls.__name__
 
 class NoneType(TypeClass):
-    pass
+  def __hash__(self, value):
+      return 0      # always return 0 since value should always be None
+
 class ModuleType(TypeClass):
     pass
 class FunctionType(TypeClass):
@@ -5157,6 +5159,10 @@ class set(object):
         while (i--);
         return null;
         """)
+
+    def __eq__(self, other):
+        if len(self) != len(other): return False
+        return self.issubset(other) and other.issubset(self)
 
     def __cmp__(self, other):
         # We (mis)use cmp here for the missing __gt__/__ge__/...
