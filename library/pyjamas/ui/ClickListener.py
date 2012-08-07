@@ -25,6 +25,9 @@ class ClickHandler(object):
         self._doubleclickListeners.append(listener)
 
     def addClickListener(self, listener):
+        stylename = self.getStyleName()
+        if stylename:
+            self.addStyleName("%s-clickable" % stylename.split()[0])
         self._clickListeners.append(listener)
 
     def onBrowserEvent(self, event):
