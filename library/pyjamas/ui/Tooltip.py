@@ -7,6 +7,8 @@ from pyjamas import Factory
 from pyjamas.ui.HTML import HTML
 from pyjamas.ui.RootPanel import RootPanel
 from pyjamas.Timer import Timer
+from pyjamas import Window
+from pyjamas import DOM
 
 tooltip_hide_timer = None
 
@@ -33,6 +35,22 @@ class Tooltip(PopupPanel):
             self.tooltip_show_timer = Timer(1, self)
         else:
             self.tooltip_show_timer = Timer(self.show_delay, self)
+
+    def onShowImpl(self, popup):
+        width = self.getOffsetWidth()
+        heigth = self.getOffsetHeight()
+        w_width = Window.getClientWidth()
+        w_heigth = Window.getClientHeight()
+        if w_width > width and w_heigth > heigth:
+            offset_x = self.getAbsoluteLeft()
+            offset_y = self.getAbsoluteTop()
+            element = self.getElement()
+            if (offset_x + width) > w_width:
+                offset_x = w_width - width
+                DOM.setStyleAttribute(element, "left", "%dpx" % offset_x)
+            if (offset_y + heigth) > w_heigth:
+                offset_y = w_heigth - heigth
+                DOM.setStyleAttribute(element, "top", "%dpx" % offset_y)
 
     def show(self):
         global tooltip_hide_timer
