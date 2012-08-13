@@ -396,14 +396,18 @@ Factory.registerClass('pyjamas.ui.Calendar', 'Calendar', Calendar)
 
 class DateField(Composite):
 
-    img_base = pygwt.getImageBaseURL(True)
-    icon_img = img_base + "icon_calendar.gif"
+    img_base = None
+    icon_img = None
 
     icon_style = "calendar-img"
     today_text = "Today"
     today_style = "calendar-today-link"
 
     def __init__(self, format='%d-%m-%Y'):
+        if self.img_base is None:
+            self.img_base = pygwt.getImageBaseURL(True)
+        if self.icon_img is None:
+            self.icon_img = self.img_base + 'icon_calendar.gif'
         self.format = format
         self.tbox = TextBox()
         self.tbox.setVisibleLength(10)
