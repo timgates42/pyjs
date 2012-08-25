@@ -1,5 +1,7 @@
-from __pyjamas__ import JS
-
 is_desktop = False
 
-setup = run = JS('''function(){return null;}''')
+def setup(application, appdir=None, width=800, height=600):
+    pass
+
+def run(one_event=False, block=True):
+    pass
