@@ -169,24 +169,24 @@ class Timer(object):
         Timer.__timers.add(self)
 
     # fire the timer
-    def __fire(self):
+    def __fire(self, *args, **kwds):
         # if not repeating, remove it from the list of active timers
         if not self.__is_repeating:
             Timer.__timers.discard(self)
         self.__onTimer()
 
     ######################################################################
-    # Platforms need to implement the following four methods
+    # Platforms may need to implement the following four methods
     ######################################################################
 
     def __setTimeout(self, delayMillis):
-        raise NotImplementedError, 'Timer is not fully implemented for your platform'
+        return get_main_frame().window.setTimeout(self.__fire, delayMillis)
 
     def __clearTimeout(self,tid):
-        raise NotImplementedError, 'Timer is not fully implemented for your platform'
+        return get_main_frame().window.clearTimeout(tid)
 
     def __setInterval(self, periodMillis):
-        raise NotImplementedError, 'Timer is not fully implemented for your platform'
+        return get_main_frame().window.setInterval(self.__fire, periodMillis)
 
     def __clearInterval(self, tid):
-        raise NotImplementedError, 'Timer is not fully implemented for your platform'
+        return get_main_frame().window.clearInterval(tid)
