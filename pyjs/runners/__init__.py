@@ -5,6 +5,7 @@ logging.basicConfig(level=logging.INFO)
 logging.getLogger(__name__).setLevel(logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+from pprint import pformat
 from os import path
 import ConfigParser
 
@@ -17,6 +18,7 @@ class RunnerManager(object):
         }
 
     _conf = {
+        'home': path.join(path.expanduser('~'), '.pyjd'),
         'runner': _platforms.get(sys.platform, _platforms[None]),
         'is_desktop': True,
         'native_dnd': True,
@@ -30,7 +32,7 @@ class RunnerManager(object):
         self._conf = self._conf.copy()
         self._listeners = []
 
-    def set_conf(self, rc=path.join(path.expanduser('~'), '.pyjd', 'pyjdrc')):
+    def set_conf(self, rc=path.join(_conf['home'], 'pyjdrc')):
         conf = self._conf
         cf = ConfigParser.ConfigParser()
         cf.read(rc)
@@ -38,7 +40,7 @@ class RunnerManager(object):
             conf.update(dict(cf.items('gui')))
             conf.setdefault('engine', conf['runner'])
             conf['runner'] = conf['engine']
-        logger.info('conf: %s', conf)
+        logger.info('conf:\n%s', pformat(conf.items()))
 
     def set_runner(self, runner=None):
         if runner is None:

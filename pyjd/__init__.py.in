@@ -1,8 +1,10 @@
 import sys
 import os
 
-import pyjd
 from pyjs.runners import RunnerManager
+
+#TODO: very ugly to self-import and setattr(self) ... remove ASAP!
+import pyjd
 
 
 pyjdversion = %r
@@ -16,9 +18,9 @@ for key, value in _manager._conf.iteritems():
 _manager.set_runner()
 
 
+#TODO: perm delete ASAP unless someone claims use; disable for now
+#sys.path = [os.path.join(pyjdinitpth, 'pygtkweb', 'library')] + sys.path
 sys.path += [os.path.join(pyjdinitpth, 'library')]
-#TODO: this looks useless ...
-sys.path = [os.path.join(pyjdinitpth, 'pygtkweb', 'library')] + sys.path
 
 
 add_setup_callback = _manager.add_setup_listener
