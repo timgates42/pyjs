@@ -86,10 +86,12 @@ class ImportManager:
 
         parts = fqname.split('.')
 
-        #print "_import_hook", parts
-        # pyjamas-gtk hack
-        if parts[0] in ['gtk', 'gdk', 'pygtk', 'gobject']:
-            parts = ['pygtkweb'] + parts
+        #TODO: all of this hacky import stuff MUST GO!
+        # from now on, we will only proceed for namespaces that *may*
+        # need merging -- drop this ASAP for pretty much anything else
+        if parts[0] not in ('pyjamas',):
+            return self.previous_importer(fqname, globals, locals,
+                                          fromlist, level)
 
         # determine the context of this import
         parent = self._determine_import_context(globals)
