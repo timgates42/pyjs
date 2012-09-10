@@ -269,6 +269,9 @@ class StringTest(UnitTest):
 
         # Check for handling of newlines in format string
         self.assertEqual("\n%(s1)s\n%(s1)s\n" % testdict, '\nstring\nstring\n')
+        self.assertEqual("%%s %(foo)s" % {'foo': 1}, "%s 1")
+        self.assertEqual("%s %%(foo)s" % {'foo': 1}, "{'foo': 1} %(foo)s")
+        self.assertEqual("%s %(foo)s" % {'foo': 1}, "{'foo': 1} 1")
 
     def testSprintfVar(self):
         f = "%s"

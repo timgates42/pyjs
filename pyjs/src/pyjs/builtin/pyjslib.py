@@ -6632,14 +6632,13 @@ def toJSObjects(x):
 def sprintf(strng, args):
     # See http://docs.python.org/library/stdtypes.html
     JS(r"""
-    var re_dict = /([^%]*)%[(]([^)]+)[)]([#0\x20\x2B-]*)(\d+)?(\.\d+)?[hlL]?(.)((.|\n)*)/;
-    var re_list = /([^%]*)%([#0\x20\x2B-]*)(\*|(\d+))?(\.\d+)?[hlL]?(.)((.|\n)*)/;
     var re_exp = /(.*)([+-])(.*)/;
-
+    var re_fmt = /([^%]*)%([(][^)]*[)])?([#0\x20\x2B-]*)(\*|(\d+))?(\.\d+)?[hlL]?(.)((.|\n)*)/;
     var argidx = 0;
     var nargs = 0;
     var result = [];
     var remainder = @{{strng}};
+    var arg0;
 
     function formatarg(flags, minlen, precision, conversion, param) {
         var subst = '';
@@ -6777,23 +6776,23 @@ def sprintf(strng, args):
     }
 
     function sprintf_list(strng, args) {
-        var a, left, flags, precision, conversion, minlen, param,
+        var a, left, key, flags, precision, conversion, minlen, param,
             __array = result;
         while (remainder) {
-            a = re_list['exec'](remainder);
+            a = re_fmt['exec'](remainder);
             if (a === null) {
                 __array[__array['length']] = remainder;
                 break;
             }
-            left = a[1]; flags = a[2];
-            minlen = a[3]; precision = a[5]; conversion = a[6];
-            remainder = a[7];
+            left = a[1]; key = a[2], flags = a[3];
+            minlen = a[4]; precision = a[6]; conversion = a[7];
+            remainder = a[8];
             if (typeof minlen == 'undefined') minlen = null;
             if (typeof precision == 'undefined') precision = null;
             if (typeof conversion == 'undefined') conversion = null;
             __array[__array['length']] = left;
             if (minlen == '*') {
-                if (argidx == nargs) {
+                if (argidx == ++nargs) {
                     throw @{{TypeError}}("not enough arguments for format string");
                 }
                 minlen = args['__getitem__'](argidx++);
@@ -6810,63 +6809,31 @@ def sprintf(strng, args):
                 }
             }
             if (conversion != '%') {
-                if (argidx == nargs) {
-                    throw @{{TypeError}}("not enough arguments for format string");
+                if (!key) {
+                    if (argidx == ++nargs || nargs > args['__array']['length']) {
+                        throw @{{TypeError}}("not enough arguments for format string");
+                    }
+                    param = args['__getitem__'](argidx++);
+                } else {
+                    if (args['__array']['length'] != 1) {
+                        throw @{{TypeError}}("format requires a mapping");
+                    }
+                    argidx = 1;
+                    key = key.substr(1, key.length-2);
+                    param = arg0['__getitem__'](key);
                 }
-                param = args['__getitem__'](argidx++);
             }
-            __array[__array['length']] = formatarg(flags, minlen, precision, conversion, param);
-        }
-    }
-
-    function sprintf_dict(strng, args) {
-        var a = null,
-            left = null,
-            flags = null,
-            precision = null,
-            conversion = null,
-            minlen = null,
-            minlen_type = null,
-            key = null,
-            arg = args,
-            param,
-            __array = result;
-
-        argidx++;
-        while (remainder) {
-            a = re_dict['exec'](remainder);
-            if (a === null) {
-                __array[__array['length']] = remainder;
-                break;
-            }
-            left = a[1]; key = a[2]; flags = a[3];
-            minlen = a[4]; precision = a[5]; conversion = a[6];
-            remainder = a[7];
-            if (typeof minlen == 'undefined') minlen = null;
-            if (typeof precision == 'undefined') precision = null;
-            if (typeof conversion == 'undefined') conversion = null;
-            __array[__array['length']] = left;
-            param = arg['__getitem__'](key);
             __array[__array['length']] = formatarg(flags, minlen, precision, conversion, param);
         }
     }
 
     var constructor = args === null ? 'NoneType' : (args['__md5__'] == @{{tuple}}['__md5__'] ? 'tuple': (args['__md5__'] == @{{dict}}['__md5__'] ? 'dict': 'Other'));
-    if (strng['indexOf']("%(") >= 0) {
-        if (re_dict['exec'](strng) !== null) {
-            if (constructor != "dict") {
-                throw @{{TypeError}}("format requires a mapping");
-            }
-            sprintf_dict(strng, args);
-            return result['join']("");
-        }
-    }
     if (constructor != "tuple") {
         args = @{{tuple}}([args]);
     }
-    nargs = args['__array']['length'];
+    arg0 = args['__array'][0];
     sprintf_list(strng, args);
-    if (argidx != nargs) {
+    if (argidx != args['__array']['length']) {
         throw @{{TypeError}}('not all arguments converted during string formatting');
     }
     return result['join']("");
