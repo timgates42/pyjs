@@ -47,8 +47,13 @@ class RunnerManager(object):
             runner = self._conf.get('runner')
             if runner is None:
                 raise ValueError(runner)
-        impl = 'pyjs.runners.%s' % runner
+        if runner == 'hulahop':
+            impl = 'pyjs.runners.hula'
+        else:
+            impl = 'pyjs.runners.%s' % runner
         __import__(impl)
+        import pyjd
+        pyjd.engine = runner
         import importers
         importers._test_revamp()
         self._runner = sys.modules[impl]
