@@ -278,7 +278,7 @@ class Importer:
         #       from the bottom (package) module; some will be modules that
         #       we imported and stored in the namespace, others are expected
         #       to be present already.
-        if bottom.__ispkg__:
+        if getattr(bottom, '__ispkg__', None):
             self._import_fromlist(bottom, fromlist)
 
         # if the form is "from a.b import c, d" then return "b"
