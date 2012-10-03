@@ -122,6 +122,9 @@ class StringTest(UnitTest):
         result=empty.split(' ')
         self.assertEquals(result, [''])
 
+        self.assertEquals('1.2.3'.rsplit('.', 1), ['1.2', '3'])
+        self.assertEquals('1.2.3'.rsplit('.', 2), ['1', '2', '3'])
+
     def testStrip(self):
         text=" this is  a rather long string  "
         expected_result1="this is  a rather long string"
