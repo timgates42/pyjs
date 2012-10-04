@@ -4073,7 +4073,12 @@ class tuple:
         """)
 
     def __hash__(self):
-        return '$tuple$' + str(self.__array)
+        h = ['$tuple']
+        for i in self:
+            h.append(str(hash(i)))
+        return '$'.join(h)
+        # This would create duplicate hashes:
+        # return '$tuple$' + str(self.__array)
 
     def __cmp__(self, l):
         if not isinstance(l, tuple):
@@ -6446,7 +6451,7 @@ if JS("typeof 'a'[0] == 'undefined'"):
     JS("""@{{hash}} = function(obj) {
         if (obj === null) return null;
 
-        if (typeof obj['$H'] != 'undefined') return obj['$H'];
+        if (typeof obj['$H'] != 'undefined' && obj['__class__']['$H'] !== obj['$H']) return obj['$H'];
         if (typeof obj == 'string' || obj['__number__']) return '$'+obj;
         switch (obj['constructor']) {
             case String:
@@ -6495,7 +6500,7 @@ else:
     JS("""@{{hash}} = function(obj) {
         if (obj === null) return null;
 
-        if (typeof obj['$H'] != 'undefined') return obj['$H'];
+        if (typeof obj['$H'] != 'undefined' && obj['__class__']['$H'] !== obj['$H']) return obj['$H'];
         if (typeof obj == 'string' || obj['__number__']) return '$'+obj;
         switch (obj['constructor']) {
             case String:
