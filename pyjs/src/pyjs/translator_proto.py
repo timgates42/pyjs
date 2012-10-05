@@ -1728,7 +1728,7 @@ if (this['__is_instance__'] === true) {\
 """ % (lpself, kwargname, maxargs1), output=output)
             s = self.spacing()
             self.w( """\
-%(s)sif (typeof %(lp)s%(kwargname)s != 'object' || %(lp)s%(kwargname)s['__name__'] != 'dict' || typeof %(lp)s%(kwargname)s['$pyjs_is_kwarg'] == 'undefined') {\
+%(s)sif (%(lp)s%(kwargname)s === null || typeof %(lp)s%(kwargname)s != 'object' || %(lp)s%(kwargname)s['__name__'] != 'dict' || typeof %(lp)s%(kwargname)s['$pyjs_is_kwarg'] == 'undefined') {\
 """ % locals(), output=output)
             if node.varargs:
                 self.w( """\
@@ -1771,7 +1771,7 @@ if ($pyjs['options']['arg_count'] && %s) $pyjs__exception_func_param(arguments['
 """ % (lpself, kwargname, maxargs2), output=output)
             s = self.spacing()
             self.w( """\
-%(s)sif (typeof %(lp)s%(kwargname)s != 'object' || %(lp)s%(kwargname)s['__name__'] != 'dict' || typeof %(lp)s%(kwargname)s['$pyjs_is_kwarg'] == 'undefined') {\
+%(s)sif (%(lp)s%(kwargname)s === null || typeof %(lp)s%(kwargname)s != 'object' || %(lp)s%(kwargname)s['__name__'] != 'dict' || typeof %(lp)s%(kwargname)s['$pyjs_is_kwarg'] == 'undefined') {\
 """ % locals(), output=output)
             if node.varargs:
                 self.w( """\
@@ -1845,7 +1845,7 @@ if ($pyjs['options']['arg_count'] && %s) $pyjs__exception_func_param(arguments['
 """ % (lpdec, kwargname, maxargs), output=output)
             s = self.spacing()
             self.w( """\
-%(s)sif (typeof %(lp)s%(kwargname)s != 'object' || %(lp)s%(kwargname)s['__name__'] != 'dict' || typeof %(lp)s%(kwargname)s['$pyjs_is_kwarg'] == 'undefined') {\
+%(s)sif (%(lp)s%(kwargname)s === null || typeof %(lp)s%(kwargname)s != 'object' || %(lp)s%(kwargname)s['__name__'] != 'dict' || typeof %(lp)s%(kwargname)s['$pyjs_is_kwarg'] == 'undefined') {\
 """ % locals(), output=output)
             if node.varargs:
                 self.w( """\
@@ -1894,7 +1894,7 @@ var %s = arguments['length'] >= %d ? arguments[arguments['length']-1] : argument
 """ % (kwargname, maxargs), output=output)
             s = self.spacing()
             self.w( """\
-%(s)sif (typeof %(kwargname)s != 'object' || %(kwargname)s['__name__'] != 'dict' || typeof %(kwargname)s['$pyjs_is_kwarg'] == 'undefined') {\
+%(s)sif (%(kwargname)s === null || typeof %(kwargname)s != 'object' || %(kwargname)s['__name__'] != 'dict' || typeof %(kwargname)s['$pyjs_is_kwarg'] == 'undefined') {\
 """ % locals(), output=output)
             if node.varargs:
                 self.w( """\
