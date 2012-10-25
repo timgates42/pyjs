@@ -14,7 +14,8 @@ class XULrunnerHackCallback:
         self.content_type = content_type
         self.headers = headers
 
-        pyjd.add_timer_queue(self.callback)
+        from pyjs.runners import hula
+        hula.add_timer_queue(self.callback)
 
 class HTTPRequest(object):
     # See HTTPRequest.py
