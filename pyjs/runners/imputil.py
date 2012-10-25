@@ -86,13 +86,6 @@ class ImportManager:
 
         parts = fqname.split('.')
 
-        #TODO: all of this hacky import stuff MUST GO!
-        # from now on, we will only proceed for namespaces that *may*
-        # need merging -- drop this ASAP for pretty much anything else
-        if parts[0] not in ('pyjamas',):
-            return self.previous_importer(fqname, globals, locals,
-                                          fromlist, level)
-
         # determine the context of this import
         parent = self._determine_import_context(globals)
 
@@ -101,6 +94,13 @@ class ImportManager:
             module = parent.__importer__._do_import(parent, parts, fromlist)
             if module:
                 return module
+        else:
+            #TODO: all of this hacky import stuff MUST GO!
+            # from now on, we will only proceed for namespaces that *may*
+            # need merging -- drop this ASAP for pretty much anything else
+            if parts[0] not in ('pyjamas',):
+                return self.previous_importer(fqname, globals, locals,
+                                              fromlist, level)
 
         # has the top module already been imported?
         try:
