@@ -367,10 +367,10 @@ class GIWindowOpen(object):
     def __call__(self, inst, uri, name="_blank", specs=""):
         if '://' not in uri:
             import pygwt
-            uri = Soup.URI.new(pygwt.getModuleBaseURL()).new_with_base(uri)
+            uri = Soup.URI.new(pygwt.getModuleBaseURL()).new_with_base(uri).to_string(0)
         rc = RunnerContext()
         rc._destroy_cb = lambda *args: logger.debug('destroying sub window...')
-        rc.setup(uri.to_string(0))
+        rc.setup(uri)
 
     @classmethod
     def bind(cls, key):
