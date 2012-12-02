@@ -359,6 +359,24 @@ class GIWindowLocation(object):
         owner, attr = key
         return types.MethodType(cls(key), None, owner)
 
+class GIWindowOpen(object):
+
+    def __init__(self, ctx):
+        pass
+
+    def __call__(self, inst, uri, name="_blank", specs=""):
+        if '://' not in uri:
+            import pygwt
+            uri = Soup.URI.new(pygwt.getModuleBaseURL()).new_with_base(uri)
+        rc = RunnerContext()
+        rc._destroy_cb = lambda *args: logger.debug('destroying sub window...')
+        rc.setup(uri.to_string(0))
+
+    @classmethod
+    def bind(cls, key):
+        owner, attr = key
+        return types.MethodType(cls(key), None, owner)
+
 
 class GIResolver(object):
 
@@ -367,6 +385,7 @@ class GIResolver(object):
 
     _custom = {
         (WebKit.DOMDOMWindow, 'location'): GIWindowLocation,
+        (WebKit.DOMDOMWindow, 'open'): GIWindowOpen,
         (WebKit.DOMDOMWindow, 'setTimeout'): GITimer,
         (WebKit.DOMDOMWindow, 'setInterval'): GITimer,
         #TODO: this is actually a bug in pyjs ... UIEvents
