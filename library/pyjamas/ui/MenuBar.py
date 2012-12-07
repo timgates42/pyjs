@@ -124,6 +124,7 @@ class MenuBar(Widget):
         if not StyleName or StyleName == 'gwt-MenuBar':
             StyleName = self.getDefaultStyleName()
         super(MenuBar, self).setStyleName(StyleName, **kwargs)
+
     def insertItem(self, item, index):
         if self.vertical:
             tr = DOM.createTR()
@@ -135,7 +136,7 @@ class MenuBar(Widget):
         item.setParentMenu(self)
         item.setSelectionStyle(False)
         self.items.insert(index, item)
-        return item
+
     # also callable as:
     #   addItem(item)
     #   addItem(text, cmd)
