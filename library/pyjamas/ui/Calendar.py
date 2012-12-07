@@ -31,7 +31,7 @@ class DateSelectedHandler(object):
         self.selectedDObjListeners = [] #listeners which will receive datetime.date object rather than y,m,d triple
 
     def addSelectedDateListener(self, listener, dobj=False):
-        """ - dobj - listener accept datetime.date object rather than y,m,d triple 
+        """ - dobj - listener accept datetime.date object rather than y,m,d triple
         """
         if dobj:
             self.selectedDObjListeners.append(listener)
@@ -41,29 +41,22 @@ class DateSelectedHandler(object):
     def removeSelectedDateListener(self, listener):
         try:
             self.selectedDateListeners.remove(listener)
-        except ValueError:pass
-        try:
+        except ValueError:
             self.selectedDObjListeners.remove(listener)
-        except ValueError:pass
 
-    def fireDateSelectedEvent(self, y=None, m=None, d=None, dateobj=None):
+    def fireDateSelectedEvent(self, dateobj):
         """ fire event to listeners with date specified in args. Date can be specified either by separate year,month,day or by datetime.date object
         """
-        assert (y and m and d) != bool(dateobj) #logical XOR - either y,m,d or date should be specified
-        if not dateobj: dateobj = date(y, m, d)
-        # well if anyone is listening to the listener, fire that event
         for listener in self.selectedDateListeners:
-            if hasattr(listener, "onDateSelected"):
-                listener.onDateSelected(dateobj.year, dateobj.month, dateobj.day)
-            else:
-                listener(dateobj.year, dateobj.month, dateobj.day)
-
+            getattr(listener, "onDateSelected", listener)(
+                    dateobj.year,
+                    dateobj.month,
+                    dateobj.day,
+                    )
         for listener in self.selectedDObjListeners:
-            if hasattr(listener, "onDateSelected"):
-                listener.onDateSelected(dateobj)
-            else:
-                listener(dateobj)
-
+            getattr(listener, "onDateSelected", listener)(
+                    dateobj,
+                    )
 
 
 class Calendar(FocusPanel, DateSelectedHandler):
@@ -344,7 +337,11 @@ class Calendar(FocusPanel, DateSelectedHandler):
         except ValueError, e:
             return
 
-        self.fireDateSelectedEvent(self.currentYear, self.currentMonth, selectedDay)
+        self.fireDateSelectedEvent(date(
+            self.currentYear,
+            self.currentMonth,
+            selectedDay,
+            ))
         self.setVisible(False)
 
 
@@ -361,7 +358,7 @@ class Calendar(FocusPanel, DateSelectedHandler):
         self.drawNextYear()
 
     def onDate(self, event, yy, mm, dd):
-        self.fireDateSelectedEvent(yy, mm, dd)
+        self.fireDateSelectedEvent(date(yy, mm, dd))
         self.setVisible(False)
 
     def onYesterday(self, event):
@@ -483,13 +480,13 @@ class DateField(Composite, DateSelectedHandler):
 
     def emitSelectedDate(self):
         _d = self.getDate()
-        if _d == self._last_date: return
+        if _d == self._last_date:
+            return
         self._last_date = _d
-        self.fireDateSelectedEvent(dateobj=_d)
+        self.fireDateSelectedEvent(_d)
 
     def onFieldChanged(self, event):
         self.emitSelectedDate()
-
 
     def getTextBox(self):
         return self.tbox
