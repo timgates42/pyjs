@@ -1,28 +1,5 @@
-Branches
-=======
-
-This project is (shor-living I hope) fork of pyjs/pyjs. It's for features, which I made for pyjs project, but which aren't pulled into main project yet. 
-
-Some of features can be rejected by Pyjs admins, but may be neccesary by me. That's why, there is "mfork" , which has all features (accepted, rejected and not reviewed yet) inside. 
-
-So:
-
---master-+-------------------------+-----+----------------------------------->
-          \                       /(pull request approved)
-           +--feature1branch--+--+       |
-                               \         |
-                                \        +-+feat2branch(not approved yet)---->
-                                 \          \
-                                  \          \
-                                   \          \
-                                    \          \
-                                     \          \
---mfork-------------------------------+----------+--------------------------->
-
-master - (1:1 copy of pyjs/master) - has feature1 and not feature2 (not appoved or rejected)
-mfork  - has all features, feature1 and feature2. 
-
-RULE: merges from mfork to master, and fork of mfork are forbidden. 
+.. image:: https://secure.travis-ci.org/pyjs/pyjs.png?branch=master
+   :target: http://travis-ci.org/pyjs/pyjs
 
 Pyjs
 =======
