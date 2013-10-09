@@ -8,7 +8,10 @@ if pyjs.pyjspth is None:
 else:
     LIBRARY_PATH = os.path.join(pyjs.pyjspth, "pyjs", "src", "pyjs")
 
-if "--translator=dict" in sys.argv:
+if (
+    "--translator=dict" in sys.argv or
+    "--use-translator=dict" in sys.argv
+):
     from translator_dict import *
     name = 'dict'
 else:
