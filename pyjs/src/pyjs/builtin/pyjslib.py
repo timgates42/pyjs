@@ -2089,7 +2089,14 @@ var $radix_regex = [
             }
             radix = null;
         }
-        if (typeof this != 'object' || this['__number__'] != 0x02) return new $int(value, radix);
+        if (typeof this != 'object' || this['__number__'] != 0x02) {
+            // The debugger statement seems to be needed for chromium
+            // for windows...
+            // LOOK HERE
+            // Remove debugger statement and get 'Maximum call stack size exceeded'
+            debugger;
+            return new $int(value, radix);
+        }
         if (value['__number__']) {
             if (radix !== null) throw @{{TypeError}}("int() can't convert non-string with explicit base");
             v = value['valueOf']();
