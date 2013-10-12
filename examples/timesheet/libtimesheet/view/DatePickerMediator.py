@@ -3,7 +3,7 @@
 
 from puremvc.patterns.mediator import Mediator
 
-from ApplicationConstants import Notification
+from libtimesheet.ApplicationConstants import Notification
 
 from pyjamas.Window import alert
 

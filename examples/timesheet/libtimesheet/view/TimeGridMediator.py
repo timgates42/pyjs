@@ -3,11 +3,11 @@
 
 from puremvc.patterns.mediator import Mediator
 
-from ApplicationConstants import Notification
+from libtimesheet.ApplicationConstants import Notification
 
-import model
-from model.TimeProxy import TimeProxy
-from model.vo.TimeVO import TimeVO
+from libtimesheet import model
+from libtimesheet.model.TimeProxy import TimeProxy
+from libtimesheet.model.vo.TimeVO import TimeVO
 
 from pyjamas.Cookies import setCookie
 from pyjamas.Window import alert

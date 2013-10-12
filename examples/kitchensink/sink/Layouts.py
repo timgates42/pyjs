@@ -12,7 +12,7 @@ from pyjamas.ui.MenuBar import MenuBar
 from pyjamas.ui.MenuItem import MenuItem
 from pyjamas.ui.ScrollPanel import ScrollPanel
 from pyjamas.ui.DisclosurePanel import DisclosurePanel
-from Logger import Logger
+from sink.Logger import Logger
 from pyjamas import DOM
 
 class Layouts(Sink):

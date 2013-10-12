@@ -3,10 +3,10 @@
 
 from puremvc.patterns.mediator import Mediator
 
-from ApplicationConstants import Notification
+from libtimesheet.ApplicationConstants import Notification
 
-import model
-from model.TimeProxy import TimeProxy
+from libtimesheet import model
+from libtimesheet.model.TimeProxy import TimeProxy
 
 from pyjamas.Window import alert
 

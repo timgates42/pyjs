@@ -3,13 +3,13 @@
 
 from puremvc.patterns.command import SimpleCommand
 
-from model.TimeProxy import TimeProxy
+from libtimesheet.model.TimeProxy import TimeProxy
 
-from view.DialogMediator import DialogMediator
-from view.MenuMediator import MenuMediator
-from view.DatePickerMediator import DatePickerMediator
-from view.TimeGridMediator import TimeGridMediator
-from view.SummaryMediator import SummaryMediator
+from libtimesheet.view.DialogMediator import DialogMediator
+from libtimesheet.view.MenuMediator import MenuMediator
+from libtimesheet.view.DatePickerMediator import DatePickerMediator
+from libtimesheet.view.TimeGridMediator import TimeGridMediator
+from libtimesheet.view.SummaryMediator import SummaryMediator
 
 class StartupCommand(SimpleCommand):
     def execute(self,note):

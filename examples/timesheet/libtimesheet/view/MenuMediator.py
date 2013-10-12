@@ -3,14 +3,14 @@
 
 from puremvc.patterns.mediator import Mediator
 
-from ApplicationConstants import Notification
+from libtimesheet.ApplicationConstants import Notification
 
 from pyjamas.Window import alert
-from model.TimeProxy import TimeProxy
-from view.components.FileOpenDlg import FileOpenDlg
-from view.components.PreferencesDlg import PreferencesDlg
-from view.components.HelpContentsDlg import HelpContentsDlg
-from view.components.HelpAboutDlg import HelpAboutDlg
+from libtimesheet.model.TimeProxy import TimeProxy
+from libtimesheet.view.components.FileOpenDlg import FileOpenDlg
+from libtimesheet.view.components.PreferencesDlg import PreferencesDlg
+from libtimesheet.view.components.HelpContentsDlg import HelpContentsDlg
+from libtimesheet.view.components.HelpAboutDlg import HelpAboutDlg
 from pyjamas.Cookies import getCookie
 
 import sys

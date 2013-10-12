@@ -1,7 +1,7 @@
 
 # vim: set ts=4 sw=4 expandtab:
 
-from ApplicationConstants import Notification
+from libtimesheet.ApplicationConstants import Notification
 
 from pyjamas.ui.DockPanel import DockPanel
 from pyjamas.ui.RootPanel import RootPanelCls

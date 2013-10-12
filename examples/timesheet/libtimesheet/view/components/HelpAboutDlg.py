@@ -1,7 +1,7 @@
 
 # vim: set ts=4 sw=4 expandtab:
 
-from ApplicationConstants import Notification
+from libtimesheet.ApplicationConstants import Notification
 
 from pyjamas.ui.HorizontalPanel import HorizontalPanel
 from pyjamas.ui.VerticalPanel import VerticalPanel
@@ -16,7 +16,7 @@ import pyjamas.DOM as DOM
 
 from pyjamas.Window import alert
 
-class HelpContentsDlg(DialogBox):
+class HelpAboutDlg(DialogBox):
 
     def __init__(self, left = 50, top = 50):
         try:
@@ -25,24 +25,10 @@ class HelpContentsDlg(DialogBox):
             self.setPopupPosition(left, top)
             self.dockPanel = DockPanel()
             self.dockPanel.setSpacing(4)
-            self.setText("Help Contents")
-            self.setWidth('80%')
+            self.setText("About")
 
             msg = HTML("""\
-<h2>Introduction</h2>
-
-This application can be used to maintain a timesheet.
-
-<p/>
-On startup, it tries to open the last opened timesheet.
-
-<p/>
-There are two modes: Edit and Summary (see menu). In edit mode the user can enter/modify his timescheet. There's some inteligence built in. The 'From' is filled in automatically when the previous line has a 'To'. The 'To' can be filled in as time span, or as end-time. The 'Project' is mandatory (as the 'From' and 'To' are). The user can walk around with the cursor keys.
-
-
-<h2>Opening and saving sheets</h2>
-The sheet can be loaded and saved from a local file. There might be some issues with Firefox, which might refuse access to the document in an iframe.
-
+This is an example application, which uses PureMVC<br/>
 <br/>
 """, True)
             self.dockPanel.add(msg, DockPanel.CENTER)
