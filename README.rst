@@ -55,38 +55,24 @@ and above come with a json library installed by default.
    known to be suitable, as is version 9.0.  Versions 10 and above are
    known to segfault.
 
-2. PyWebKitGtk
+2. GIWebKit (GObject Introspection)
 
-   The version of pywebkitgtk at http://www.gnu.org/software/pythonwebkit
-   provides full and direct python-equivalent interoperability for all functions
-   for which access through javascript has been provided: thus, Pyjs
-   Desktop will function correctly.
+   A 95% functional binding enabled via the dynamic GObject/Python bindings
+   produced by https://wiki.gnome.org/GObjectIntrospection after scanning the
+   annotated WebKit sources. This backend is missing a critical piece,
+   window.addEventListener, from https://bugs.webkit.org/show_bug.cgi?id=77835
+   but development is in progress to implement the missing binding via ctypes
+   instead, due to a lack of interest by WebKit.
 
-   PyWebkitGtk must be explicitly enabled.  create a $HOME/.pyjd/pyjdrc file
+   This is intended to supercede XULRunner as the default on Linux once ready.
+
+   GIWebKit must be explicitly enabled.  create a $HOME/.pyjd/pyjdrc file
    containing the following two lines:
 
    [gui]
-   engine=pywebkitgtk
+   engine=giwebkit
 
-3. PyWebkitDFB
-
-   This is an experimental but minimally functional engine that is extremely
-   quick to start up.  The build dependencies are also drastically smaller than
-   any of the other web browser engines (which indirectly contributes to the
-   fast startup time).
-
-   HTML5 is fully supported, with the exception of Video and Canvas; also
-   missing at present is support for Frames.  Despite the present limitations,
-   PyWebkitDFB is highly suited to embedded systems, as well as being useable
-   as an excellent and ultra-quick general-purpose web browser engine.
-
-   PyWebkitDFB must be explicitly enabled.  create a $HOME/.pyjd/pyjdrc file
-   containing the following two lines:
-
-   [gui]
-   engine=pywebkitdfb
-
-4. MSHTML
+3. MSHTML
 
    For Windows users, all that's required, other than installing python
    and Internet Explorer, is one further tiny package: Win32 "comtypes".
