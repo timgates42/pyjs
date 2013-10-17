@@ -325,10 +325,12 @@ class GIWindowLocation(object):
 
     def __init__(self, ctx):
         #TODO: use SoupURI for this instead
-        Soup.URI.new()
         def update(doc, pspec=None):
             a.set_href(doc.get_document_uri())
             logger.debug('location:%s', a.get_href())
+        #TODO: this only works for the first window created
+        # need something like GIProxy but for attributes
+        app = context
         doc = app._doc
         a = doc.createElement('a')
         doc.connect('notify::document-uri', update)
@@ -357,7 +359,7 @@ class GIWindowLocation(object):
     @classmethod
     def bind(cls, key):
         owner, attr = key
-        return types.MethodType(cls(key), None, owner)
+        return cls(key)
 
 class GIWindowOpen(object):
 
@@ -419,6 +421,8 @@ class GIResolver(object):
                                     inst.__class__.__name__, key))
 
     def getattr_gi(self, inst, key):
+        #TODO: this can probably just be removed now?
+        return self.NONE
         try:
             if inst.get_data(key) is None:
                 return self.NONE
@@ -450,12 +454,8 @@ class GIResolver(object):
         # hasattr() *specifically* chosen because it calls getattr()
         # internally, possibly setting a proxy object; if True, super()
         # will then properly setattr() against the proxy or instance.
-        if hasattr(inst, key):
-            super(self._type_gi, inst).__setattr__(key, attr)
-        else:
-            inst.set_data(key, attr)
-            logger.debug('setattr(inst, %r, attr):\n%s', key,
-                pformat([('inst', inst), ('attr', attr)]))
+        hasattr(inst, key)
+        super(self._type_gi, inst).__setattr__(key, attr)
 
     def _key_gi(self, key):
         return self.UPPER.sub(r'_\1', key).lower()
@@ -468,7 +468,7 @@ class Callback(object):
         self.cb = cb
         self.boolparam = boolparam
 
-    def _callback(self, sender, event, data):
+    def __call__(self, sender, event, data):
         try:
             return self.cb(self.sender, event, self.boolparam)
         except:
@@ -585,7 +585,8 @@ class RunnerContext(object):
 
         self._doc = self._view.get_dom_document()
         self._wnd = self._doc.get_default_view()
-        self._doc.ctx = self
+        self._doc.__dict__['ctx'] = self
+        self._wnd.__dict__['ctx'] = self
 
         # GITimer: ready the listener
         view.execute_script(r'''
@@ -687,9 +688,10 @@ class RunnerContext(object):
         return GIXMLHttpRequest(self)
 
     def addWindowEventListener(self, event_name, cb):
-        cb = Callback(self, cb, True)
-        listener = WebKit.dom_create_event_listener(cb._callback, None)
-        self._wnd.add_event_listener(event_name, listener, False)
+        listener = Callback(self, cb, True)
+        self._wnd.add_event_listener(event_name, listener, False, None)
+        #TODO: this can probably just be removed now?
+        # if not, MUST USE WEAKREFS OR IT WILL LEAK!
         self.listeners[listener] = self._wnd
 
     def addXMLHttpRequestEventListener(self, element, event_name, cb):
@@ -697,9 +699,10 @@ class RunnerContext(object):
         setattr(element, "on%s" % event_name, cb._callback)
 
     def addEventListener(self, element, event_name, cb):
-        cb = Callback(element, cb, False)
-        listener = WebKit.dom_create_event_listener(cb._callback, None)
-        element.add_event_listener(event_name, listener, False)
+        listener = Callback(element, cb, False)
+        element.add_event_listener(event_name, listener, False, None)
+        #TODO: this can probably just be removed now?
+        # if not, MUST USE WEAKREFS OR IT WILL LEAK!
         self.listeners[listener] = element
 
     def _destroy_cb(self, *args):
