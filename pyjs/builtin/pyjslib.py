@@ -8262,6 +8262,5 @@ def __import__(name, globals={}, locals={}, fromlist=[], level=-1):
     raise ImportError("No module named " + name)
 
 import sys # needed for debug option
-import dynamic # needed for ___import___
 
 

@@ -22629,5 +22629,4 @@ for name in ['sys', 'imp', 'dynamic']:
 
 import sys # needed for debug option
 import imp
-import dynamic # needed for ___import___
 

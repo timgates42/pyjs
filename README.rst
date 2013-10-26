@@ -30,6 +30,23 @@ IRC:
 :Server: irc.freenode.net
 :Channel: #pyjs
 
+Pyjs-Compiler
+===============
+
+Pyjs-Compiler tools are a collection of tools that related to
+  * compiling python code to java script
+  * linking compiled javascript modules into complete application
+  * to convert java to python, etc.
+
+Pyjs-Compiler runs your python application in a Web Browser (as javascript).
+
+Pyjs-Widgets
+===============
+
+Pyjs-Widgets are a collection of GUI widget libraris that can be run natively
+as part of Pyjs-Native or compiled by Pyjs-Compiler to run in a browser.
+
+
 Pyjs-Desktop
 ===============
 
@@ -84,3 +101,40 @@ and above come with a json library installed by default.
    of anything up to 30mb in size, the MSHTML port literally requires
    nothing more than comtypes, thanks to the far-sighted design of the
    MSHTML Trident Engine and its extensive COM interface.
+
+
+Installation Dependencies
+=========================
+
+1. python
+2. virtualenv - a python toolset that allows multiple python sandox installations
+3. pip - an alternative to the standard python installation tools
+
+Installation
+============
+
+1. Download and unzip/untar the pyjs.tar.gz file
+
+2. Change into the pyjs root directory
+    cd <pyjsroot>
+
+3. Optional step to create your own virtual python sandbox for development purposes
+   virtualenv mypython
+This will create a mypython directory and install sandboxed virtual python installation at
+   <pyjsroot>/mypython
+
+4. Install Pyjs-Tools, Pyjs-Pyjamas and all dependencies
+       <pyjsroot>/mypython/bin/pip install <pyjsroot>
+   OR the following if you want to develop and modify Pyjs-Compiler or Pyjs-Widgets
+   themselves
+       <pyjsroot>/mypython/bin/pip install -e <pyjsroot>
+
+
+You are now ready to use Pyjs. Scripts for compiling python code to Javascript
+as well as compiling applications will be installed into the mypython sandbox
+    <pyjsroot>/mypython/bin/pyjscompile
+    <pyjsroot>/mypython/bin/pyjsbuild
+    <pyjsroot>/mypython/bin/pyjampiler
+
+
+

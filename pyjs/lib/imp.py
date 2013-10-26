@@ -133,4 +133,3 @@ Reload the module.
 The module must have been successfully imported before."""
     raise NotImplementedError
 
-import dynamic

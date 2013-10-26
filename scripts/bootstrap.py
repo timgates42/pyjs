@@ -15,13 +15,12 @@ pyjspth = r'%(pyjspth)s'
 
 import os
 import sys
-sys.path[0:0] = [r'%(pth)s']
-sys.path.append(os.path.join(pyjspth, 'pgen'))
+pypaths=[pyjspth]
+sys.path.extend(pypaths)
+os.environ['PYTHONPATH'] =':'.join(os.environ.get('PYTHONPATH','').split(':')+pypaths)
+
 import pyjs
-pyjs.pyjspth = pyjspth
-pyjs.path += [os.path.join(pyjspth, 'library'),
-os.path.join(pyjspth, 'addons'),
-]
+# pyjs.pyjspth = pyjspth
 
 import pyjs.browser
 if __name__ == '__main__':
@@ -38,12 +37,14 @@ pyjspth = r'%(pyjspth)s'
 
 import os
 import sys
-sys.path[0:0] = [r'%(pth)s']
-sys.path.append(os.path.join(pyjspth, 'pgen'))
+pypaths=[pyjspth]
+sys.path.extend(pypaths)
+os.environ['PYTHONPATH'] =':'.join(os.environ.get('PYTHONPATH','').split(':')+pypaths)
 
+
+import pyjs
 import pyjs.translator
-pyjs.pyjspth = pyjspth
-pyjs.path += [os.path.join(pyjspth, 'library')]
+# pyjs.pyjspth = pyjspth
 
 if __name__ == '__main__':
     if "--version" in sys.argv:
@@ -59,12 +60,14 @@ pyjspth = r'%(pyjspth)s'
 
 import os
 import sys
-sys.path[0:0] = [r'%(pth)s']
-sys.path.append(os.path.join(pyjspth, 'pgen'))
+pypaths=[pyjspth]
+sys.path.extend(pypaths)
+os.environ['PYTHONPATH'] =':'.join(os.environ.get('PYTHONPATH','').split(':')+pypaths)
 
+
+import pyjs
 import pyjs.pyjampiler
-pyjs.pyjspth = pyjspth
-pyjs.path += [os.path.join(pyjspth, 'library')]
+# pyjs.pyjspth = pyjspth
 
 if __name__ == '__main__':
     if "--version" in sys.argv:
@@ -78,16 +81,13 @@ pyjdsh = """#!/bin/sh
 PYJAMAS_HOME="%(pyjspth)s"
 PYJAMAS_SITE="%(pyjssitepth)s"
 if [ "Q${PYTHONPATH}" = "Q" ] ; then
-    export PYTHONPATH="${PYJAMAS_HOME}:${PYJAMAS_SITE}"
+    export PYTHONPATH="${PYJAMAS_HOME}"
 else
-    export PYTHONPATH="${PYJAMAS_HOME}:${PYJAMAS_SITE}:${PYTHONPATH}"
+    export PYTHONPATH="${PYJAMAS_HOME}:${PYTHONPATH}"
 fi
 
 %(python)s $@
 """
-
-pyjdinitpth = os.path.join("pyjd", "__init__.py.in")
-pyjdinit = open(pyjdinitpth, "r").read()
 
 batcmdtxt = '''@echo off
 set CMD_LINE_ARGS=
@@ -166,7 +166,6 @@ if __name__ == '__main__':
     else:
         pth = os.path.abspath(os.getcwd())
         pyjspth = pth
-        pth = os.path.join(pth, 'pyjs', 'src')
 
     if len(sys.argv) == 3:
         prefix = sys.argv[2]
@@ -179,12 +178,6 @@ if __name__ == '__main__':
     make_cmd(prefix, pth, version, pyjspth, "pyjsbuild", pyjsbuild)
     make_cmd(prefix, pth, version, pyjspth, "pyjscompile", pyjscompile)
     make_cmd(prefix, pth, version, pyjspth, "pyjampiler", pyjampiler)
-
-    # create pyjd/__init__.py
-    pyjdinitpth = os.path.join("pyjd", "__init__.py")
-    f = open(pyjdinitpth, "w")
-    f.write(pyjdinit % (version, pyjspth))
-    f.close()
 
     if sys.platform == 'win32':
         make_cmd(prefix, pth, version, pyjspth, "pyjd", pyjdbat)

@@ -24,8 +24,8 @@ if pyjs.pyjspth is None:
     PYJAMASLIB_PATH = os.path.join(os.path.split(PYJAMASLIB_PATH)[0], 'library')
 else:
     try:
-        import pyjamaslibrary
-        PYJAMASLIB_PATH = os.path.dirname(pyjamaslibrary.__file__)
+        import pyjswidgets
+        PYJAMASLIB_PATH = os.path.dirname(pyjswidgets.__file__)
     except ImportError:
         PYJAMASLIB_PATH = os.path.join(pyjs.pyjspth, "library")
 
