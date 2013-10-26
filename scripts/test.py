@@ -26,6 +26,7 @@ import glob
 from optparse import OptionParser
 from os import path, mkdir
 import subprocess
+import sys
 import os
 import re
 import urllib2
@@ -36,7 +37,7 @@ from tempfile import mkdtemp
 test_msg_re = re.compile("""\s*([\w]+) (Known issue|Test failed) \(([\w\/]+)\) \: (.+)$""")
 issue_no_re = re.compile("""\#(\d+)""")
 test_passed_re = re.compile("""\s*(\w+)\: Passed (\d+) \/ (\d+) tests( \((\d+) failed\))?""")
-currentdir = path.abspath(path.dirname(__file__))
+# currentdir = path.abspath(path.dirname(__file__))
 
 class PyjamasTester(object):
     parser = OptionParser()
@@ -47,23 +48,23 @@ class PyjamasTester(object):
         default=False,
         help="Show detailed information")
     parser.add_option(
-        "--no-tracker",
+        "--tracker",
         dest="tracker",
         action="store_false",
-        default=True,
+        default=False,
         help="Do not load data from issue tracker")
     parser.add_option(
         "--cpython",
         dest="cpython",
         action="store",
-        default="/usr/bin/python",
+        default=sys.executable,
         help="Path to CPython executable"
         )
     parser.add_option(
         "--pyv8",
         dest="pyv8",
         action="store",
-        default="pyv8/pyv8run.py",
+        default="pyjs/pyv8/pyv8run.py",
         help="Path to PyV8-based interpreter"
         )
     parser.add_option(
@@ -143,18 +144,18 @@ class PyjamasTester(object):
         self.options, args = self.parser.parse_args()
 
         self.tmpdir = mkdtemp(prefix='pyjs')
-        self.root = path.dirname(__file__)
+        self.root = os.path.abspath(os.path.join(path.dirname(__file__),'../'))
 
         print "Output will be produced in %s" % self.tmpdir
 
         self.tracker_url = "http://code.google.com/p/pyjamas/issues/csv"
         if not path.isabs(self.options.pyv8):
-            self.options.pyv8 = path.join(currentdir, self.options.pyv8)
+            self.options.pyv8 = path.join(self.root, self.options.pyv8)
         if self.options.pyv8.endswith(".py"):
             self.options.pyv8 = "%s %s" % (self.options.cpython, self.options.pyv8)
 
         if not path.isabs(self.options.examples_path):
-            self.options.examples_path = path.join(currentdir, self.options.examples_path)
+            self.options.examples_path = path.join(self.root, self.options.examples_path)
 
         self.testsresults = []
         self.testsknown = []
@@ -221,7 +222,7 @@ class PyjamasTester(object):
         return self.parse_cmd_output(
             *self.run_cmd(cmd=self.options.pyv8,
                           opts=["-o %s" % output,
-                                "--strict",
+                                "--enable-strict",
                                 "--dynamic '^I18N[.].*.._..'",
                                 "LibTest"] + example_files,
                           cwd=directory)
@@ -239,7 +240,7 @@ class PyjamasTester(object):
         return self.check_stderr(*(self.run_cmd(
             path.join(self.root, 'bin', 'pyjsbuild'),
             opts=["-o %s" % output,
-                  "--strict",
+                  "--enable-strict",
                   "LibTest",
                   ],
             cwd=path.join(self.options.examples_path, 'libtest')) +
@@ -249,7 +250,7 @@ class PyjamasTester(object):
         return self.check_stderr(*(self.run_cmd(
             path.join(self.root, 'bin', 'pyjscompile'),
             opts=["-o %s/LibTest.js" % output,
-                  "--strict",
+                  "--enable-strict",
                   "LibTest.py",
                   ],
             cwd=path.join(self.options.examples_path, 'libtest')) +
