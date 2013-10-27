@@ -9,9 +9,11 @@ package_data={'pyjs': ['boilerplate/*.html', 'boilerplate/pyjampiler_wrapper.js.
                        'builtin/__builtin__.py.in', 'builtin/public/*.js',],
               }
 entry_points = {'console_scripts':[
-    'pyjampiler=pyjs.pyjampiler:Builder',
+    'pyjampiler=pyjs.pyjampiler:pyjampiler',
     'pyjscompile=pyjs.translator:main',
     'pyjsbuild=pyjs.browser:build_script',
+    'pyv8run=pyjs.pyv8.pyv8run:main',
+    'pyjstest=pyjs.pyjstest:pyjstest',
 ]}
 
 # setup(

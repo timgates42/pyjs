@@ -38,6 +38,10 @@ test_msg_re = re.compile("""\s*([\w]+) (Known issue|Test failed) \(([\w\/]+)\) \
 issue_no_re = re.compile("""\#(\d+)""")
 test_passed_re = re.compile("""\s*(\w+)\: Passed (\d+) \/ (\d+) tests( \((\d+) failed\))?""")
 # currentdir = path.abspath(path.dirname(__file__))
+pyjsbuild=os.path.join(os.path.dirname(sys.executable),'pyjsbuild')
+pyjscompile=os.path.join(os.path.dirname(sys.executable),'pyjscompile')
+pyjampiler=os.path.join(os.path.dirname(sys.executable),'pyjampiler')
+pyv8run=os.path.join(os.path.dirname(sys.executable),'pyv8run')
 
 class PyjamasTester(object):
     parser = OptionParser()
@@ -64,7 +68,7 @@ class PyjamasTester(object):
         "--pyv8",
         dest="pyv8",
         action="store",
-        default="pyjs/pyv8/pyv8run.py",
+        default=pyv8run,
         help="Path to PyV8-based interpreter"
         )
     parser.add_option(
@@ -238,7 +242,7 @@ class PyjamasTester(object):
 
     def test_pyjsbuild(self, output):
         return self.check_stderr(*(self.run_cmd(
-            path.join(self.root, 'bin', 'pyjsbuild'),
+            pyjsbuild,
             opts=["-o %s" % output,
                   "--enable-strict",
                   "LibTest",
@@ -248,7 +252,7 @@ class PyjamasTester(object):
 
     def test_pyjscompile(self, output):
         return self.check_stderr(*(self.run_cmd(
-            path.join(self.root, 'bin', 'pyjscompile'),
+            pyjscompile,
             opts=["-o %s/LibTest.js" % output,
                   "--enable-strict",
                   "LibTest.py",
@@ -257,7 +261,7 @@ class PyjamasTester(object):
                                    ('libtest', 'compile')))
 
     def test_pyjampiler(self, output):
-        cmd = path.join(self.root, 'bin', 'pyjampiler')
+        cmd = pyjampiler
         r = self.check_stderr(*(self.run_cmd(
             cmd,
             opts=["-r Hello",
@@ -440,7 +444,8 @@ class PyjamasTester(object):
 
 
 
-
+def pyjstest():
+    PyjamasTester()
 
 
 if __name__ == '__main__':

@@ -1,9 +1,12 @@
 import sys
 import os
-import pyjswidgets
-import pyjswaddons
-sys.path += [os.path.dirname(pyjswidgets.__file__),
-             os.path.dirname(pyjswaddons.__file__), ]
+try:
+    import pyjswidgets
+    import pyjswaddons
+    sys.path += [os.path.dirname(pyjswidgets.__file__),
+                 os.path.dirname(pyjswaddons.__file__), ]
+except ImportError:
+    pass
 
 from UnitTest import IN_BROWSER, IN_JS
 from LoopTest import LoopTest
