@@ -255,7 +255,7 @@ def java2python(txt):
     txt = java_replace(txt, "}", '')
     return '\n'.join(l)
 
-if __name__ == "__main__":
+def main():
     fnames = sys.argv[1:]
     for fname in fnames:
         f = open(fname, "r")
@@ -266,3 +266,6 @@ if __name__ == "__main__":
         f.write(txt)
         f.close()
 
+
+if __name__ == "__main__":
+    main()

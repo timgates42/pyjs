@@ -14,6 +14,9 @@ entry_points = {'console_scripts':[
     'pyjsbuild=pyjs.browser:build_script',
     'pyv8run=pyjs.pyv8.pyv8run:main',
     'pyjstest=pyjs.pyjstest:pyjstest',
+    'java2py=pyjs.contrib.java2py:main',
+    'mo2json=pyjs.contrib.mo2json:main',
+    'pyjscompressor=pyjs.contrib.pyjscompressor:main',
 ]}
 
 # setup(

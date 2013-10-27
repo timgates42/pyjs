@@ -271,7 +271,7 @@ def compress_all(path):
     print('%s %s' % (sizes.ljust(51), "%4.1f%%" % compression))
 
 
-if __name__ == '__main__':
+def main():
     try:
         import argparse
         # Available only on Python 2.7+
@@ -357,3 +357,7 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print('')
         print('Compression Aborted')
+
+if __name__ == '__main__':
+    main()
+
