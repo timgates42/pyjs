@@ -4,7 +4,7 @@ python:
 
 # On a 32-bit Ubuntu Linux 11.10 (server edition):
 install:
-  - sudo apt-get install libboost-python-dev v8 virtualenv
+  - sudo apt-get install libboost-python-dev libv8 python-virtualenv
   - virtualenv --system-site-packages lpython
   - lpython/bin/pip install -r requirements.txt
   - lpython/bin/pip install -e .
