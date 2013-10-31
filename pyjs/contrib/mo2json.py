@@ -51,7 +51,7 @@ def mo2json(fp):
     c[""] = header
     return dumps(c)
 
-if __name__ == '__main__':
+def main():
     if len(sys.argv) == 1:
         sys.stdout.write(mo2json(sys.stdin))
     else:
@@ -61,3 +61,6 @@ if __name__ == '__main__':
                 fname = fname[:-3]
             fname = fname + '.json'
             open(fname, 'w').write(json)
+
+if __name__ == '__main__':
+    main()

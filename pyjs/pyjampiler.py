@@ -144,6 +144,9 @@ class Builder(object):
                           "entry_module": self.options.entry_module})
         fapp.close()
 
+def pyjampiler():
+    Builder()
+
 if __name__ == "__main__":
     Builder()
 
