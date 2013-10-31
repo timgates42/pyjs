@@ -6,7 +6,8 @@ packages=['pyjs', 'pyjs.builtin', 'pyjs.lib', 'pyjs.lib.os', 'pyjs.lib.test',
           'pyjs.boilerplate',
           'pgen', 'pgen.lib2to3', 'pgen.lib2to3.pgen2', 'pgen.lib2to3.compiler', ]
 package_data={'pyjs': ['boilerplate/*.html', 'boilerplate/pyjampiler_wrapper.js.tmpl',
-                       'builtin/__builtin__.py.in', 'builtin/public/*.js',],
+                       'builtin/__builtin__.py.in', 'builtin/public/*.js',
+                       'contrib/compiler.jar'],
               }
 entry_points = {'console_scripts':[
     'pyjampiler=pyjs.pyjampiler:pyjampiler',

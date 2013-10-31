@@ -34,6 +34,8 @@ import subprocess
 import sys
 import tempfile
 
+compiler_path=os.path.join(os.path.dirname(__file__),'compiler.jar')
+
 
 try:
     import multiprocessing
@@ -48,12 +50,13 @@ SCRIPT = re.compile('<script(?:(?!\ssrc).)*?>(.*?)</script>', re.DOTALL)
 
 
 def compile(js_file, js_output_file, html_file=''):
+    global debug, optimizations
     # SIMPLE_OPTIMIZATIONS has some problem with Opera, so we'll use
     # WHITESPACE_ONLY for opera
     if 'opera' in html_file:
         level = 'WHITESPACE_ONLY'
     else:
-        level = 'SIMPLE_OPTIMIZATIONS'
+        level = optimizations
 
     global compiler_path
 
@@ -62,6 +65,8 @@ def compile(js_file, js_output_file, html_file=''):
             '--compilation_level', level,
             '--js', js_file,
             '--js_output_file', js_output_file]
+    if debug:
+        args.append('--formatting=pretty_print')
 
     error = subprocess.call(args=args,
                             stdout=open(os.devnull, 'w'),
@@ -270,55 +275,16 @@ def compress_all(path):
             (p_size / 1024., n_size / 1024.)
     print('%s %s' % (sizes.ljust(51), "%4.1f%%" % compression))
 
-
-def main():
-    try:
-        import argparse
-        # Available only on Python 2.7+
-        mode = 'argparse'
-    except ImportError:
-        import optparse
-        mode = 'optparse'
-
-    # Take one position argument (directory)
-    # and optional arguments for compiler path and multiprocessing
-
+def dopyjscompressor(directory, c_path=compiler_path, n_procs=0, opts='SIMPLE_OPTIMIZATIONS', dbg=False):
     global compiler_path
     global num_procs
+    global debug
+    global optimizations
 
-    num_procs = 1  # By default, disable multiprocessing
-
-    if mode == 'argparse':
-        parser = argparse.ArgumentParser(
-            description='Compress HTML, CSS and JS in PYJS output')
-
-        parser.add_argument('directory', type=str,
-                            help='Pyjamas Output Directory')
-        parser.add_argument('-c', '--compiler', type=str, default='',
-                            help='Path to Google Closure compiler.jar')
-        parser.add_argument('-j', metavar='NUM', default=0, type=int,
-                            dest='num_procs',
-                            help='Run NUM processes in parallel')
-        args = parser.parse_args()
-        directory = args.directory
-        compiler_path = args.compiler
-        num_procs = args.num_procs
-    else:
-        # Use optparse
-        usage = 'usage: %prog [options] <pyjamas-output-directory>'
-        parser = optparse.OptionParser(usage=usage)
-        parser.add_option('-c', '--compiler', type=str, default='',
-                          help='Path to Google Closure compiler.jar')
-        parser.add_option('-j', metavar='NUM', default=0, type=int,
-                          dest='num_procs',
-                          help='Run NUM processes in parallel')
-        options, args = parser.parse_args()
-        if len(args) != 1:
-            parser.error('Please specify the directory to compress')
-
-        directory = args[0]
-        compiler_path = options.compiler
-        num_procs = options.num_procs
+    compiler_path=c_path
+    num_procs = n_procs
+    optimizations = opts
+    debug = dbg
 
     if not compiler_path:
         # Not specified on command line
@@ -357,6 +323,56 @@ def main():
     except KeyboardInterrupt:
         print('')
         print('Compression Aborted')
+
+
+def main():
+    try:
+        import argparse
+        # Available only on Python 2.7+
+        mode = 'argparse'
+    except ImportError:
+        import optparse
+        mode = 'optparse'
+
+    # Take one position argument (directory)
+    # and optional arguments for compiler path and multiprocessing
+    if mode == 'argparse':
+        parser = argparse.ArgumentParser(
+            description='Compress HTML, CSS and JS in PYJS output')
+
+        parser.add_argument('directory', type=str,
+                            help='Pyjamas Output Directory')
+        parser.add_argument('-c', '--compiler', type=str, default=compiler_path,
+                            help='Path to Google Closure compiler.jar')
+        parser.add_argument('-j', metavar='NUM', default=0, type=int,
+                            dest='num_procs',
+                            help='Run NUM processes in parallel')
+        parser.add_argument('-d', default=False, action="store_true", dest='debug',
+                            help='Debugging mode')
+        parser.add_argument('-o', metavar='OPTIMIZATION_LEVEL', default='SIMPLE_OPTIMIZATIONS', 
+                            type=str, dest='optimizations',
+                            help='Closure Compiler Optimization levels')
+        options = parser.parse_args()
+        directory = options.directory
+    else:
+        # Use optparse
+        usage = 'usage: %prog [options] <pyjamas-output-directory>'
+        parser = optparse.OptionParser(usage=usage)
+        parser.add_option('-c', '--compiler', type=str, default=compiler_path,
+                          help='Path to Google Closure compiler.jar')
+        parser.add_option('-j', metavar='NUM', default=0, type=int,
+                          dest='num_procs',
+                          help='Run NUM processes in parallel')
+        parser.add_option('-d', default=False, action="store_true", dest='debug',
+                          help='Debugging mode')
+        parser.add_option('-o', metavar='OPTIMIZATION_LEVEL', default='SIMPLE_OPTIMIZATION', 
+                          type=str, dest='optimizations',
+                          help='Closure Compiler Optimization levels')
+        options, args = parser.parse_args()
+        if len(args) != 1:
+            parser.error('Please specify the directory to compress')
+        directory = args[0]
+    dopyjscompressor(directory, options.compiler, options.num_procs, options.optimizations, options.debug)
 
 if __name__ == '__main__':
     main()
