@@ -1,3 +1,7 @@
+.. image:: https://travis-ci.org/pyjs/pyjs.png
+    :target: https://travis-ci.org/pyjs/pyjs
+    :alt: Build Status
+
 Pyjs
 =======
 
