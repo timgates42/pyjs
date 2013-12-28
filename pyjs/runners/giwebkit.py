@@ -17,6 +17,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('WebKit', '3.0')
 from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Soup
 from gi.repository import WebKit
@@ -468,7 +469,7 @@ class Callback(object):
         self.cb = cb
         self.boolparam = boolparam
 
-    def __call__(self, sender, event, data):
+    def __call__(self, sender, event):
         try:
             return self.cb(self.sender, event, self.boolparam)
         except:
@@ -542,7 +543,7 @@ class RunnerContext(object):
         settings.set_property('enable-webgl', True)
 
         # GLib.PRIORITY_LOW == 300
-        GObject.timeout_add(1000, self._idle_loop_cb, priority=300)
+        GLib.timeout_add(1000, self._idle_loop_cb, priority=300)
         signal.signal(signal.SIGINT, self._destroy_cb)
         toplevel.connect('destroy', self._destroy_cb)
         toplevel.add_accel_group(accel_destroy)
@@ -689,7 +690,7 @@ class RunnerContext(object):
 
     def addWindowEventListener(self, event_name, cb):
         listener = Callback(self, cb, True)
-        self._wnd.add_event_listener(event_name, listener, False, None)
+        self._wnd.add_event_listener(event_name, listener, False)
         #TODO: this can probably just be removed now?
         # if not, MUST USE WEAKREFS OR IT WILL LEAK!
         self.listeners[listener] = self._wnd
@@ -700,7 +701,7 @@ class RunnerContext(object):
 
     def addEventListener(self, element, event_name, cb):
         listener = Callback(element, cb, False)
-        element.add_event_listener(event_name, listener, False, None)
+        element.add_event_listener(event_name, listener, False)
         #TODO: this can probably just be removed now?
         # if not, MUST USE WEAKREFS OR IT WILL LEAK!
         self.listeners[listener] = element
