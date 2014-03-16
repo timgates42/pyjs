@@ -27,7 +27,7 @@ setup(
     entry_points = entry_points,
     
     license="Apache"
-    key_words="js"
+    keywords="js"
     url = http://pyjs.org
     long_description=read('README.rst')
     )
