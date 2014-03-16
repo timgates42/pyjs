@@ -1,11 +1,19 @@
 from setuptools import setup
 import setup_pyjstools
 import setup_pyjswidgets
-__VERSION__='0.8.1'
+__VERSION__='0.8.2'
 
 packages=setup_pyjstools.packages+setup_pyjswidgets.packages
 package_data=dict(setup_pyjstools.package_data.items()+setup_pyjswidgets.package_data.items())
 entry_points=dict(setup_pyjstools.entry_points.items()+setup_pyjswidgets.entry_points.items())
+
+# Utility function to read the README file.
+# Used for the long_description.  It's nice, because now 1) we have a top level
+# README file and 2) it's easier to type in the README file than to put a raw
+# string in below ...
+# Source: https://pythonhosted.org/an_example_pypi_project/setuptools.html
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
     name="pyjs",
@@ -14,4 +22,9 @@ setup(
     package_data=package_data,
     zip_safe = False,
     entry_points = entry_points,
+    
+    license="Apache"
+    key_words="js"
+    url = http://pyjs.org
+    long_description=read('README.rst')
     )
