@@ -1,4 +1,5 @@
 from setuptools import setup
+import os.path
 import setup_pyjstools
 import setup_pyjswidgets
 __VERSION__='0.8.2'
