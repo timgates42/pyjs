@@ -4,8 +4,11 @@ import setup_pyjswidgets
 __VERSION__='0.8.2'
 
 packages=setup_pyjstools.packages+setup_pyjswidgets.packages
-package_data=dict(setup_pyjstools.package_data.items()+setup_pyjswidgets.package_data.items())
-entry_points=dict(setup_pyjstools.entry_points.items()+setup_pyjswidgets.entry_points.items())
+package_data=dict(setup_pyjstools.package_data.items())
+package_data.update(dict(setup_pyjswidgets.package_data.items()))
+
+entry_points=dict(setup_pyjstools.entry_points.items())
+entry_points.update(dict(setup_pyjswidgets.entry_points.items()))
 
 # Utility function to read the README file.
 # Used for the long_description.  It's nice, because now 1) we have a top level
