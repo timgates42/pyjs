@@ -26,8 +26,8 @@ setup(
     zip_safe = False,
     entry_points = entry_points,
     
-    license="Apache"
-    keywords="js"
-    url = http://pyjs.org
-    long_description=read('README.rst')
-    )
+    license="Apache",
+    keywords="js",
+    url = http://pyjs.org,
+    long_description=read('README.rst'),
+)
