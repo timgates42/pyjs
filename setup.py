@@ -28,6 +28,6 @@ setup(
     
     license="Apache",
     keywords="js",
-    url = http://pyjs.org,
+    url = "http://pyjs.org",
     long_description=read('README.rst'),
 )
