@@ -300,7 +300,7 @@ class BaseLinker(object):
                 p = module_path(mn, paths)
             if not p:
                 if "generic" in mn:
-                    print "Module %r not found, sys.path is %r" % (mn, paths)
+                    print("Module %r not found, sys.path is %r" % (mn, paths))
                 continue
                 #raise RuntimeError, "Module %r not found. Dep of %r" % (
                 #    mn, self.dependencies)
