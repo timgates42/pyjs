@@ -454,7 +454,7 @@ def build(top_module, pyjs, options, app_platforms,
     for f, deps in l.dependencies.items():
         print("%s\n%s" % (f, '\n'.join(map(lambda x: "\t%s" % x, deps))))
     print
-    print "Visited Modules"
+    print("Visited Modules")
     for plat, deps in l.visited_modules.items():
         print("%s\n%s" % (plat, '\n'.join(map(lambda x: "\t%s" % x, deps))))
     print
