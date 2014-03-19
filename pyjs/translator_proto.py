@@ -4842,7 +4842,7 @@ class AppTranslator:
                 continue
             self.library_modules.append(library)
             if self.verbose:
-                print 'Including LIB', library
+                print ('Including LIB', library)
             print >> lib_code, '\n//\n// BEGIN LIB '+library+'\n//\n'
             print >> lib_code, self._translate(
                 library, False, debug=debug, imported_js=imported_js)
@@ -4858,7 +4858,7 @@ class AppTranslator:
            path = self.findFile(js)
            if os.path.isfile(path):
               if self.verbose:
-                  print 'Including JS', js
+                  print ('Including JS', js)
               print >> lib_code,  '\n//\n// BEGIN JS '+js+'\n//\n'
               print >> lib_code, file(path).read()
               print >> lib_code,  '\n//\n// END JS '+js+'\n//\n'
@@ -4907,14 +4907,14 @@ def main():
               **get_compile_options(options))
     if options.list_imports:
         if imports:
-            print '/*'
-            print 'PYJS_DEPS: %s' % imports
-            print '*/'
+            print ('/*')
+            print ('PYJS_DEPS: %s' % imports)
+            print ('*/')
 
         if js:
-            print '/*'
-            print 'PYJS_JS: %s' % repr(js)
-            print '*/'
+            print ('/*')
+            print ('PYJS_JS: %s' % repr(js))
+            print ('*/')
 
 if __name__ == "__main__":
     main()
