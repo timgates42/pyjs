@@ -165,8 +165,8 @@ def redofunctions(txt):
         if len(arg) == 2:
             newargs.append(arg[1]) # drop first word (arg type)
         else:
-            print txt
-            print pre, args, arg
+            print (txt)
+            print (pre, args, arg)
             error # deliberately cause error - find out why arg no type
     if count != 0 and not is_exception:
         # assume class not global function - add self
