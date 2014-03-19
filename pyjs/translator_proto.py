@@ -17,7 +17,7 @@ import sys
 import types
 import os
 import copy
-from six.moves.cStringIO import StringIO
+from six.moves import cStringIO
 import re
 try:
     from hashlib import md5
