@@ -448,15 +448,15 @@ def build(top_module, pyjs, options, app_platforms,
     l()
 
     if not options.list_imports:
-        print "Built to :", os.path.abspath(options.output)
+        print ("Built to :", os.path.abspath(options.output))
         return
-    print "Dependencies"
+    print("Dependencies")
     for f, deps in l.dependencies.items():
-        print "%s\n%s" % (f, '\n'.join(map(lambda x: "\t%s" % x, deps)))
+        print("%s\n%s" % (f, '\n'.join(map(lambda x: "\t%s" % x, deps))))
     print
     print "Visited Modules"
     for plat, deps in l.visited_modules.items():
-        print "%s\n%s" % (plat, '\n'.join(map(lambda x: "\t%s" % x, deps)))
+        print("%s\n%s" % (plat, '\n'.join(map(lambda x: "\t%s" % x, deps))))
     print
 
 
