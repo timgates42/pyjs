@@ -65,7 +65,7 @@ class Mappings(object):
         _opt_types = {str: 'string', int: 'int', long: 'long',
                       float: 'float', complex: 'complex',
                       NO_DEFAULT: 'string'}
-    elseif six.PY3:
+    elif six.PY3:
         _opt_types = {str: 'string', int: 'int',# long: 'int',
                       float: 'float', complex: 'complex',
                       NO_DEFAULT: 'string'}
