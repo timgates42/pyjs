@@ -354,8 +354,8 @@ class PyjamasTester(object):
             mkdir(output)
         try:
             d['tests'] = method(output=output)
-        except Exception, e:
-            print e
+        except Exception( e ):
+            print (e)
             d['err'] = e
             return False
 
@@ -372,7 +372,7 @@ class PyjamasTester(object):
         d['total'] = d['passed'] + d['failed'] + d['known']
 
     def get_tracker_issues(self):
-        print "Fetching issues csv from %s" % self.tracker_url
+        print ("Fetching issues csv from %s" % self.tracker_url)
         csv_data = urllib2.urlopen(self.tracker_url)
         reader = csv.reader(csv_data)
         issue_cls = None
@@ -382,7 +382,7 @@ class PyjamasTester(object):
             elif row:
                 issue = issue_cls(*row)
                 self.issues[issue.ID] = issue
-        print "    received %s issues from tracker" % len(self.issues)
+        print ("    received %s issues from tracker" % len(self.issues))
 
     def print_results(self):
         """
