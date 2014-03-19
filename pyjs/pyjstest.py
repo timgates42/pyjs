@@ -29,7 +29,7 @@ import subprocess
 import sys
 import os
 import re
-import urllib2
+import urllib
 import csv
 import collections
 from tempfile import mkdtemp
