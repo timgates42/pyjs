@@ -9,10 +9,10 @@ if (
     "--translator=dict" in sys.argv or
     "--use-translator=dict" in sys.argv
 ):
-    from translator_dict import *
+    from pyjs.translator_dict import *
     name = 'dict'
 else:
-    from translator_proto import *
+    from pyjs.translator_proto import *
     name = 'proto'
 
 usage = """
