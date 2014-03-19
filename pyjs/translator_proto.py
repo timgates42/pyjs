@@ -14,7 +14,7 @@
 
 
 import sys
-from types import StringType
+import types
 import os
 import copy
 from cStringIO import StringIO
@@ -29,7 +29,7 @@ from options import (all_compile_options, add_compile_options,
                      get_compile_options, debug_options, speed_options,
                      pythonic_options)
 
-if os.environ.has_key('PYJS_SYSPATH'):
+if 'PYJS_SYSPATH' in os.environ:
     sys.path[0:0] = [os.environ['PYJS_SYSPATH']]
 
 sys.path[1:1] = [os.path.join(os.path.dirname(__file__), "lib_trans")]
