@@ -1,6 +1,6 @@
 import os
 import sys
-import util
+from pyjs.util as util
 import logging
 import pyjs
 import subprocess
