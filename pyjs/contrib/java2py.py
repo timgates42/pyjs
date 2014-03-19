@@ -153,7 +153,7 @@ def redofunctions(txt):
         elif len(pre) == 2:
             pre = pre[-1] # drop the first word (return type)
         else:
-            print txt, pre
+            print (txt, pre)
             error # deliberately cause error - investigate 3-word thingies!
 
     args = map(string.strip, args.split(','))
