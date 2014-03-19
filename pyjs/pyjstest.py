@@ -150,7 +150,7 @@ class PyjamasTester(object):
         self.tmpdir = mkdtemp(prefix='pyjs')
         self.root = os.path.abspath(os.path.join(path.dirname(__file__),'../'))
 
-        print "Output will be produced in %s" % self.tmpdir
+        print ("Output will be produced in %s" % self.tmpdir)
 
         self.tracker_url = "http://code.google.com/p/pyjamas/issues/csv"
         if not path.isabs(self.options.pyv8):
