@@ -424,7 +424,7 @@ def serve(path):
 
 def build(top_module, pyjs, options, app_platforms,
           runtime_options, args):
-    print "Building: %s\nPYJSPATH: %s" % (top_module, pformat(pyjs.path))
+    print("Building: %s\nPYJSPATH: %s" % (top_module, pformat(pyjs.path)))
 
     translator_arguments= translator.get_compile_options(options)
 
