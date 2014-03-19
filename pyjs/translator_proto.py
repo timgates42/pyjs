@@ -1127,7 +1127,7 @@ class Translator(object):
             if word in pyjs_attrib_remap:
                attr.append("'%s'" % pyjs_attrib_remap[word])
             elif word.find('(') >= 0:
-                print 'attrib_join:', splitted, attr, word
+                print ('attrib_join:', splitted, attr, word)
                 attr.append(word)
             else:
                attr.append("'%s'" % word)
