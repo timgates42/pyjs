@@ -25,7 +25,7 @@ except:
     from md5 import md5
 import logging
 
-from options import (all_compile_options, add_compile_options,
+from pyjs.options import (all_compile_options, add_compile_options,
                      get_compile_options, debug_options, speed_options,
                      pythonic_options)
 
