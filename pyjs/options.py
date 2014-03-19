@@ -75,7 +75,7 @@ class Mappings(object):
 
     def __init__(self):
         groups = dict()
-        for n, g in Groups.__dict__.iteritems():
+        for n, g in six.iteritems(Groups.__dict__):
             if not n.startswith('_'):
                 groups[g] = set()
         super(self.__class__, self).__setattr__('_order', list())
