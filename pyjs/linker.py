@@ -138,8 +138,8 @@ def out_translate(platform, file_names, out_file, module_name,
             raise translator.TranslationError('general fail in translator process')
 
     if translator_args.get('list_imports', None):
-        print "List Imports %s:" % platform, file_names
-        print stdout_value
+        print("List Imports %s:" % platform, file_names)
+        print(stdout_value)
         return [], []
 
     deps, js_libs = parse_outfile(out_file)
