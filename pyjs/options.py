@@ -69,7 +69,7 @@ class Mappings(object):
         _opt_types = {str: 'string', int: 'int',# long: 'int',
                       float: 'float', complex: 'complex',
                       NO_DEFAULT: 'string'}
-    else
+    else:
         error
 
     def __init__(self):
