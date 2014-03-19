@@ -414,7 +414,7 @@ class PyjamasTester(object):
             for test_pack in self.testsresults:
                 if test_pack['failed_list']:
                     print ("-"*30)
-                    print (tst_pack['name'], "failed tests:"
+                    print (tst_pack['name'], "failed tests:")
                     for test in test_pack['failed_list']:
                         print ("[!] %(cls)s.%(name)s: %(message)s" % test)
 
