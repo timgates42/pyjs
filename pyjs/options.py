@@ -61,9 +61,16 @@ class Mappings(object):
     _opt_sig_hash = set(_opt_sig)
     _grp_sig_hash = set(_grp_sig)
 
-    _opt_types = {str: 'string', int: 'int', long: 'long',
-                  float: 'float', complex: 'complex',
-                  NO_DEFAULT: 'string'}
+    if six.PY2:
+        _opt_types = {str: 'string', int: 'int', long: 'long',
+                      float: 'float', complex: 'complex',
+                      NO_DEFAULT: 'string'}
+    elseif six.PY3:
+        _opt_types = {str: 'string', int: 'int',# long: 'int',
+                      float: 'float', complex: 'complex',
+                      NO_DEFAULT: 'string'}
+    else
+        error
 
     def __init__(self):
         groups = dict()
