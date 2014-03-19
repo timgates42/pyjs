@@ -207,7 +207,7 @@ def module_path(name, path, platform=None):
         _path_cache[name][p] = None
 
     return None
-    raise RuntimeError, "Module %r not found" % name
+    raise RuntimeError( "Module %r not found" % name )
 
 
 class BaseLinker(object):
