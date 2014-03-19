@@ -389,9 +389,9 @@ class BaseLinker(object):
                         elif location == 'late':
                             self.late_static_js_libs.append(path)
                         else:
-                            raise RuntimeError, "Unknown js lib location: %r" % location
+                            raise RuntimeError( "Unknown js lib location: %r" % location )
                     else:
-                        raise RuntimeError, "Unknown js lib mode: %r" % mode
+                        raise RuntimeError( "Unknown js lib mode: %r" % mode )
 
                 if '.' in module_name:
                     for i, dep in enumerate(deps):
