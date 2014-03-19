@@ -94,7 +94,7 @@ comp_iter = 269
 trailer = 329
 
 sym_name = {}
-for _name, _value in globals().items():
+for _name, _value in globals().items() if _name:
     if type(_value) is type(0):
             sym_name[_value] = _name
 
