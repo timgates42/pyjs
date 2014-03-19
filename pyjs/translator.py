@@ -1,6 +1,6 @@
 import sys
 import os
-if os.environ.has_key('PYJS_SYSPATH'):
+if 'PYJS_SYSPATH' in os.environ:
     sys.path[0:0] = [os.environ['PYJS_SYSPATH']]
 import pyjs
 LIBRARY_PATH = os.path.abspath(os.path.dirname(__file__))
