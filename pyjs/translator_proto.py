@@ -2390,7 +2390,7 @@ var %s = arguments['length'] >= %d ? arguments[arguments['length']-1] : argument
                     raise TranslationError(
                         "Unknown __pyjamas__ function %s" % pyname,
                          v.node, self.module_name)
-                except TranslationError, e:
+                except TranslationError(e):
                     raise TranslationError(e.msg, v, self.module_name)
             elif v.node.name == 'locals':
                 return """$p['dict']({%s})""" % (",".join(["'%s': %s" % (pyname, self.lookup_stack[-1][pyname][2]) for pyname in self.lookup_stack[-1] if self.lookup_stack[-1][pyname][0] not in ['__pyjamas__', 'global']]))
