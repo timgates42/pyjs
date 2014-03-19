@@ -2386,7 +2386,7 @@ var %s = arguments['length'] >= %d ? arguments[arguments['length']-1] : argument
                     else:
                         raw_js = self.translate_escaped_names(raw_js, current_klass)
                     return raw_js
-                except AttributeError, e:
+                except AttributeError(e):
                     raise TranslationError(
                         "Unknown __pyjamas__ function %s" % pyname,
                          v.node, self.module_name)
