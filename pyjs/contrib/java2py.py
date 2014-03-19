@@ -72,7 +72,7 @@ def countspaces(txt):
 def java2pythonlinebyline(txt):
     if txt.find('if (') >= 0:
         if not txt.strip().endswith("{"):
-            print txt
+            print(txt)
             error # deliberate error on lines with no {
         txt = txt.replace('if (', 'if ')
         txt = txt.replace('!', 'not ')
