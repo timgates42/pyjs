@@ -56,14 +56,14 @@ def main():
               **get_compile_options(options))
     if options.list_imports:
         if imports:
-            print '/*'
-            print 'PYJS_DEPS: %s' % imports
-            print '*/'
+            print ('/*')
+            print ('PYJS_DEPS: %s' % imports)
+            print ('*/')
 
         if js:
-            print '/*'
-            print 'PYJS_JS: %s' % repr(js)
-            print '*/'
+            print ('/*')
+            print ('PYJS_JS: %s' % repr(js))
+            print ('*/')
 
 if __name__ == "__main__":
     main()
