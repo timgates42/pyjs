@@ -8,7 +8,7 @@ Copyright (C) 2009, Luke Kenneth Casson Leighton <lkcl@lkcl.net>
 Pyjampiler: a stand-alone python-to-javascript compiler, by David Siroky
 
 """
-print 'pyjampiler loaded'
+print ('pyjampiler loaded')
 
 import os
 import glob
