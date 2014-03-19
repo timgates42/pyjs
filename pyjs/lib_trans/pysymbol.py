@@ -95,8 +95,8 @@ comp_iter = 269
 trailer = 329
 
 sym_name = {}
-values = list(globals())
-for _name, _value in six.iterlists(values) :
+values = dict(globals())
+for _name, _value in six.iteritems(values) :
     if type(_value) is type(0):
             sym_name[_value] = _name
 
