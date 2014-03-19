@@ -4570,15 +4570,15 @@ class PlatformParser:
             mod = copy.deepcopy(mod)
             mod_override = self.compiler.parseFile(platform_file_name)
             if self.verbose:
-                print "Merging", module_name, self.platform
+                print ("Merging", module_name, self.platform)
             self.merge(smod, mod_override)
             override = True
 
         if self.verbose:
             if override:
-                print "Importing %s (Platform %s)" % (module_name, self.platform)
+                print ("Importing %s (Platform %s)" % (module_name, self.platform))
             elif importing:
-                print "Importing %s" % (module_name)
+                print ("Importing %s" % (module_name))
 
         return mod, override
 
