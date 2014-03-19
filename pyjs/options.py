@@ -1,5 +1,6 @@
 from optparse import SUPPRESS_HELP, NO_DEFAULT
 from logging import warn
+import six
 
 #-----------------------------------------------------------( group namespace )
 
