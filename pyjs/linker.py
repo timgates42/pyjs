@@ -105,12 +105,12 @@ def out_translate(platform, file_names, out_file, module_name,
                     platform = "[%s] " % platform
                 else:
                     platform = ''
-                print "Translating file %s:" % platform, file_name
+                print("Translating file %s:" % platform, file_name)
                 do_translate = True
                 break
     if not incremental or do_translate:
         pydir = os.path.abspath(os.path.dirname(__file__))
-        if not os.environ.has_key('PYJS_SYSPATH'):
+        if not 'PYJS_SYSPATH' in os.environ:
             os.environ['PYJS_SYSPATH'] = sys.path[0]
         opts = ["--module-name", module_name, "-o"]
         if sys.platform == 'win32':
