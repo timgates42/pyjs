@@ -38,7 +38,7 @@ Pyjs-Compiler
 ===============
 
 Pyjs-Compiler tools are a collection of tools that related to
-  * compiling python code to java script
+  * compiling python code to javascript
   * linking compiled javascript modules into complete application
   * to convert java to python, etc.
 
