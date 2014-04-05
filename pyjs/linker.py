@@ -1,6 +1,6 @@
 import os
 import sys
-import util
+import pyjs.util as util
 import logging
 import pyjs
 import subprocess
@@ -105,12 +105,12 @@ def out_translate(platform, file_names, out_file, module_name,
                     platform = "[%s] " % platform
                 else:
                     platform = ''
-                print "Translating file %s:" % platform, file_name
+                print("Translating file %s:" % platform, file_name)
                 do_translate = True
                 break
     if not incremental or do_translate:
         pydir = os.path.abspath(os.path.dirname(__file__))
-        if not os.environ.has_key('PYJS_SYSPATH'):
+        if not 'PYJS_SYSPATH' in os.environ:
             os.environ['PYJS_SYSPATH'] = sys.path[0]
         opts = ["--module-name", module_name, "-o"]
         if sys.platform == 'win32':
@@ -138,8 +138,8 @@ def out_translate(platform, file_names, out_file, module_name,
             raise translator.TranslationError('general fail in translator process')
 
     if translator_args.get('list_imports', None):
-        print "List Imports %s:" % platform, file_names
-        print stdout_value
+        print("List Imports %s:" % platform, file_names)
+        print(stdout_value)
         return [], []
 
     deps, js_libs = parse_outfile(out_file)
@@ -207,7 +207,7 @@ def module_path(name, path, platform=None):
         _path_cache[name][p] = None
 
     return None
-    raise RuntimeError, "Module %r not found" % name
+    raise RuntimeError( "Module %r not found" % name )
 
 
 class BaseLinker(object):
@@ -264,7 +264,7 @@ class BaseLinker(object):
                     self.visit_end_platform(platform)
             if not self.list_imports:
                 self.visit_end()
-        except translator.TranslationError, e:
+        except translator.TranslationError( e ):
             raise
 
     def visit_modules(self, module_names, platform=None, parent_file = None):
@@ -300,7 +300,7 @@ class BaseLinker(object):
                 p = module_path(mn, paths)
             if not p:
                 if "generic" in mn:
-                    print "Module %r not found, sys.path is %r" % (mn, paths)
+                    print("Module %r not found, sys.path is %r" % (mn, paths))
                 continue
                 #raise RuntimeError, "Module %r not found. Dep of %r" % (
                 #    mn, self.dependencies)
@@ -389,9 +389,9 @@ class BaseLinker(object):
                         elif location == 'late':
                             self.late_static_js_libs.append(path)
                         else:
-                            raise RuntimeError, "Unknown js lib location: %r" % location
+                            raise RuntimeError( "Unknown js lib location: %r" % location )
                     else:
-                        raise RuntimeError, "Unknown js lib mode: %r" % mode
+                        raise RuntimeError( "Unknown js lib mode: %r" % mode )
 
                 if '.' in module_name:
                     for i, dep in enumerate(deps):

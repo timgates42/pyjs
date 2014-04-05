@@ -1,6 +1,6 @@
 import sys
 import os
-if os.environ.has_key('PYJS_SYSPATH'):
+if 'PYJS_SYSPATH' in os.environ:
     sys.path[0:0] = [os.environ['PYJS_SYSPATH']]
 import pyjs
 LIBRARY_PATH = os.path.abspath(os.path.dirname(__file__))
@@ -9,10 +9,10 @@ if (
     "--translator=dict" in sys.argv or
     "--use-translator=dict" in sys.argv
 ):
-    from translator_dict import *
+    from pyjs.translator_dict import *
     name = 'dict'
 else:
-    from translator_proto import *
+    from pyjs.translator_proto import *
     name = 'proto'
 
 usage = """
@@ -56,14 +56,14 @@ def main():
               **get_compile_options(options))
     if options.list_imports:
         if imports:
-            print '/*'
-            print 'PYJS_DEPS: %s' % imports
-            print '*/'
+            print ('/*')
+            print ('PYJS_DEPS: %s' % imports)
+            print ('*/')
 
         if js:
-            print '/*'
-            print 'PYJS_JS: %s' % repr(js)
-            print '*/'
+            print ('/*')
+            print ('PYJS_JS: %s' % repr(js))
+            print ('*/')
 
 if __name__ == "__main__":
     main()

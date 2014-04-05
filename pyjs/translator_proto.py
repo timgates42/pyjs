@@ -14,10 +14,10 @@
 
 
 import sys
-from types import StringType
+import types
 import os
 import copy
-from cStringIO import StringIO
+from six.moves import cStringIO
 import re
 try:
     from hashlib import md5
@@ -25,11 +25,11 @@ except:
     from md5 import md5
 import logging
 
-from options import (all_compile_options, add_compile_options,
+from pyjs.options import (all_compile_options, add_compile_options,
                      get_compile_options, debug_options, speed_options,
                      pythonic_options)
 
-if os.environ.has_key('PYJS_SYSPATH'):
+if 'PYJS_SYSPATH' in os.environ:
     sys.path[0:0] = [os.environ['PYJS_SYSPATH']]
 
 sys.path[1:1] = [os.path.join(os.path.dirname(__file__), "lib_trans")]
@@ -539,7 +539,7 @@ class __Pyjamas__(object):
            ):
             try:
                 data = open(node.args[0].value, 'r').read()
-            except IOError, e:
+            except IOError(e):
                 raise TranslationError(
                     "Cannot include file '%s': %s" % (node.args[0].value, e), node.node)
             translator.ignore_debug = True
@@ -1127,7 +1127,7 @@ class Translator(object):
             if word in pyjs_attrib_remap:
                attr.append("'%s'" % pyjs_attrib_remap[word])
             elif word.find('(') >= 0:
-                print 'attrib_join:', splitted, attr, word
+                print ('attrib_join:', splitted, attr, word)
                 attr.append(word)
             else:
                attr.append("'%s'" % word)
@@ -2131,7 +2131,7 @@ var %s = arguments['length'] >= %d ? arguments[arguments['length']-1] : argument
                         self.add_lookup("__pyjamas__", ass_name, name[0])
                     else:
                         self.add_lookup("__pyjamas__", ass_name, jsname)
-                except AttributeError, e:
+                except AttributeError(e):
                     #raise TranslationError("Unknown __pyjamas__ import: %s" % name, node)
                     pass
             return
@@ -2386,11 +2386,11 @@ var %s = arguments['length'] >= %d ? arguments[arguments['length']-1] : argument
                     else:
                         raw_js = self.translate_escaped_names(raw_js, current_klass)
                     return raw_js
-                except AttributeError, e:
+                except AttributeError(e):
                     raise TranslationError(
                         "Unknown __pyjamas__ function %s" % pyname,
                          v.node, self.module_name)
-                except TranslationError, e:
+                except TranslationError(e):
                     raise TranslationError(e.msg, v, self.module_name)
             elif v.node.name == 'locals':
                 return """$p['dict']({%s})""" % (",".join(["'%s': %s" % (pyname, self.lookup_stack[-1][pyname][2]) for pyname in self.lookup_stack[-1] if self.lookup_stack[-1][pyname][0] not in ['__pyjamas__', 'global']]))
@@ -4570,15 +4570,15 @@ class PlatformParser:
             mod = copy.deepcopy(mod)
             mod_override = self.compiler.parseFile(platform_file_name)
             if self.verbose:
-                print "Merging", module_name, self.platform
+                print ("Merging", module_name, self.platform)
             self.merge(smod, mod_override)
             override = True
 
         if self.verbose:
             if override:
-                print "Importing %s (Platform %s)" % (module_name, self.platform)
+                print ("Importing %s (Platform %s)" % (module_name, self.platform))
             elif importing:
-                print "Importing %s" % (module_name)
+                print ("Importing %s" % (module_name))
 
         return mod, override
 
@@ -4842,7 +4842,7 @@ class AppTranslator:
                 continue
             self.library_modules.append(library)
             if self.verbose:
-                print 'Including LIB', library
+                print ('Including LIB', library)
             print >> lib_code, '\n//\n// BEGIN LIB '+library+'\n//\n'
             print >> lib_code, self._translate(
                 library, False, debug=debug, imported_js=imported_js)
@@ -4858,7 +4858,7 @@ class AppTranslator:
            path = self.findFile(js)
            if os.path.isfile(path):
               if self.verbose:
-                  print 'Including JS', js
+                  print ('Including JS', js)
               print >> lib_code,  '\n//\n// BEGIN JS '+js+'\n//\n'
               print >> lib_code, file(path).read()
               print >> lib_code,  '\n//\n// END JS '+js+'\n//\n'
@@ -4907,14 +4907,14 @@ def main():
               **get_compile_options(options))
     if options.list_imports:
         if imports:
-            print '/*'
-            print 'PYJS_DEPS: %s' % imports
-            print '*/'
+            print ('/*')
+            print ('PYJS_DEPS: %s' % imports)
+            print ('*/')
 
         if js:
-            print '/*'
-            print 'PYJS_JS: %s' % repr(js)
-            print '*/'
+            print ('/*')
+            print ('PYJS_JS: %s' % repr(js))
+            print ('*/')
 
 if __name__ == "__main__":
     main()

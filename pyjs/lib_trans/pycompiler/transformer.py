@@ -34,7 +34,7 @@ import pyparser as parser
 import pysymbol as symbol
 import pytoken as token
 
-class WalkerError(StandardError):
+class WalkerError(Exception):
     pass
 
 from compiler.consts import CO_VARARGS, CO_VARKEYWORDS

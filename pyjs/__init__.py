@@ -20,7 +20,7 @@ try:
 except ImportError:
     pyjspth = None
 
-if os.environ.has_key('PYJSPATH'):
+if 'PYJSPATH' in os.environ:
     for p in os.environ['PYJSPATH'].split(os.pathsep):
         p = os.path.abspath(p)
         if os.path.isdir(p):

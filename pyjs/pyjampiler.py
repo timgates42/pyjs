@@ -8,7 +8,7 @@ Copyright (C) 2009, Luke Kenneth Casson Leighton <lkcl@lkcl.net>
 Pyjampiler: a stand-alone python-to-javascript compiler, by David Siroky
 
 """
-print 'pyjampiler loaded'
+print ('pyjampiler loaded')
 
 import os
 import glob
@@ -112,7 +112,7 @@ class Builder(object):
                     module_name = based_filename[:-3] # cut ".py"
                 module_name = module_name.replace(os.sep, ".")
 
-                print "Compiling %s (%s)" % (module_name, based_filename)
+                print ("Compiling %s (%s)" % (module_name, based_filename))
                 self.compile(os.path.join(self.options.working_dir, based_filename), module_name)
 
     def clear_tmp(self):

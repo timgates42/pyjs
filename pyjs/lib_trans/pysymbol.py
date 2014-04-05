@@ -5,6 +5,7 @@
 #
 # Copyright 2006 Google, Inc. All Rights Reserved.
 # Licensed to PSF under a Contributor Agreement.
+import six
 
 """Export the Python grammar and symbols."""
 
@@ -94,7 +95,8 @@ comp_iter = 269
 trailer = 329
 
 sym_name = {}
-for _name, _value in globals().items():
+values = dict(globals())
+for _name, _value in six.iteritems(values) :
     if type(_value) is type(0):
             sym_name[_value] = _name
 

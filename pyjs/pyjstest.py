@@ -29,7 +29,7 @@ import subprocess
 import sys
 import os
 import re
-import urllib2
+import urllib
 import csv
 import collections
 from tempfile import mkdtemp
@@ -150,7 +150,7 @@ class PyjamasTester(object):
         self.tmpdir = mkdtemp(prefix='pyjs')
         self.root = os.path.abspath(os.path.join(path.dirname(__file__),'../'))
 
-        print "Output will be produced in %s" % self.tmpdir
+        print ("Output will be produced in %s" % self.tmpdir)
 
         self.tracker_url = "http://code.google.com/p/pyjamas/issues/csv"
         if not path.isabs(self.options.pyv8):
@@ -202,7 +202,7 @@ class PyjamasTester(object):
             if not isinstance(opts, list):
                 opts = [opts]
             cmd = ' '.join([cmd] + opts)
-        print "Running `%s` at \"%s\"" % (cmd, cwd)
+        print("Running `%s` at \"%s\"" % (cmd, cwd))
         proc = subprocess.Popen(cmd,
                                 stdin=subprocess.PIPE,
                                 stdout=subprocess.PIPE,
@@ -354,8 +354,8 @@ class PyjamasTester(object):
             mkdir(output)
         try:
             d['tests'] = method(output=output)
-        except Exception, e:
-            print e
+        except Exception( e ):
+            print (e)
             d['err'] = e
             return False
 
@@ -372,7 +372,7 @@ class PyjamasTester(object):
         d['total'] = d['passed'] + d['failed'] + d['known']
 
     def get_tracker_issues(self):
-        print "Fetching issues csv from %s" % self.tracker_url
+        print ("Fetching issues csv from %s" % self.tracker_url)
         csv_data = urllib2.urlopen(self.tracker_url)
         reader = csv.reader(csv_data)
         issue_cls = None
@@ -382,29 +382,29 @@ class PyjamasTester(object):
             elif row:
                 issue = issue_cls(*row)
                 self.issues[issue.ID] = issue
-        print "    received %s issues from tracker" % len(self.issues)
+        print ("    received %s issues from tracker" % len(self.issues))
 
     def print_results(self):
         """
         .. TODO:: handle test_pack['err']
         """
-        print "="*30
-        print " Test results "
-        print "="*30
+        print ("="*30)
+        print (" Test results ")
+        print ("="*30)
         is_failed = False
         is_bad_issue = False
         if self.options.verbose:
             for test_pack in self.testsresults:
-                print "-"*30
+                print ("-"*30)
                 print ("%(name)s: total %(total)s, passed %(passed)s,"
                 " known %(known)s, failed %(failed)s" % test_pack)
-                print "-"*30
+                print ("-"*30)
                 if test_pack['failed'] > 0:
                     is_failed = True
                 for test in test_pack['known_list']:
-                    print "    Known issue: %(cls)s.%(name)s: %(message)s" % test
+                    print ("    Known issue: %(cls)s.%(name)s: %(message)s" % test)
                 for test in test_pack['failed_list']:
-                    print "[!] Failed test: %(cls)s.%(name)s: %(message)s" % test
+                    print ("[!] Failed test: %(cls)s.%(name)s: %(message)s" % test)
         else:
             for test_pack in self.testsresults:
                 print ("%(name)s: total %(total)s, passed %(passed)s,"
@@ -413,10 +413,10 @@ class PyjamasTester(object):
                     is_failed = True
             for test_pack in self.testsresults:
                 if test_pack['failed_list']:
-                    print "-"*30
-                    print test_pack['name'], "failed tests:"
+                    print ("-"*30)
+                    print (tst_pack['name'], "failed tests:")
                     for test in test_pack['failed_list']:
-                        print "[!] %(cls)s.%(name)s: %(message)s" % test
+                        print ("[!] %(cls)s.%(name)s: %(message)s" % test)
 
         if self.issues:
             referenced = []
@@ -425,22 +425,22 @@ class PyjamasTester(object):
                     referenced.append(issue_id)
                     if not issue_id in self.issues:
                         if not is_bad_issue:
-                            print "-"*30
-                            print "Some issues referenced as known are not open on tracker:"
+                            print ("-"*30)
+                            print ("Some issues referenced as known are not open on tracker:")
                             is_bad_issue = True
-                        print "[!] Issue #%s is not open, referenced by %s:%s.%s: %s" % (
+                        print ("[!] Issue #%s is not open, referenced by %s:%s.%s: %s" % (
                             issue_id,
                             test_pack['name'],
-                            test['cls'], test['name'], test['message'])
+                            test['cls'], test['name'], test['message']))
 
 
             if self.options.tracker_report:
-                print "="*30
-                print " Issues test coverage report"
-                print "="*30
+                print ("="*30)
+                print (" Issues test coverage report")
+                print ("="*30)
                 for issue_id, issue in self.issues.iteritems():
                     if not issue_id in referenced:
-                        print "    No test for issue #%(ID)s '%(Summary)s'" % issue._asdict()
+                        print ("    No test for issue #%(ID)s '%(Summary)s'" % issue._asdict())
 
 
 

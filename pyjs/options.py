@@ -1,5 +1,6 @@
 from optparse import SUPPRESS_HELP, NO_DEFAULT
 from logging import warn
+import six
 
 #-----------------------------------------------------------( group namespace )
 
@@ -61,13 +62,20 @@ class Mappings(object):
     _opt_sig_hash = set(_opt_sig)
     _grp_sig_hash = set(_grp_sig)
 
-    _opt_types = {str: 'string', int: 'int', long: 'long',
-                  float: 'float', complex: 'complex',
-                  NO_DEFAULT: 'string'}
+    if six.PY2:
+        _opt_types = {str: 'string', int: 'int', long: 'long',
+                      float: 'float', complex: 'complex',
+                      NO_DEFAULT: 'string'}
+    elif six.PY3:
+        _opt_types = {str: 'string', int: 'int',# long: 'int',
+                      float: 'float', complex: 'complex',
+                      NO_DEFAULT: 'string'}
+    else:
+        error
 
     def __init__(self):
         groups = dict()
-        for n, g in Groups.__dict__.iteritems():
+        for n, g in six.iteritems(Groups.__dict__):
             if not n.startswith('_'):
                 groups[g] = set()
         super(self.__class__, self).__setattr__('_order', list())

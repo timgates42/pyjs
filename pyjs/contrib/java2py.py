@@ -72,7 +72,7 @@ def countspaces(txt):
 def java2pythonlinebyline(txt):
     if txt.find('if (') >= 0:
         if not txt.strip().endswith("{"):
-            print txt
+            print(txt)
             error # deliberate error on lines with no {
         txt = txt.replace('if (', 'if ')
         txt = txt.replace('!', 'not ')
@@ -153,7 +153,7 @@ def redofunctions(txt):
         elif len(pre) == 2:
             pre = pre[-1] # drop the first word (return type)
         else:
-            print txt, pre
+            print (txt, pre)
             error # deliberately cause error - investigate 3-word thingies!
 
     args = map(string.strip, args.split(','))
@@ -165,8 +165,8 @@ def redofunctions(txt):
         if len(arg) == 2:
             newargs.append(arg[1]) # drop first word (arg type)
         else:
-            print txt
-            print pre, args, arg
+            print (txt)
+            print (pre, args, arg)
             error # deliberately cause error - find out why arg no type
     if count != 0 and not is_exception:
         # assume class not global function - add self
