@@ -74,6 +74,8 @@ class JSONTranslations(NullTranslations):
         self.load(url)
 
     def gettext(self, message):
+        if message == "":
+            return message
         tmsg = self._catalog.get(message)
         if tmsg is None:
             if self._fallback:
