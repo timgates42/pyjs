@@ -26,7 +26,8 @@ setup(
     package_data=package_data,
     zip_safe = False,
     entry_points = entry_points,
-    
+    install_requires=['six'],
+
     license="Apache",
     keywords=["js", "javascript"],
     url = "http://pyjs.org",
