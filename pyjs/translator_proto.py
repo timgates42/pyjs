@@ -17,7 +17,7 @@ import sys
 import types
 import os
 import copy
-from six.moves import cStringIO
+from six.moves import cStringIO as StringIO
 import re
 try:
     from hashlib import md5
@@ -2131,7 +2131,7 @@ var %s = arguments['length'] >= %d ? arguments[arguments['length']-1] : argument
                         self.add_lookup("__pyjamas__", ass_name, name[0])
                     else:
                         self.add_lookup("__pyjamas__", ass_name, jsname)
-                except AttributeError(e):
+                except AttributeError, e:
                     #raise TranslationError("Unknown __pyjamas__ import: %s" % name, node)
                     pass
             return
@@ -3955,7 +3955,7 @@ var %(e)s_name = (typeof %(e)s['__name__'] == 'undefined' ? %(e)s['name'] : %(e)
 %(s)s\t@{{op_mul}}(%(v1)s,%(v2)s))""" % locals()
 
     def _mod(self, node, current_klass):
-        if isinstance(node.left, self.ast.Const) and isinstance(node.left.value, StringType):
+        if isinstance(node.left, self.ast.Const) and isinstance(node.left.value, types.StringType):
             return self.track_call("@{{sprintf}}("+self.expr(node.left, current_klass) + ", " + self.expr(node.right, current_klass)+")", node.lineno)
 
         e1 = self.expr(node.left, current_klass)
