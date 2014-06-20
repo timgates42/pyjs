@@ -3,7 +3,7 @@
     :alt: Build Status
 
 Pyjs
-=======
+====
 
 Pyjs is a port of Google Web Toolkit to Python, and thus enables
 the development of Rich Media AJAX applications in Python, with no
@@ -16,26 +16,9 @@ python, with three useable Desktop ports available.  With web-engine
 technology at it's core, HTML, CSS, plugins and other related features
 work out-of-the-box.
 
-For more information and documentation, see:
-
-* http://pyjs.org
-* https://github.com/pyjs/pyjs/wiki
-
-For issue tracking:
-
-* https://github.com/pyjs/pyjs/issues
-
-Mailing list:
-
-* https://groups.google.com/group/pyjs-users
-
-IRC:
-
-:Server: irc.freenode.net
-:Channel: #pyjs
 
 Pyjs-Compiler
-===============
+=============
 
 Pyjs-Compiler tools are a collection of tools that related to
   * compiling python code to javascript
@@ -44,15 +27,16 @@ Pyjs-Compiler tools are a collection of tools that related to
 
 Pyjs-Compiler runs your python application in a Web Browser (as javascript).
 
+
 Pyjs-Widgets
-===============
+============
 
 Pyjs-Widgets are a collection of GUI widget libraris that can be run natively
 as part of Pyjs-Native or compiled by Pyjs-Compiler to run in a browser.
 
 
 Pyjs-Desktop
-===============
+============
 
 Pyjs runs your python application in a Web Browser (as javascript).
 Pyjs-Desktop runs exactly the same python application on the
@@ -107,38 +91,26 @@ and above come with a json library installed by default.
    MSHTML Trident Engine and its extensive COM interface.
 
 
-Installation Dependencies
-=========================
-
-1. python
-2. virtualenv - a python toolset that allows multiple python sandox installations
-3. pip - an alternative to the standard python installation tools
-
 Installation
-============
+===============
 
-1. Download and unzip/untar the pyjs.tar.gz file
+Access our "Getting Started" wiki (https://github.com/pyjs/pyjs/wiki/GettingStarted) for get information about installation, examples, troubleshooting, etc.
 
-2. Change into the pyjs root directory
-    cd <pyjsroot>
+For more information and documentation, see:
 
-3. Optional step to create your own virtual python sandbox for development purposes
-   virtualenv mypython
-This will create a mypython directory and install sandboxed virtual python installation at
-   <pyjsroot>/mypython
+* http://pyjs.org
+* https://github.com/pyjs/pyjs/wiki
 
-4. Install Pyjs-Tools, Pyjs-Pyjamas and all dependencies
-       <pyjsroot>/mypython/bin/pip install <pyjsroot>
-   OR the following if you want to develop and modify Pyjs-Compiler or Pyjs-Widgets
-   themselves
-       <pyjsroot>/mypython/bin/pip install -e <pyjsroot>
+For issue tracking:
 
+* https://github.com/pyjs/pyjs/issues
 
-You are now ready to use Pyjs. Scripts for compiling python code to Javascript
-as well as compiling applications will be installed into the mypython sandbox
-    <pyjsroot>/mypython/bin/pyjscompile
-    <pyjsroot>/mypython/bin/pyjsbuild
-    <pyjsroot>/mypython/bin/pyjampiler
+Mailing list:
 
+* https://groups.google.com/group/pyjs-users
 
+IRC:
+
+:Server: irc.freenode.net
+:Channel: #pyjs
 
