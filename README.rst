@@ -20,10 +20,10 @@ work out-of-the-box.
 Pyjs-Compiler
 =============
 
-Pyjs-Compiler tools are a collection of tools that related to
+Pyjs-Compiler is a collection of tools that are related to
   * compiling python code to javascript
-  * linking compiled javascript modules into complete application
-  * to convert java to python, etc.
+  * linking compiled javascript modules into complete applications
+  * converting java to python, etc.
 
 Pyjs-Compiler runs your python application in a Web Browser (as javascript).
 
@@ -31,20 +31,20 @@ Pyjs-Compiler runs your python application in a Web Browser (as javascript).
 Pyjs-Widgets
 ============
 
-Pyjs-Widgets are a collection of GUI widget libraris that can be run natively
-as part of Pyjs-Native or compiled by Pyjs-Compiler to run in a browser.
+Pyjs-Widgets is a collection of GUI widget libraries that can be run natively
+as part of Pyjs-Native or can be compiled by Pyjs-Compiler to run in a browser.
 
 
 Pyjs-Desktop
 ============
 
-Pyjs runs your python application in a Web Browser (as javascript).
+While Pyjs runs your python application in a Web Browser (as javascript),
 Pyjs-Desktop runs exactly the same python application on the
 Desktop (as pure python).  There are currently three engine
 choices, with alternatives in development.
 
-All ports of Pyjs-Desktop require a JSON library: simplejson is
-recommended if the version of python is 2.5 or less.  Python 2.6
+All ports of Pyjs-Desktop require a JSON library; simplejson is
+recommended if the version of python is 2.5 or older.  Python 2.6
 and above come with a json library installed by default.
 
 1. XULRunner
@@ -71,7 +71,7 @@ and above come with a json library installed by default.
 
    This is intended to supercede XULRunner as the default on Linux once ready.
 
-   GIWebKit must be explicitly enabled.  create a $HOME/.pyjd/pyjdrc file
+   GIWebKit must be explicitly enabled.  Create a $HOME/.pyjd/pyjdrc file
    containing the following two lines:
 
    [gui]
@@ -79,7 +79,7 @@ and above come with a json library installed by default.
 
 3. MSHTML
 
-   For Windows users, all that's required, other than installing python
+   For Windows users - all that's required, other than installing python
    and Internet Explorer, is one further tiny package: Win32 "comtypes".
 
    Win32 "comtypes" can be downloaded here:
@@ -105,7 +105,7 @@ For issue tracking:
 
 * https://github.com/pyjs/pyjs/issues
 
-Mailing list:
+To join the mailing list:
 
 * https://groups.google.com/group/pyjs-users
 
